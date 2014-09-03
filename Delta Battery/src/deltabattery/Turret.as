@@ -14,6 +14,18 @@ package deltabattery
 		public var cg:ContainerGame;
 		public var turret:MovieClip;
 		
+		public var rightMouseDown:Boolean;
+		
+		public var ammoPrimary:Array = [100, 0, 0];
+		public var ammoSecondary:Array = [200, 0, 0];
+		
+		public var activePrimary:int = 0;		// index in array
+		public var activeSecondary:int = 0;		// index in array
+		
+		// TODO use array
+		public var cooldownRight:int;
+		public var resetRight:int;
+		
 		public const TURRET_LIMIT_L:Number = 0;
 		public const TURRET_LIMIT_R:Number = -95;
 		
@@ -25,6 +37,9 @@ package deltabattery
 			turret = _turret;
 			turret.addEventListener(Event.ADDED_TO_STAGE, init);
 			
+			cooldownRight = 0;
+			resetRight = 7;
+			
 			missileParams = new Object();
 			missileParams["velocity"] = 7;
 		}
@@ -32,9 +47,24 @@ package deltabattery
 		private function init(e:Event):void
 		{
 			turret.removeEventListener(Event.ADDED_TO_STAGE, init);
-			turret.stage.addEventListener(MouseEvent.CLICK, onMouse);
-			turret.stage.addEventListener(MouseEvent.RIGHT_CLICK, onMouseRight);
+			turret.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouse);
+			turret.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onMouseRightDown);
+			turret.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseRightUp);
 			turret.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
+		}
+		
+		public function step():void
+		{
+			if (cooldownRight > 0)
+				cooldownRight--;
+			else if (rightMouseDown && ammoSecondary[activeSecondary] > 0)
+			{
+				ammoSecondary[activeSecondary]--;
+				cg.game.mc_gui.tf_ammoS.text = ammoSecondary[activeSecondary];
+				
+				cg.manBull.spawnProjectile("chain", new Point(turret.x, turret.y - 15), new Point(cg.mouseX, cg.mouseY), 1);
+				cooldownRight = resetRight;
+			}
 		}
 		
 		// called by Container Game
@@ -50,13 +80,24 @@ package deltabattery
 		
 		private function onMouse(e:MouseEvent):void
 		{
-			trace(e.type);
-			cg.manMiss.spawnMissile(new Point(turret.x, turret.y - 15), new Point(cg.mouseX, cg.mouseY), 1, missileParams);
+			if (ammoPrimary[activePrimary] > 0)
+			{
+				ammoPrimary[activePrimary]--;
+				cg.game.mc_gui.tf_ammoP.text = ammoPrimary[activePrimary];
+				
+				cg.manMiss.spawnProjectile("standard", new Point(turret.x, turret.y - 15), new Point(cg.mouseX, cg.mouseY), 1, missileParams);
+			}
+			trace(cg.mouseX + " " + cg.mouseY);
 		}
 		
-		private function onMouseRight(e:MouseEvent):void
+		private function onMouseRightDown(e:MouseEvent):void
 		{
-			trace("Right");
+			rightMouseDown = true;
+		}
+		
+		private function onMouseRightUp(e:MouseEvent):void
+		{
+			rightMouseDown = false;
 		}
 		
 		private function destroy(e:Event):void

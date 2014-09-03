@@ -9,10 +9,12 @@ package deltabattery
 	 */
 	public class ManagerExplosion extends ABST_Manager 
 	{
+		private var manMiss:ManagerMissile;
 		
-		public function ManagerExplosion(_cg:ContainerGame) 
+		public function ManagerExplosion(_cg:ContainerGame, _manMiss:ManagerMissile) 
 		{
 			super(_cg);
+			manMiss = _manMiss;
 		}
 		
 		override public function step():void
@@ -21,7 +23,7 @@ package deltabattery
 			for (var i:int = objArr.length - 1; i >= 0; i--)
 			{
 				expl = objArr[i];
-				if (expl.step())
+				if (expl.step(manMiss))
 				{
 					if (cg.game.c_main.contains(expl.mc))
 						cg.game.c_main.removeChild(expl.mc);

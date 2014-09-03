@@ -21,6 +21,11 @@ package deltabattery
 		{
 			// -- override this function
 		}
+		
+		public function hasObjects():Boolean
+		{
+			return objArr.length > 0;
+		}
 	}
 
 }

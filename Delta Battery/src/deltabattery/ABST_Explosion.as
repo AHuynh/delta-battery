@@ -13,6 +13,8 @@ package deltabattery
 		public var mc:MovieClip;
 		public var type:int;
 		
+		public var range:int;
+		
 		private var origin:Point;
 		
 		public function ABST_Explosion(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int = 0) 
@@ -25,10 +27,23 @@ package deltabattery
 			
 			mc.x = origin.x;
 			mc.y = origin.y;
+			
+			range = 30;		// TODO set dynamically
 		}
 		
-		public function step():Boolean
+		public function step(manMiss:ManagerMissile):Boolean
 		{
+			var miss:ABST_Missile;
+			
+			for (var i:int = manMiss.objArr.length - 1; i >= 0; i--)
+			{
+				miss = manMiss.objArr[i]
+				if (type == miss.type) continue;
+
+				if (getDistance(mc.x, mc.y, miss.mc.x, miss.mc.y) < range)
+					miss.destroy();
+			}
+				
 			if (mc.currentFrame != mc.totalFrames) return false;
 			
 			if (par.contains(mc))

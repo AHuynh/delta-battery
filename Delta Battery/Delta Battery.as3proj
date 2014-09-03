@@ -54,11 +54,11 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="ContainerMenu.swc" />
-    <element path="MissileStandard.swc" />
-    <element path="Game.swc" />
+    <element path="BulletStandard.swc" />
     <element path="ExplosionStandard.swc" />
+    <element path="MissileStandard.swc" />
     <element path="MissileTarget.swc" />
-    <element path="RightClickListener.swc" />
+    <element path="Game.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

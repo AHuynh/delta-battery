@@ -14,7 +14,6 @@ package deltabattery
 	{
 		public function Main():void 
 		{
-			trace("pls");
 			if (stage)
 				init();
 			else
@@ -27,8 +26,6 @@ package deltabattery
 			
 			var engine:Engine = new Engine();
 			stage.addChild(engine);
-			
-			trace("Done.");
 		}
 	}
 }

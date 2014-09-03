@@ -1,33 +1,28 @@
 package deltabattery 
 {
 	import cobaltric.ContainerGame;
+	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * Manager for a generic gravity-ignoring missile
 	 * @author Alexander Huynh
 	 */
 	public class ManagerMissile extends ABST_Manager 
 	{	
-		private var manExpl:ManagerExplosion;
 		
-		public function ManagerMissile(_cg:ContainerGame, _manExpl:ManagerExplosion) 
+		public function ManagerMissile(_cg:ContainerGame) 
 		{
 			super(_cg);
-			manExpl = _manExpl;
 		}
 		
 		override public function step():void
-		{
-			// -- TEMPORARY TESTING
-			if (Math.random() > .99)
-				spawnMissile(new Point(450, -300 + getRand(0, 150)), new Point(-440 + getRand(10), 200 + getRand(0, 100)));
-			
+		{			
 			var miss:ABST_Missile;
 			for (var i:int = objArr.length - 1; i >= 0; i--)
 			{
 				miss = objArr[i];
-				if (miss.step(manExpl))
+				if (miss.step())
 				{
 					if (cg.game.c_main.contains(miss.mc))
 						cg.game.c_main.removeChild(miss.mc);
@@ -37,11 +32,27 @@ package deltabattery
 			}
 		}
 		
-		public function spawnMissile(origin:Point, target:Point, type:int = 0, params:Object = null):void
+		/**	Spawn a gravity-ignoring missile
+		 * 
+		 *	@proj		the type of projectile to spawn
+		 * 	@origin		the starting location of the projectile
+		 * 	@target		where the projectile will head toward
+		 * 	@type		the affiliation that this projectile has (0 enemy; 1 player)
+		 * 	@params		parameters for the projectile
+		 */
+		public function spawnProjectile(proj:String, origin:Point, target:Point, type:int = 0, params:Object = null):void
 		{
-			var m:ABST_Missile = new ABST_Missile(cg, new MissileStandard(), cg.renderer, origin, target, type, params);
-			objArr.push(m);
-			cg.game.c_main.addChild(m.mc);
+			switch (proj)
+			{
+				default:		// "standard"
+					addObject(new ABST_Missile(cg, new MissileStandard(), cg.renderer, origin, target, type, params));
+			}
+		}
+		
+		private function addObject(a:ABST_Missile):void
+		{
+			objArr.push(a);
+			cg.game.c_main.addChild(a.mc);
 		}
 	}
 }

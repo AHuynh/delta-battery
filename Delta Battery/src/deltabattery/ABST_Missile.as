@@ -17,8 +17,9 @@ package deltabattery
 	import org.flintparticles.twoD.renderers.DisplayObjectRenderer;
 	import org.flintparticles.twoD.zones.DiscZone;
 	import org.flintparticles.twoD.zones.PointZone;
+	
 	/**
-	 * ...
+	 * A generic, gravity-ignoring projectile
 	 * @author Alexander Huynh
 	 */
 	public class ABST_Missile extends ABST_Base 
@@ -28,22 +29,27 @@ package deltabattery
 		
 		public var type:int;
 		
-		private var origin:Point;
-		private var target:Point;
+		protected var origin:Point;
+		protected var target:Point;
+		
+		protected var dist:Number;
+		protected var prevDist:Number;
 
-		private var velocity:Number;
-		private var rot:Number;
+		protected var velocity:Number;
+		protected var rot:Number;
 		
-		private var renderer:DisplayObjectRenderer;
-		private var emitter:Emitter2D;
+		protected var renderer:DisplayObjectRenderer;
+		protected var emitter:Emitter2D;
 		
-		private var markedForDestroy:Boolean;
-		private var readyToDestroy:Boolean;
+		protected var createExplosion:Boolean;
+		protected var markedForDestroy:Boolean;
+		protected var readyToDestroy:Boolean;
 		
-		private var timerKill:Timer;
-		private var tgt:MissileTarget;
+		protected var timerKill:Timer;
+		protected var tgt:MissileTarget;
 		
-		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _dor:DisplayObjectRenderer, _origin:Point, _target:Point, _type:int = 0, params:Object = null) 
+		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _dor:DisplayObjectRenderer,
+									 _origin:Point, _target:Point, _type:int = 0, params:Object = null) 
 		{
 			cg = _cg;
 			mc = _mc;		
@@ -56,63 +62,85 @@ package deltabattery
 			mc.x = origin.x;
 			mc.y = origin.y;
 			
-			tgt = new MissileTarget();
-			tgt.x = target.x;
-			tgt.y = target.y;
-			cg.game.c_main.addChild(tgt);
-
+			// default values
+			var useTarget:Boolean = true;
 			velocity = Math.random() * 2 + 4;
-			mc.rotation = getAngle(_origin.x, _origin.y, target.x, target.y);
-			rot = degreesToRadians(mc.rotation);
-					
-			emitter = new Emitter2D();
-			emitter.counter = new Steady(12);
-			emitter.addInitializer(new ImageClass(ParticleSmokeTrail));
-			emitter.addInitializer(new Position(new DiscZone(new Point(mc.x, mc.y), 5, 3)));
-			emitter.addInitializer(new Velocity(new PointZone(new Point(velocity * Math.cos(rot), velocity * Math.sin(rot) + 10))));
-			
-			emitter.addAction(new Move());
-			emitter.addInitializer(new Lifetime(3, 4));
-			emitter.addAction(new Age());
-			emitter.addAction(new ColorChange(0xFFFFFFFF, 0x00FFFFFF));
-			
-			emitter.start();
-
-			renderer.addEmitter(emitter);
+			var useEmitter:Boolean = true;
+			var emitterRate:int = 12;
+			var minLife:Number = 3;
+			var maxLife:Number = 4;
+			createExplosion = true;
 			
 			if (params)
 			{
-				if (params["velocity"])
+				if (params["target"] != null)
+					useTarget = params["target"];
+				if (params["velocity"] != null)
 					velocity = params["velocity"];
+				if (params["useEmitter"] != null)
+					useEmitter = params["useEmitter"];
+				if (params["emitterRate"] != null)
+					emitterRate = params["emitterRate"];
+				if (params["minLife"] != null)
+					emitterRate = params["minLife"];
+				if (params["maxLife"] != null)
+					emitterRate = params["maxLife"];
+				if (params["explode"] != null)
+					createExplosion = params["explode"];
+			}
+			
+			if (useTarget)
+			{
+				tgt = new MissileTarget();
+				tgt.x = target.x;
+				tgt.y = target.y;
+				cg.game.c_main.addChild(tgt);
+			}
+
+			mc.rotation = getAngle(origin.x, origin.y, target.x, target.y);
+			rot = degreesToRadians(mc.rotation);
+			
+			dist = prevDist = getDistance(origin.x, origin.y, target.x, target.y);
+
+			if (useEmitter)
+			{
+				emitter = new Emitter2D();
+				emitter.counter = new Steady(emitterRate);
+				emitter.addInitializer(new ImageClass(ParticleSmokeTrail));
+				emitter.addInitializer(new Position(new DiscZone(new Point(mc.x, mc.y), 5, 3)));
+				emitter.addInitializer(new Velocity(new PointZone(new Point(velocity * Math.cos(rot), velocity * Math.sin(rot) + 10))));
+				
+				emitter.addAction(new Move());
+				emitter.addInitializer(new Lifetime(minLife, maxLife));
+				emitter.addAction(new Age());
+				emitter.addAction(new ColorChange(0xFFFFFFFF, 0x00FFFFFF));
+				
+				emitter.start();
+
+				renderer.addEmitter(emitter);
 			}
 		}
 		
-		public function step(manExpl:ManagerExplosion):Boolean
+		public function step():Boolean
 		{
-			if (!readyToDestroy && !markedForDestroy)
+			if (!markedForDestroy)
 			{
 				mc.x += velocity * Math.cos(rot);
 				mc.y += velocity * Math.sin(rot);
 				
-				emitter.x = mc.x - 22 * Math.cos(rot);
-				emitter.y = mc.y + 50;
-				
-				var dist:Number = 99999;
-				var distToExplosion:Number = 99999;
-				var expl:ABST_Explosion;
-				
-				for (var i:int = manExpl.objArr.length - 1; i >= 0; i--)
+				if (emitter)
 				{
-					if (type == manExpl.objArr[i].type) continue;
-					
-					dist = getDistance(mc.x, mc.y, manExpl.objArr[i].mc.x, manExpl.objArr[i].mc.y);
-					if (dist < distToExplosion)
-						distToExplosion = dist;
+					emitter.x = mc.x - 22 * Math.cos(rot);
+					emitter.y = mc.y + 50;
 				}
 				
+				dist = getDistance(mc.x, mc.y, target.x, target.y);
+				
 				// TODO replace magic numbers
-				if ((Math.abs(mc.x) > 500 || distToExplosion < 25 || getDistance(mc.x, mc.y, target.x, target.y) < 15))		// TODO check if moving away from target, if so explode
+				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist))
 					destroy();
+				else
+					prevDist = dist;
 			}
 			
 			return readyToDestroy;
@@ -120,30 +148,48 @@ package deltabattery
 		
 		public function destroy():void
 		{
+			if (markedForDestroy) return;
+			
 			markedForDestroy = true;
 			
 			mc.visible = false;
-
+ 
 			timerKill = new Timer(4000);
 			timerKill.addEventListener(TimerEvent.TIMER, cleanup);
 			timerKill.start();
 			
-			emitter.counter = new Steady();
+			if (emitter)
+				emitter.counter = new Steady();
 			
-			cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type);
-			cg.game.c_main.removeChild(tgt);
-			tgt.visible = false;
-			tgt = null;
+			if (createExplosion)
+				cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type);
+	
+			if (tgt)
+			{
+				cg.game.c_main.removeChild(tgt);
+				tgt.visible = false;
+				tgt = null;
+			}
+			
+			// TEMPORARY
+			if (type == 0)
+				cg.addMoney(100 + 50 * (velocity / 6));
 		}
 		
 		public function cleanup(e:TimerEvent):void
 		{
-			timerKill.removeEventListener(TimerEvent.TIMER, cleanup);
-			timerKill = null;
+			if (timerKill)
+			{
+				timerKill.removeEventListener(TimerEvent.TIMER, cleanup);
+				timerKill = null;
+			}
 
-			emitter.stop();
-			renderer.removeEmitter(emitter);
-			emitter = null;
+			if (emitter)
+			{
+				emitter.stop();
+				renderer.removeEmitter(emitter);
+				emitter = null;
+			}
 			
 			readyToDestroy = true;
 		}
