@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'8/31/2014'</value>
+      <value>'9/3/2014'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -33,11 +33,16 @@
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\src</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Flash\org</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
     <library-path append="true">
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ContainerMenu.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Game.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ExplosionStandard.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileTarget.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\RightClickListener.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>

@@ -9,7 +9,7 @@ package deltabattery
 	 * @author Alexander Huynh
 	 */
 	//[Frame(factoryClass = "Preloader")]
-	[SWF(width="800", height="500", backgroundColor="#EAEAEA", frameRate="30")]
+	[SWF(width="800", height="500", backgroundColor="#666666", frameRate="30")]
 	public class Main extends Sprite 
 	{
 		public function Main():void 
