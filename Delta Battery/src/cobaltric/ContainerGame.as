@@ -1,10 +1,11 @@
 ﻿package cobaltric
 {	
-	import deltabattery.ABST_Manager;
-	import deltabattery.ManagerBullet;
-	import deltabattery.ManagerMissile;
-	import deltabattery.ManagerExplosion;
-	import deltabattery.ManagerWave;
+	import deltabattery.managers.ABST_Manager;
+	import deltabattery.managers.AutoPlayer;
+	import deltabattery.managers.ManagerBullet;
+	import deltabattery.managers.ManagerMissile;
+	import deltabattery.managers.ManagerExplosion;
+	import deltabattery.managers.ManagerWave;
 	import deltabattery.Turret;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -12,18 +13,18 @@
 	import org.flintparticles.twoD.renderers.DisplayObjectRenderer;
 	
 	/**
-	 * ...
+	 * Primary game container and controller
 	 * @author Alexander Huynh
 	 */
 	public class ContainerGame extends ABST_Container
 	{		
-		public var game:Game;
-		public var turret:Turret;
+		public var game:Game;				// the Game SWC, containing all the base assets
+		public var turret:Turret;			// the player's turret
 
-		public var renderer:DisplayObjectRenderer;
+		public var renderer:DisplayObjectRenderer;		// partical renderer
 		
-		private var managers:Array;
-		private var manLen:int;
+		private var managers:Array;			// array of all managers
+		private var manLen:int;				// length of the manager array
 		public var manWave:ManagerWave;
 		public var manMiss:ManagerMissile;
 		public var manBull:ManagerBullet;
@@ -31,9 +32,13 @@
 		
 		public var money:int;				// actual money
 		private var moneyDisplay:int;		// displayed money
-		private const MONEY_DELTA:int = 11;
+		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
-		private var intermission:int;
+		private var intermission:int;		// counter for in-between waves
+		
+		private var ai:AutoPlayer;			// TEMP AutoPlayer
+		public var mx:Number = 0;
+		public var my:Number = 0;
 	
 		public function ContainerGame()
 		{
@@ -45,34 +50,42 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.REMOVED_FROM_STAGE, destroy);
-			addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+			//addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 			
 			stage.showDefaultContextMenu = false;
-			
-			manMiss = new ManagerMissile(this);
-			manBull = new ManagerBullet(this, manMiss);
-			manExpl = new ManagerExplosion(this, manMiss);
-			manWave = new ManagerWave(this, manMiss);
-			
-			managers = [manWave, manMiss, manBull, manExpl];
-			manLen = managers.length - 1;
 	
+			// setup the Game SWC
 			game = new Game();
 			addChild(game);
 			game.x -= 15;
 			game.mc_gui.tf_status.text = "Wave 1 begun!";
 			game.mc_gui.mc_statusHuge.visible = false;
 			
+			// initialize managers
+			manMiss = new ManagerMissile(this);
+			manBull = new ManagerBullet(this, manMiss);
+			manExpl = new ManagerExplosion(this, manMiss);
+			manWave = new ManagerWave(this, manMiss);
+			managers = [manWave, manMiss, manBull, manExpl];
+			manLen = managers.length - 1;
+			
+			// setup the Turret
 			turret = new Turret(this, game.mc_turret);
 			turret.updateMouse();
 			
+			// setup the particles
 			renderer = new DisplayObjectRenderer();
 			game.c_main.addChild(renderer);
 			renderer.x += 380;		// TODO fix
 			renderer.y -= 190;
+			
+			// setup autoplayer
+			ai = new AutoPlayer(this, manMiss);
+			
+			game.soundBox.gotoAndPlay("first");
 		}
 		
-		
+		// called by Engine every frame
 		override public function step():Boolean
 		{
 			if (intermission > 0)
@@ -83,17 +96,23 @@
 					game.mc_gui.tf_status.text = "Wave " + (manWave.wave) + " begin!";	
 					game.mc_gui.mc_statusHuge.visible = false;
 				}
-				return false;
+				return manWave.wave == 3;
 			}
 			
 			turret.step();
+			// update each manager
 			for (var i:int = manLen; i >= 0; i--)
 				managers[i].step();
 			updateMoney();
 			
+			ai.step();
+			
 			return false;
 		}
 		
+		/**	End the current wave, enabling the shop, etc.
+		 * 
+		 */
 		public function endWave():void
 		{
 			game.mc_gui.tf_wave.text = manWave.wave;
@@ -102,8 +121,12 @@
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 120;
+			
+			if (manWave.wave == 2)
+				game.soundBox.gotoAndPlay("second");
 		}
 		
+		// updates the displayed money to match the actual money
 		private function updateMoney():void
 		{
 			if (moneyDisplay == money)
@@ -117,6 +140,7 @@
 			game.mc_gui.tf_money.text = moneyDisplay;
 		}
 		
+		// changes the money by amount
 		public function addMoney(amount:int):Boolean
 		{
 			if (money + amount < 0)
@@ -125,9 +149,19 @@
 			return true;
 		}
 		
+		// called when the mouse is moved
 		protected function updateMouse(e:MouseEvent):void
 		{
-			turret.updateMouse();
+			mx = mouseX;
+			my = mouseY;
+			turret.updateMouse();			
+		}
+		
+		public function overrideMouse(tgtX:Number, tgtY:Number):void
+		{
+			mx = tgtX;
+			my = tgtY;
+			turret.updateMouse();	
 		}
 		
 		protected function getRand(min:Number = 0, max:Number = 1):Number   

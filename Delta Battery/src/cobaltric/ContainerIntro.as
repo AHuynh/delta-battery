@@ -1,9 +1,8 @@
 ﻿package cobaltric
 {
 	import flash.events.MouseEvent;
-	/**
-	 * ...
-	 * @author Alexander Huynh
+	/**	Main menu screen
+	 * 	@author Alexander Huynh
 	 */
 	public class ContainerIntro extends ABST_Container
 	{
@@ -42,6 +41,8 @@
 			menu.btn_level2.removeEventListener(MouseEvent.CLICK, onLevel);
 			
 			completed = true;
+			
+			// -- TODO have Engine utilize lvl
 		}
 	}
 }

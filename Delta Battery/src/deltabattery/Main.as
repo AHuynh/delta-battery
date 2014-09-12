@@ -5,7 +5,7 @@ package deltabattery
 	import cobaltric.Engine;
 
 	/**
-	 * ...
+	 * Initialization and entry point
 	 * @author Alexander Huynh
 	 */
 	//[Frame(factoryClass = "Preloader")]

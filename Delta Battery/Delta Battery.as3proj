@@ -53,11 +53,11 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="ContainerMenu.swc" />
     <element path="BulletStandard.swc" />
     <element path="ExplosionStandard.swc" />
     <element path="MissileStandard.swc" />
     <element path="MissileTarget.swc" />
+    <element path="ContainerMenu.swc" />
     <element path="Game.swc" />
   </libraryPaths>
   <!-- External Libraries -->
@@ -74,7 +74,9 @@
   </intrinsics>
   <!-- Assets to embed into the output SWF -->
   <library>
-    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
+    <asset path="src\sounds\SFX_missileNormFire.wav" update="..\Flash\SFX_missileNormFire.wav" />
+    <asset path="src\sounds\SFX_explodeNorm.wav" update="..\Flash\SFX_explodeNorm.wav" />
+    <asset path="src\sounds\SFX_chaingunNorm.wav" update="..\Flash\SFX_chaingunNorm.wav" />
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

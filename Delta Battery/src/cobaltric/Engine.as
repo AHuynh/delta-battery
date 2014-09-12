@@ -30,7 +30,6 @@
 		
 		public function step(e:Event):void
 		{
-			trace(container);
 			if (!container.step())
 				return;
 				
@@ -57,8 +56,6 @@
 			addChild(container);
 			container.x = stage.width * .5;
 			container.y = stage.height * .5;
-			
-			trace("! " + container);
 		}
 	}
 	

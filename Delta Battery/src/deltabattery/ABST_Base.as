@@ -1,7 +1,6 @@
 package deltabattery 
 {
-	/**
-	 * Contains utility functions
+	/**	Contains utility functions
 	 * @author Alexander Huynh
 	 */
 	public class ABST_Base 

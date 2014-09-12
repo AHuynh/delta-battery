@@ -1,8 +1,7 @@
 ﻿package cobaltric
 {
-	/**
-	 * ...
-	 * @author Alexander Huynh
+	/**	The victory/defeat screen
+	 * 	@author Alexander Huynh
 	 */
 	public class ContainerOutro extends ABST_Container
 	{

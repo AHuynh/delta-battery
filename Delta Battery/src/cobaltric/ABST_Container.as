@@ -2,9 +2,9 @@
 {
 	import flash.display.MovieClip;
 	
-	/**
-	 * ABSTRACT CLASS - Do not instantiate
-	 * @author Alexander Huynh
+	/**	An Engine-steppable container
+	 * 	ABSTRACT CLASS - do not instantiate
+	 * 	@author Alexander Huynh
 	 */
 	public class ABST_Container extends MovieClip
 	{
