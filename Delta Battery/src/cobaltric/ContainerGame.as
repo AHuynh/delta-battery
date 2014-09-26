@@ -2,6 +2,7 @@
 {	
 	import deltabattery.managers.ABST_Manager;
 	import deltabattery.managers.AutoPlayer;
+	import deltabattery.managers.ManagerArtillery;
 	import deltabattery.managers.ManagerBullet;
 	import deltabattery.managers.ManagerMissile;
 	import deltabattery.managers.ManagerExplosion;
@@ -27,6 +28,7 @@
 		private var manLen:int;				// length of the manager array
 		public var manWave:ManagerWave;
 		public var manMiss:ManagerMissile;
+		public var manArty:ManagerArtillery;
 		public var manBull:ManagerBullet;
 		public var manExpl:ManagerExplosion;
 		
@@ -50,7 +52,7 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.REMOVED_FROM_STAGE, destroy);
-			//addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+			addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 			
 			stage.showDefaultContextMenu = false;
 	
@@ -63,10 +65,11 @@
 			
 			// initialize managers
 			manMiss = new ManagerMissile(this);
-			manBull = new ManagerBullet(this, manMiss);
-			manExpl = new ManagerExplosion(this, manMiss);
-			manWave = new ManagerWave(this, manMiss);
-			managers = [manWave, manMiss, manBull, manExpl];
+			manArty = new ManagerArtillery(this);
+			manBull = new ManagerBullet(this);
+			manExpl = new ManagerExplosion(this);
+			manWave = new ManagerWave(this);
+			managers = [manWave, manArty, manMiss, manBull, manExpl];
 			manLen = managers.length - 1;
 			
 			// setup the Turret
@@ -80,9 +83,9 @@
 			renderer.y -= 190;
 			
 			// setup autoplayer
-			ai = new AutoPlayer(this, manMiss);
+			//ai = new AutoPlayer(this, manMiss);
 			
-			game.soundBox.gotoAndPlay("first");
+			//game.soundBox.gotoAndPlay("first");
 		}
 		
 		// called by Engine every frame
@@ -105,7 +108,7 @@
 				managers[i].step();
 			updateMoney();
 			
-			ai.step();
+			//ai.step();
 			
 			return false;
 		}
@@ -122,8 +125,8 @@
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 120;
 			
-			if (manWave.wave == 2)
-				game.soundBox.gotoAndPlay("second");
+			//if (manWave.wave == 2)
+				//game.soundBox.gotoAndPlay("second");
 		}
 		
 		// updates the displayed money to match the actual money

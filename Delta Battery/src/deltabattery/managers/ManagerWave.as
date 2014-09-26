@@ -9,6 +9,7 @@ package deltabattery.managers {
 	public class ManagerWave extends ABST_Manager 
 	{
 		private var manMiss:ManagerMissile;
+		private var manArty:ManagerArtillery;
 		public var wave:int;
 
 		public var waveActive:Boolean;
@@ -19,21 +20,22 @@ package deltabattery.managers {
 		private var spawnMax:int;		// maximum counter value
 		private var spawnRandom:Number;
 		
-		private var spawnX:int = 420;
+		private var spawnX:int = -420;
 		private var spawnY:int = -200;
 		private var spawnVarianceX:int = 20;
 		private var spawnVarianceY:int = 50;
 		
-		private var targetX:int = -370;
+		private var targetX:int = 370;
 		private var targetY:int = 230;
 		private var targetVarianceX:int = 100;
 		private var targetVarianceY:int = 10;
 		
-		public function ManagerWave(_cg:ContainerGame, _manMiss:ManagerMissile, _wave:int = 1)
+		public function ManagerWave(_cg:ContainerGame, _wave:int = 1)
 		{
 			super(_cg);
 			
-			manMiss = _manMiss;
+			manMiss = cg.manMiss;
+			manArty = cg.manArty;
 			wave = _wave;
 			
 			// TODO change later
@@ -63,7 +65,7 @@ package deltabattery.managers {
 					spawnMax = -15;
 					spawnRandom = .3;
 		
-					spawnX = 400;
+					spawnX = -400;
 					spawnY = -240;
 					spawnVarianceX = 300;
 				break;
@@ -97,6 +99,13 @@ package deltabattery.managers {
 													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
 														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
 				//manMiss.spawnProjectile("standard", new Point(spawnX, spawnY), new Point(targetX, targetY));
+				
+				manArty.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
+															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY) + 100),
+													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
+														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
+				//manArty.spawnProjectile("standard", new Point(0, 0), new Point(targetX, targetY));
+				
 				spawnDelay = spawnMin;
 				enemiesRemaining--;
 				cg.game.mc_gui.tf_status.text = enemiesRemaining + " missiles left."

@@ -1,6 +1,7 @@
 package deltabattery.managers
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.projectiles.ABST_Artillery;
 	import deltabattery.projectiles.ABST_Bullet;
 	import deltabattery.projectiles.ABST_Missile;
 	import deltabattery.projectiles.Bullet_Chain;
@@ -14,17 +15,20 @@ package deltabattery.managers
 	public class ManagerBullet extends ABST_Manager 
 	{	
 		private var manMiss:ManagerMissile;
+		private var manArty:ManagerArtillery;
 		
-		public function ManagerBullet(_cg:ContainerGame, _manMiss:ManagerMissile) 
+		public function ManagerBullet(_cg:ContainerGame) 
 		{
-			manMiss = _manMiss;
 			super(_cg);
+			manMiss = cg.manMiss;
+			manArty = cg.manArty;
 		}
 		
 		override public function step():void
 		{
 			var bull:ABST_Bullet;
 			var miss:ABST_Missile;
+			var arty:ABST_Artillery;
 			var j:int;
 			for (var i:int = objArr.length - 1; i >= 0; i--)
 			{
@@ -46,6 +50,13 @@ package deltabattery.managers
 
 						if (getDistance(bull.mc.x, bull.mc.y, miss.mc.x, miss.mc.y) < 15)		// TODO replace magic number
 							miss.destroy();
+					}
+					for (j = manArty.objArr.length - 1; j >= 0; j--)
+					{
+						arty = manArty.objArr[j]
+
+						if (getDistance(bull.mc.x, bull.mc.y, arty.mc.x, arty.mc.y) < 15)		// TODO replace magic number
+							arty.destroy();
 					}
 				}
 			}

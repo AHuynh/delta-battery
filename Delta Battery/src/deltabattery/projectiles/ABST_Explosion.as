@@ -1,5 +1,6 @@
 package deltabattery.projectiles {
 	import deltabattery.ABST_Base;
+	import deltabattery.managers.ManagerArtillery;
 	import deltabattery.managers.ManagerMissile;
 	import deltabattery.SoundPlayer;
 	import flash.display.MovieClip;
@@ -40,10 +41,9 @@ package deltabattery.projectiles {
 			SoundPlayer.play("sfx_explosion");
 		}
 		
-		public function step(manMiss:ManagerMissile):Boolean
+		public function step(manMiss:ManagerMissile, manArty:ManagerArtillery):Boolean
 		{
-			var miss:ABST_Missile;
-			
+			var miss:ABST_Missile;			
 			for (var i:int = manMiss.objArr.length - 1; i >= 0; i--)
 			{
 				miss = manMiss.objArr[i]
@@ -51,6 +51,16 @@ package deltabattery.projectiles {
 
 				if (getDistance(mc.x, mc.y, miss.mc.x, miss.mc.y) < range)
 					miss.destroy();
+			}
+			
+			var arty:ABST_Artillery;			
+			for (var i:int = manArty.objArr.length - 1; i >= 0; i--)
+			{
+				arty = manArty.objArr[i]
+				if (type == arty.type) continue;
+
+				if (getDistance(mc.x, mc.y, arty.mc.x, arty.mc.y) < range)
+					arty.destroy();
 			}
 				
 			if (mc.currentFrame != mc.totalFrames) return false;

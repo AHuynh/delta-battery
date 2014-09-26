@@ -59,6 +59,7 @@
     <element path="MissileTarget.swc" />
     <element path="ContainerMenu.swc" />
     <element path="Game.swc" />
+    <element path="ArtilleryStandard.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
