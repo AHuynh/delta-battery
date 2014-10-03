@@ -50,7 +50,7 @@ package deltabattery.managers {
 			switch (wave)
 			{
 				case 1:
-					enemiesRemaining = 11;
+					enemiesRemaining = 5;
 					
 					spawnDelay = 30 * 4;		// 2 seconds initial delay
 					spawnMin = 30;				// 1 second minimum
@@ -58,6 +58,14 @@ package deltabattery.managers {
 					spawnRandom = .98;
 				break;
 				case 2:
+					enemiesRemaining = 14;
+					
+					spawnDelay = 30 * 4;		// 2 seconds initial delay
+					spawnMin = 20;				// .67 second minimum
+					spawnMax = 30 * -1;			// 1 second maximum
+					spawnRandom = .98;
+				break;
+				case 999:		// crazy demo
 					enemiesRemaining = 60;
 					
 					spawnDelay = 30 * 4;
@@ -94,21 +102,26 @@ package deltabattery.managers {
 			spawnDelay--;
 			if (spawnDelay <= 0 && Math.random() > spawnRandom)
 			{
-				manMiss.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
-															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
-													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
-														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
-				//manMiss.spawnProjectile("standard", new Point(spawnX, spawnY), new Point(targetX, targetY));
-				
+				if (wave > 1 && Math.random() > .6)		// TODO remove magic number .6
+				{
 				manArty.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
 															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY) + 100),
 													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
 														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
-				//manArty.spawnProjectile("standard", new Point(0, 0), new Point(targetX, targetY));
+				
+				}
+															  
+				else
+				{
+				manMiss.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
+															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
+													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
+														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
+				}											  
 				
 				spawnDelay = spawnMin;
 				enemiesRemaining--;
-				cg.game.mc_gui.tf_status.text = enemiesRemaining + " missiles left."
+				cg.game.mc_gui.tf_status.text = enemiesRemaining + " projectile(s) left."
 			}
 			if (spawnDelay < spawnMax)
 				spawnDelay = spawnMin;

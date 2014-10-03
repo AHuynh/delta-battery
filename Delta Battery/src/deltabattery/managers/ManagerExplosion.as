@@ -1,6 +1,7 @@
 package deltabattery.managers {
 	import cobaltric.ContainerGame;
 	import deltabattery.projectiles.ABST_Explosion;
+	import deltabattery.projectiles.Explosion_Standard;
 	import flash.geom.Point;
 
 	/**	Manager for a generic explosion
@@ -38,7 +39,8 @@ package deltabattery.managers {
 		
 		public function spawnExplosion(origin:Point, type:int = 0):void
 		{
-			var m:ABST_Explosion = new ABST_Explosion(cg.game.c_main, new ExplosionStandard(), origin, type);
+			// TODO switch case for different explosions?
+			var m:ABST_Explosion = new Explosion_Standard(cg.game.c_main, new ExplosionStandard(), origin, type);
 			objArr.push(m);
 			cg.game.c_main.addChild(m.mc);
 			

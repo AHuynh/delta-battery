@@ -2,6 +2,7 @@ package deltabattery.managers
 {
 	import cobaltric.ContainerGame;
 	import deltabattery.projectiles.ABST_Missile;
+	import deltabattery.projectiles.Missile_Standard;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
@@ -46,7 +47,7 @@ package deltabattery.managers
 			switch (proj)
 			{
 				default:		// "standard"
-					addObject(new ABST_Missile(cg, new MissileStandard(), origin, target, type, params));
+					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));
 			}
 		}
 		
