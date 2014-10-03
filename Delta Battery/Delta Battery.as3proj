@@ -16,7 +16,6 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="..\Flash\org" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -54,12 +53,14 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="BulletStandard.swc" />
-    <element path="ExplosionStandard.swc" />
     <element path="MissileStandard.swc" />
     <element path="MissileTarget.swc" />
     <element path="ContainerMenu.swc" />
-    <element path="Game.swc" />
     <element path="ArtilleryStandard.swc" />
+    <element path="ParticleSmoke01.swc" />
+    <element path="Game.swc" />
+    <element path="ExplosionStandard.swc" />
+    <element path="ParticleArtillery.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

@@ -46,7 +46,7 @@ package deltabattery.managers
 			switch (proj)
 			{
 				default:		// "standard"
-					addObject(new ABST_Artillery(cg, new ArtilleryStandard(), cg.renderer, origin, target, type, params));
+					addObject(new ABST_Artillery(cg, new ArtilleryStandard(), origin, target, type, params));
 			}
 		}
 		

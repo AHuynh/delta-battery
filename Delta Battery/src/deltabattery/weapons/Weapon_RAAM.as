@@ -16,7 +16,10 @@ package deltabattery.weapons
 		{
 			super(_cg, _slot);
 			name = "RAAM";
+			
 			projectileParams["velocity"] = 18;
+			projectileParams["partInterval"] = 2;
+			
 			ammo = ammoMax = 60;
 			cooldownReset = 25;
 			

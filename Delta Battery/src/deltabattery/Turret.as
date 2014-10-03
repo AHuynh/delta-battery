@@ -75,7 +75,13 @@ package deltabattery
 		{
 			var newAmmo:int = weaponPrimary[activePrimary].fire();
 			if (newAmmo != -1)
-				cg.game.mc_gui.tf_ammoP.text = newAmmo;
+			{
+				cg.game.mc_gui.tf_ammoP.text = newAmmo
+				for (var i:int = 0; i < int(getRand(2, 4)) + 2; i++)
+				{
+					cg.manPart.spawnParticle("", new Point(turret.x + getRand(-5, 5), turret.y + getRand(-5, 5)), 0, getRand(0, 1), getRand(0, 1), .05);
+				}
+			}
 		}
 		
 		// TEMP

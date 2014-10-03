@@ -1,22 +1,11 @@
-package deltabattery.projectiles {
+package deltabattery.projectiles
+{
 	import cobaltric.ContainerGame;
 	import deltabattery.ABST_Base;
 	import flash.display.MovieClip;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
-	import org.flintparticles.common.actions.Age;
-	import org.flintparticles.common.actions.ColorChange;
-	import org.flintparticles.common.counters.Steady;
-	import org.flintparticles.common.initializers.ImageClass;
-	import org.flintparticles.common.initializers.Lifetime;
-	import org.flintparticles.twoD.actions.Move;
-	import org.flintparticles.twoD.emitters.Emitter2D;
-	import org.flintparticles.twoD.initializers.Position;
-	import org.flintparticles.twoD.initializers.Velocity;
-	import org.flintparticles.twoD.renderers.DisplayObjectRenderer;
-	import org.flintparticles.twoD.zones.DiscZone;
-	import org.flintparticles.twoD.zones.PointZone;
 	
 	/**
 	 * A generic, gravity-ignoring projectile
@@ -32,14 +21,16 @@ package deltabattery.projectiles {
 		public var origin:Point;
 		protected var target:Point;
 		
+		protected var partEnabled:Boolean = true;
+		protected var partCount:int = 5;				// particle timer
+		protected var partInterval:int = partCount;		// frames inbetween particle spawn
+		protected var partType:String = "";				// type of particle
+		
 		protected var dist:Number;
 		protected var prevDist:Number;
 
 		public var velocity:Number;
 		public var rot:Number;
-		
-		protected var renderer:DisplayObjectRenderer;
-		protected var emitter:Emitter2D;
 		
 		protected var createExplosion:Boolean;
 		protected var markedForDestroy:Boolean;
@@ -48,12 +39,11 @@ package deltabattery.projectiles {
 		protected var timerKill:Timer;
 		protected var tgt:MissileTarget;
 		
-		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _dor:DisplayObjectRenderer,
-									 _origin:Point, _target:Point, _type:int = 0, params:Object = null) 
+		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _origin:Point,
+								     _target:Point, _type:int = 0, params:Object = null) 
 		{
 			cg = _cg;
 			mc = _mc;		
-			renderer = _dor;
 			origin = _origin;
 			target = _target;
 			
@@ -79,12 +69,12 @@ package deltabattery.projectiles {
 					velocity = params["velocity"];
 				if (params["useEmitter"] != null)
 					useEmitter = params["useEmitter"];
-				if (params["emitterRate"] != null)
-					emitterRate = params["emitterRate"];
-				if (params["minLife"] != null)
+				if (params["partInterval"] != null)
+					partInterval = params["partInterval"];
+				/*if (params["minLife"] != null)
 					emitterRate = params["minLife"];
 				if (params["maxLife"] != null)
-					emitterRate = params["maxLife"];
+					emitterRate = params["maxLife"];*/
 				if (params["explode"] != null)
 					createExplosion = params["explode"];
 			}
@@ -101,39 +91,20 @@ package deltabattery.projectiles {
 			rot = degreesToRadians(mc.rotation);
 			
 			dist = prevDist = getDistance(origin.x, origin.y, target.x, target.y);
-
-			if (useEmitter)
-			{
-				emitter = new Emitter2D();
-				emitter.counter = new Steady(emitterRate);
-				emitter.addInitializer(new ImageClass(ParticleSmokeTrail));
-				emitter.addInitializer(new Position(new DiscZone(new Point(mc.x, mc.y), 5, 3)));
-				emitter.addInitializer(new Velocity(new PointZone(new Point(velocity * Math.cos(rot), velocity * Math.sin(rot) + 10))));
-				
-				emitter.addAction(new Move());
-				emitter.addInitializer(new Lifetime(minLife, maxLife));
-				emitter.addAction(new Age());
-				emitter.addAction(new ColorChange(0xFFFFFFFF, 0x00FFFFFF));
-				
-				emitter.start();
-
-				renderer.addEmitter(emitter);
-			}
 		}
 		
 		public function step():Boolean
 		{
 			if (!markedForDestroy)
 			{
-				mc.x += velocity * Math.cos(rot);
-				mc.y += velocity * Math.sin(rot);
+				var dx:Number = velocity * Math.cos(rot);
+				var dy:Number = velocity * Math.sin(rot);
 				
-				if (emitter)
-				{
-					emitter.x = mc.x - 22 * Math.cos(rot);
-					emitter.y = mc.y + 50;
-				}
-				
+				mc.x += dx;
+				mc.y += dy;
+
+				updateParticle(dx, dy);
+			
 				dist = getDistance(mc.x, mc.y, target.x, target.y);
 				
 				// TODO replace magic numbers
@@ -144,6 +115,15 @@ package deltabattery.projectiles {
 			}
 			
 			return readyToDestroy;
+		}
+		
+		protected function updateParticle(dx:Number, dy:Number):void
+		{
+			if (partEnabled && --partCount == 0)
+			{
+				partCount = partInterval;
+				cg.manPart.spawnParticle(partType, new Point(mc.x, mc.y), 0, dx * .1, dy * .10, .05);
+			}
 		}
 		
 		public function destroy():void
@@ -157,9 +137,6 @@ package deltabattery.projectiles {
 			timerKill = new Timer(4000);
 			timerKill.addEventListener(TimerEvent.TIMER, cleanup);
 			timerKill.start();
-			
-			if (emitter)
-				emitter.counter = new Steady();
 			
 			if (createExplosion)
 				cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type);
@@ -184,12 +161,7 @@ package deltabattery.projectiles {
 				timerKill = null;
 			}
 
-			if (emitter)
-			{
-				emitter.stop();
-				renderer.removeEmitter(emitter);
-				emitter = null;
-			}
+			// TODO stop emittung
 			
 			readyToDestroy = true;
 		}

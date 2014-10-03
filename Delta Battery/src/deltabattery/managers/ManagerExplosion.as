@@ -41,6 +41,11 @@ package deltabattery.managers {
 			var m:ABST_Explosion = new ABST_Explosion(cg.game.c_main, new ExplosionStandard(), origin, type);
 			objArr.push(m);
 			cg.game.c_main.addChild(m.mc);
+			
+			for (var i:int = 0; i < int(getRand(2, 4)) + 2; i++)
+			{
+				cg.manPart.spawnParticle("", new Point(origin.x + getRand(-5, 5), origin.y + getRand(-5, 5)), 0, getRand(-.5, .5), getRand(-.5, .5), .05);
+			}
 		}
 	}
 }

@@ -6,12 +6,12 @@
 	import deltabattery.managers.ManagerBullet;
 	import deltabattery.managers.ManagerMissile;
 	import deltabattery.managers.ManagerExplosion;
+	import deltabattery.managers.ManagerParticle;
 	import deltabattery.managers.ManagerWave;
 	import deltabattery.Turret;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import org.flintparticles.twoD.renderers.DisplayObjectRenderer;
 	
 	/**
 	 * Primary game container and controller
@@ -21,11 +21,10 @@
 	{		
 		public var game:Game;				// the Game SWC, containing all the base assets
 		public var turret:Turret;			// the player's turret
-
-		public var renderer:DisplayObjectRenderer;		// partical renderer
 		
 		private var managers:Array;			// array of all managers
 		private var manLen:int;				// length of the manager array
+		public var manPart:ManagerParticle;
 		public var manWave:ManagerWave;
 		public var manMiss:ManagerMissile;
 		public var manArty:ManagerArtillery;
@@ -64,23 +63,18 @@
 			game.mc_gui.mc_statusHuge.visible = false;
 			
 			// initialize managers
+			manPart = new ManagerParticle(this);
 			manMiss = new ManagerMissile(this);
 			manArty = new ManagerArtillery(this);
 			manBull = new ManagerBullet(this);
 			manExpl = new ManagerExplosion(this);
 			manWave = new ManagerWave(this);
-			managers = [manWave, manArty, manMiss, manBull, manExpl];
+			managers = [manPart, manWave, manArty, manMiss, manBull, manExpl];
 			manLen = managers.length - 1;
 			
 			// setup the Turret
 			turret = new Turret(this, game.mc_turret);
 			turret.updateMouse();
-			
-			// setup the particles
-			renderer = new DisplayObjectRenderer();
-			game.c_main.addChild(renderer);
-			renderer.x += 380;		// TODO fix
-			renderer.y -= 190;
 			
 			// setup autoplayer
 			//ai = new AutoPlayer(this, manMiss);

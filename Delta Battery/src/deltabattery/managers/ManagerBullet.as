@@ -76,7 +76,7 @@ package deltabattery.managers
 			switch (proj)
 			{
 				default:		// "chain"
-					addObject(new Bullet_Chain(cg, new BulletStandard(), cg.renderer, origin, target, type, life, params));
+					addObject(new Bullet_Chain(cg, new BulletStandard(), origin, target, type, life, params));
 			}
 		}
 		

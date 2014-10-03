@@ -3,7 +3,6 @@ package deltabattery.projectiles
 	import cobaltric.ContainerGame;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
-	import org.flintparticles.twoD.renderers.DisplayObjectRenderer;
 	
 	/**
 	 * ...
@@ -15,21 +14,22 @@ package deltabattery.projectiles
 		protected var dx:Number;
 		protected var dy:Number;
 		
-		public function ABST_Artillery(_cg:ContainerGame, _mc:MovieClip, _dor:DisplayObjectRenderer, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
+		public function ABST_Artillery(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
 			params = new Object();
 			params["velocity"] = 2;
 			
-			super(_cg, _mc, _dor, _origin, _target, _type, params);
+			super(_cg, _mc, _origin, _target, _type, params);
 			
 			// override super
-			mc.rotation = -45;		// TODO calculate
+			dx = velocity * Math.cos(rot) * 2;
+			dy = -velocity * Math.sin(rot) * 1.5;
+			
+			mc.rotation = Math.atan2(dy, dx);
 			rot = degreesToRadians(mc.rotation);
 			
-			dx = velocity * Math.cos(rot) * 2;
-			dy = velocity * Math.sin(rot) * 1.5;
-			
-			trace("Artillery: " + Math.round(dx) + " " + Math.round(dy));
+			partType = "artillery";
+			partCount = 2;
 		}
 		
 		override public function step():Boolean
@@ -39,16 +39,15 @@ package deltabattery.projectiles
 				mc.x += dx;
 				mc.y += dy;
 				
-				dy += gravity;
+				mc.rotation = Math.atan2(dy, dx) * 100;		// ???
+				rot = degreesToRadians(mc.rotation);
 				
-				if (emitter)
-				{
-					emitter.x = mc.x - 22 * Math.cos(rot);
-					emitter.y = mc.y - 200;
-				}
+				dy += gravity;
 				
 				if (Math.abs(mc.x) > 800)
 					destroy();
+					
+				updateParticle(dx, dy);
 				
 				/*dist = getDistance(mc.x, mc.y, target.x, target.y);
 				
@@ -60,6 +59,15 @@ package deltabattery.projectiles
 			}
 			
 			return readyToDestroy;
+		}
+		
+		override protected function updateParticle(dx:Number, dy:Number):void
+		{
+			if (partEnabled && --partCount == 0)
+			{
+				partCount = partInterval;
+				cg.manPart.spawnParticle(partType, new Point(mc.x, mc.y), mc.rotation * 100, dx * .1, dy * .10, .05);
+			}
 		}
 		
 	}

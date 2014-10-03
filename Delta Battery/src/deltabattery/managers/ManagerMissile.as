@@ -46,7 +46,7 @@ package deltabattery.managers
 			switch (proj)
 			{
 				default:		// "standard"
-					addObject(new ABST_Missile(cg, new MissileStandard(), cg.renderer, origin, target, type, params));
+					addObject(new ABST_Missile(cg, new MissileStandard(), origin, target, type, params));
 			}
 		}
 		

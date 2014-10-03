@@ -1,4 +1,5 @@
-package deltabattery.projectiles {
+package deltabattery.projectiles
+{
 	import deltabattery.ABST_Base;
 	import deltabattery.managers.ManagerArtillery;
 	import deltabattery.managers.ManagerMissile;
@@ -37,14 +38,17 @@ package deltabattery.projectiles {
 			mc.x = origin.x;
 			mc.y = origin.y;
 			
+			mc.rotation = getRand( -180, 180);
+			
 			range = 30;		// TODO set dynamically
 			SoundPlayer.play("sfx_explosion");
 		}
 		
 		public function step(manMiss:ManagerMissile, manArty:ManagerArtillery):Boolean
 		{
-			var miss:ABST_Missile;			
-			for (var i:int = manMiss.objArr.length - 1; i >= 0; i--)
+			var miss:ABST_Missile;	
+			var i:int;
+			for (i = manMiss.objArr.length - 1; i >= 0; i--)
 			{
 				miss = manMiss.objArr[i]
 				if (type == miss.type) continue;
@@ -54,7 +58,7 @@ package deltabattery.projectiles {
 			}
 			
 			var arty:ABST_Artillery;			
-			for (var i:int = manArty.objArr.length - 1; i >= 0; i--)
+			for (i = manArty.objArr.length - 1; i >= 0; i--)
 			{
 				arty = manArty.objArr[i]
 				if (type == arty.type) continue;
