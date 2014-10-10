@@ -7,12 +7,6 @@ package deltabattery
 	 */
 	public class SoundPlayer 
 	{
-		[Embed(source = "../sounds/SFX_chaingunNorm.wav", mimeType = "application/octet-stream")]private static var sfx_missile:Class;
-		
-		[Embed(source = "../sounds/SFX_explodeNorm.wav", mimeType = "application/octet-stream")]private static var sfx_chaingun:Class;
-		
-		[Embed(source = "../sounds/SFX_missileNormFire.wav", mimeType = "application/octet-stream")]private static var sfx_explosion:Class;
-		
 		public var sndMap:Object = new Object();
 		
 		public function SoundPlayer() 

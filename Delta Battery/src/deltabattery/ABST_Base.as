@@ -20,6 +20,12 @@ package deltabattery
 			return radians * 57.296;
 		}
 		
+		// faster than Math.abs()
+		protected function abs(x:Number):Number
+		{
+			return (x >= 0 ? x : -x);
+		}
+		
 		protected function getDistance(x1:Number, y1:Number,  x2:Number, y2:Number):Number
 		{
 			var dx:Number = x1 - x2;

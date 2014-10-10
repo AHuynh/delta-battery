@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'10/3/2014'</value>
+      <value>'10/10/2014'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -39,12 +39,12 @@
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\BulletStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileTarget.swc</path-element>
-      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ContainerMenu.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ArtilleryStandard.swc</path-element>
-      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ParticleSmoke01.swc</path-element>
-      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Game.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ExplosionStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ParticleArtillery.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ContainerMenu.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ParticleSmoke01.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Game.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>

@@ -13,7 +13,6 @@ package deltabattery.weapons
 	 */
 	public class Weapon_SAM extends ABST_Weapon 
 	{
-		[Embed(source="../../sounds/SFX_missileNormFire.wav", mimeType="application/octet-stream")]
 		private var sfx_missile:Class;
 		
 		public function Weapon_SAM(_cg:ContainerGame, _slot:int) 

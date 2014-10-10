@@ -8,6 +8,7 @@
 	import deltabattery.managers.ManagerExplosion;
 	import deltabattery.managers.ManagerParticle;
 	import deltabattery.managers.ManagerWave;
+	import deltabattery.projectiles.ABST_Missile;
 	import deltabattery.Turret;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -35,11 +36,16 @@
 		private var moneyDisplay:int;		// displayed money
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
+		public var cityHP:Number;
+		public var cityHPMax:Number;
+		
 		private var intermission:int;		// counter for in-between waves
 		
 		private var ai:AutoPlayer;			// TEMP AutoPlayer
 		public var mx:Number = 0;
 		public var my:Number = 0;
+		
+		private var shop:MovieClip;
 	
 		public function ContainerGame()
 		{
@@ -59,7 +65,8 @@
 			game = new Game();
 			addChild(game);
 			game.x -= 15;
-			game.mc_gui.tf_status.text = "Wave 1 begun!";
+			//game.mc_gui.mc_statusCenter.tf_status.text = "Wave 1 begun!";
+			game.mc_gui.mc_statusCenter.visible = false;
 			game.mc_gui.mc_statusHuge.visible = false;
 			
 			// initialize managers
@@ -76,10 +83,17 @@
 			turret = new Turret(this, game.mc_turret);
 			turret.updateMouse();
 			
+			// setup city
+			cityHP = cityHPMax = 100;
+			game.mc_gui.mc_health.secondary.visible = false;		// TEMPORARY
+			
 			// setup autoplayer
 			//ai = new AutoPlayer(this, manMiss);
 			
-			//game.soundBox.gotoAndPlay("first");
+			// setup shop
+			shop = game.mc_gui.shop;
+			shop.visible = false;
+			shop.btn_nextDay.addEventListener(MouseEvent.CLICK, onShopDone);
 		}
 		
 		// called by Engine every frame
@@ -89,11 +103,9 @@
 			{
 				if (--intermission == 0)
 				{
-					manWave.startWave();
-					game.mc_gui.tf_status.text = "Wave " + (manWave.wave) + " begin!";	
+					game.mc_gui.shop.visible = true;
 					game.mc_gui.mc_statusHuge.visible = false;
 				}
-				return manWave.wave == 3;
 			}
 			
 			turret.step();
@@ -107,14 +119,50 @@
 			return false;
 		}
 		
+		public function damageCity(m:ABST_Missile):void
+		{
+			cityHP -= m.damage;
+			
+			var life:Number = cityHP / cityHPMax;
+			game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar
+			
+			if (cityHP <= 0)
+			{
+				cityHP = 0;
+				game.city.gotoAndStop(game.city.totalFrames);
+				// TODO game over
+			}
+			else
+			{
+				if (life < .35)
+					game.city.gotoAndStop(4);
+				else if (life < .5)
+					game.city.gotoAndStop(3);
+				else if (life < .85)
+					game.city.gotoAndStop(2);
+				else
+					game.city.gotoAndStop(1);
+				// TODO make into a function?
+				//game.city.gotoAndStop(Math.round((cityHP / cityHPMax) * game.city.totalFrames));
+			}
+		}
+		
+		// called by a button in the shop
+		private function onShopDone(e:MouseEvent):void
+		{
+			manWave.startWave();
+			//game.mc_gui.mc_statusCenter.tf_status.text = "Wave " + (manWave.wave) + " begin!";	
+			game.mc_gui.shop.visible = false;
+		}
+		
 		/**	End the current wave, enabling the shop, etc.
 		 * 
 		 */
 		public function endWave():void
 		{
 			game.mc_gui.tf_wave.text = manWave.wave;
-			game.mc_gui.tf_status.visible = true;
-			game.mc_gui.tf_status.text = "Wave " + (manWave.wave - 1) + " complete!";
+			//game.mc_gui.mc_statusCenter.tf_status.visible = true;
+			//game.mc_gui.mc_statusCenter.tf_status.text = "Wave " + (manWave.wave - 1) + " complete!";
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 120;

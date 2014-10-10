@@ -1,7 +1,9 @@
 ﻿package cobaltric
 {
 	import flash.display.MovieClip;
+	import flash.display.StageQuality;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	
 	/**
 	 * Engine.as
@@ -24,8 +26,9 @@
 			// center the container
 			container.x = 0;//stage.width * .5;
 			container.y = 0;//stage.height * .5;
-
+			
 			addEventListener(Event.ENTER_FRAME, step);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		public function step(e:Event):void
@@ -56,6 +59,23 @@
 			addChild(container);
 			container.x = stage.width * .5;
 			container.y = stage.height * .5;
+		}
+		
+		private function onAddedToStage(e:Event):void
+		{
+			container.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			container.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		}
+		
+		private function onKeyPress(e:KeyboardEvent):void
+		{
+			if (!container.stage) return;
+			if (e.keyCode == 76)		// -- 1
+				container.stage.quality = StageQuality.LOW;
+			else if (e.keyCode == 77)	// -- 2
+				container.stage.quality = StageQuality.MEDIUM;
+			else if (e.keyCode == 72)	// -- 3
+				container.stage.quality = StageQuality.HIGH;
 		}
 	}
 	

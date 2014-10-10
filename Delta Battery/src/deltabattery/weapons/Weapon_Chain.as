@@ -19,9 +19,7 @@ package deltabattery.weapons
 			
 			cooldownReset = 7;
 			projectileLife = 15;
-			ammo = ammoMax = 200;
-			
-			SoundPlayer.play("sfx_chaingun");
+			ammo = ammoMax = 100;
 		}
 		
 		override protected function createProjectile():void

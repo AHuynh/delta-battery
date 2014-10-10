@@ -20,7 +20,7 @@ package deltabattery.weapons
 			projectileParams["velocity"] = 18;
 			projectileParams["partInterval"] = 2;
 			
-			ammo = ammoMax = 60;
+			ammo = ammoMax = 30;
 			cooldownReset = 25;
 			
 			SoundPlayer.play("sfx_missile");

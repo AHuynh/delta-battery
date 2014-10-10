@@ -40,6 +40,8 @@
 			menu.btn_level1.removeEventListener(MouseEvent.CLICK, onLevel);
 			menu.btn_level2.removeEventListener(MouseEvent.CLICK, onLevel);
 			
+			menu.destroy();
+			
 			completed = true;
 			
 			// -- TODO have Engine utilize lvl

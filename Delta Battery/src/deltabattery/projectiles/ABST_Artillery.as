@@ -48,14 +48,7 @@ package deltabattery.projectiles
 					destroy();
 					
 				updateParticle(dx, dy);
-				
-				/*dist = getDistance(mc.x, mc.y, target.x, target.y);
-				
-				// TODO replace magic numbers
-				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist))
-					destroy();
-				else
-					prevDist = dist;*/
+				checkTarget();
 			}
 			
 			return readyToDestroy;

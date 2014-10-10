@@ -17,9 +17,11 @@ package deltabattery.projectiles
 		public var mc:MovieClip;
 		
 		public var type:int;
+		public var damage:Number;
 		
 		public var origin:Point;
 		protected var target:Point;
+		protected var targetMC:MovieClip;
 		
 		protected var partEnabled:Boolean = true;
 		protected var partCount:int = 5;				// particle timer
@@ -52,13 +54,12 @@ package deltabattery.projectiles
 			mc.x = origin.x;
 			mc.y = origin.y;
 			
+			targetMC = cg.game.city;
+			
 			// default values
 			var useTarget:Boolean = true;
+			damage = 9 + getRand(0, 2);
 			velocity = Math.random() * 2 + 4;
-			var useEmitter:Boolean = true;
-			var emitterRate:int = 12;
-			var minLife:Number = 3;
-			var maxLife:Number = 4;
 			createExplosion = true;
 			
 			if (params)
@@ -67,14 +68,8 @@ package deltabattery.projectiles
 					useTarget = params["target"];
 				if (params["velocity"] != null)
 					velocity = params["velocity"];
-				if (params["useEmitter"] != null)
-					useEmitter = params["useEmitter"];
 				if (params["partInterval"] != null)
 					partInterval = params["partInterval"];
-				/*if (params["minLife"] != null)
-					emitterRate = params["minLife"];
-				if (params["maxLife"] != null)
-					emitterRate = params["maxLife"];*/
 				if (params["explode"] != null)
 					createExplosion = params["explode"];
 			}
@@ -104,11 +99,12 @@ package deltabattery.projectiles
 				mc.y += dy;
 
 				updateParticle(dx, dy);
+				checkTarget();
 			
 				dist = getDistance(mc.x, mc.y, target.x, target.y);
 				
 				// TODO replace magic numbers
-				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist))
+				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist || mc.y > 370))
 					destroy();
 				else
 					prevDist = dist;
@@ -126,15 +122,28 @@ package deltabattery.projectiles
 			}
 		}
 		
+		// if this projectile is close to the city, with a 20% chance of happening per frame,
+		// destroy this projectile and damage the city
+		protected function checkTarget(dest:Boolean = true):void
+		{
+			if (type == 1) return;				// ignore player projectiles
+			if (abs(mc.x - targetMC.x) < 100 && abs(mc.y - targetMC.y) < 50 && Math.random() > .8)
+			{
+				cg.damageCity(this);
+				if (dest)
+					destroy();
+			}
+		}
+		
 		public function destroy():void
 		{
 			if (markedForDestroy) return;
+			checkTarget(false);
 			
 			markedForDestroy = true;
-			
 			mc.visible = false;
  
-			timerKill = new Timer(4000);
+			timerKill = new Timer(2000);
 			timerKill.addEventListener(TimerEvent.TIMER, cleanup);
 			timerKill.start();
 			
@@ -159,10 +168,7 @@ package deltabattery.projectiles
 			{
 				timerKill.removeEventListener(TimerEvent.TIMER, cleanup);
 				timerKill = null;
-			}
-
-			// TODO stop emittung
-			
+			}			
 			readyToDestroy = true;
 		}
 	}

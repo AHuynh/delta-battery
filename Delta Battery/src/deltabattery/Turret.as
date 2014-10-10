@@ -23,6 +23,8 @@ package deltabattery
 		
 		public var weaponPrimary:Array = [null, null, null];
 		public var weaponSecondary:Array = [null, null, null];
+		
+		private var weaponMC:Array;				// array of GUI objects
 
 		public var activePrimary:int = 0;		// index in array
 		public var activeSecondary:int = 0;		// index in array
@@ -50,33 +52,57 @@ package deltabattery
 			turret.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseRightUp);
 			turret.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyboard);
 			turret.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
+			
+			var gui:MovieClip = cg.game.mc_gui;
+			weaponMC = [gui.wep_1, gui.wep_2, null, gui.wep_4, null, null, null, null];
+			
+			// setup weapons
+			weaponMC[1].gotoAndStop("raam");
+			weaponMC[3].gotoAndStop("chain");
+			for (var i:int = 0; i < weaponMC.length; i++)
+				if (weaponMC[i])
+				{
+					weaponMC[i].selected.visible = false;
+					weaponMC[i].tf_number.text = (i+1);
+				}
+			weaponMC[0].selected.visible = true;
+			weaponMC[3].selected.visible = true;
 		}
 		
 		// called by ContainerGame
-		public function step():void
+		public function step():void 
 		{
+			var i:int;
 			if (rightMouseDown)
 			{
 				var newAmmo:int = weaponSecondary[activeSecondary].fire();
+				weaponMC[3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[0].ammo / weaponSecondary[0].ammoMax)));
 				if (newAmmo != -1)
 					cg.game.mc_gui.tf_ammoS.text = newAmmo;
 			}
 
-			for (var i:int = 0; i < 3; i++)
+			for (i = 0; i < 3; i++)
 			{
 				if (weaponPrimary[i])
+				{
 					weaponPrimary[i].step();
+					weaponMC[i].reload.y = -20 + ((weaponPrimary[i].cooldownCounter / weaponPrimary[i].cooldownReset) * 40);		// TODO move to ABST_Weapon.
+				}
 				if (weaponSecondary[i])
+				{
 					weaponSecondary[i].step();
+					weaponMC[i + 3].reload.y = -20 + ((weaponSecondary[i].cooldownCounter / weaponSecondary[i].cooldownReset) * 40);		// TODO move to ABST_Weapon.
+				}
 			}
 		}
-		
+
 		private function onMouseLeftDown(e:MouseEvent):void
 		{
 			var newAmmo:int = weaponPrimary[activePrimary].fire();
 			if (newAmmo != -1)
 			{
-				cg.game.mc_gui.tf_ammoP.text = newAmmo
+				cg.game.mc_gui.tf_ammoP.text = newAmmo;
+				weaponMC[activePrimary].ammo.y = 16.65 + (35 * (1 - (weaponPrimary[activePrimary].ammo / weaponPrimary[activePrimary].ammoMax)));
 				for (var i:int = 0; i < int(getRand(2, 4)) + 2; i++)
 				{
 					cg.manPart.spawnParticle("", new Point(turret.x + getRand(-5, 5), turret.y + getRand(-5, 5)), 0, getRand(0, 1), getRand(0, 1), .05);
@@ -119,12 +145,15 @@ package deltabattery
 		
 		private function onKeyboard(e:KeyboardEvent):void
 		{
+			var changed:int = -1;
+			
 			switch (e.keyCode)
 			{
 				case 49:	// 1
 					if (weaponPrimary[0])
 					{
 						activePrimary = 0;
+						changed = 0;
 						cg.game.mc_gui.tf_weaponP.text = weaponPrimary[activePrimary].name;
 						cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
 					}
@@ -133,6 +162,7 @@ package deltabattery
 					if (weaponPrimary[1])
 					{
 						activePrimary = 1;
+						changed = 1;
 						cg.game.mc_gui.tf_weaponP.text = weaponPrimary[activePrimary].name;
 						cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
 					}
@@ -141,11 +171,18 @@ package deltabattery
 					if (weaponPrimary[2])
 					{
 						activePrimary = 2;
+						changed = 2;
 						cg.game.mc_gui.tf_weaponP.text = weaponPrimary[activePrimary].name;
 						cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
 					}
 				break;
 			}
+		
+			if (changed == -1) return;
+			for (var i:int = 0; i < 3; i++)		// TODO change 3
+				if (weaponMC[i])
+					weaponMC[i].selected.visible = false;
+			weaponMC[changed].selected.visible = true;
 		}
 		
 		private function destroy(e:Event):void
