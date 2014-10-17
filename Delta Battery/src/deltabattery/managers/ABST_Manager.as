@@ -14,7 +14,7 @@ package deltabattery.managers
 	public class ABST_Manager extends ABST_Base
 	{
 		public var cg:ContainerGame;
-		public var objArr:Array;
+		public var objArr:Array;			// an array to hold this specific Manager's objects
 		
 		public function ABST_Manager(_cg:ContainerGame) 
 		{
@@ -22,6 +22,7 @@ package deltabattery.managers
 			objArr = [];
 		}
 		
+		// called by ContainerGame - should step and remove (if applicable) all of its objects
 		public function step():void
 		{
 			// -- override this function

@@ -22,8 +22,6 @@ package deltabattery.weapons
 			
 			ammo = ammoMax = 30;
 			cooldownReset = 25;
-			
-			SoundPlayer.play("sfx_missile");
 		}
 		
 		override protected function createProjectile():void

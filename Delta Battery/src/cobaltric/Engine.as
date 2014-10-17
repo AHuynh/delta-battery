@@ -17,10 +17,12 @@
 		private var gameState:int;				// 0:Intro, 1:Game, 2:Outro
 		private var container:ABST_Container;	// the currently active container
 		
+		public var startWave:int = 1;
+		
 		public function Engine()
 		{
 			gameState = 0;
-			container = new ContainerIntro();
+			container = new ContainerIntro(this);
 			addChild(container);
 
 			// center the container
@@ -35,12 +37,12 @@
 		{
 			if (!container.step())
 				return;
-				
+
 			removeChild(container);
 			switch (gameState)
 			{
 				case 0:
-					container = new ContainerGame();
+					container = new ContainerGame(startWave);
 					gameState++;
 					trace("Intro Container completed!");
 				break;
@@ -51,7 +53,7 @@
 				break;
 				case 2:
 					gameState = 0;
-					container = new ContainerIntro();
+					container = new ContainerIntro(this);
 					trace("Outro Container completed!");
 				break;
 			}

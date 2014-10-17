@@ -1,51 +1,52 @@
 package deltabattery.weapons
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.ABST_Base;
 	import flash.display.MovieClip;
 	/**	An abstract weapon used in Turret.as
 	 *
 	 * @author Alexander Huynh
 	 */
-	public class ABST_Weapon 
+	public class ABST_Weapon extends ABST_Base
 	{		
-		protected var cg:ContainerGame;
-		protected var turret:MovieClip;
-		protected const TURRET_ID:int = 1;
+		protected var cg:ContainerGame;	
+		protected var turret:MovieClip;			// the Turret MovieClip
+		protected const TURRET_ID:int = 1;		// .. ???
 		
-		public var name:String;
-		public var slot:int;		// weapon slot
+		public var name:String;					// display name for the weapon (SAM, RAAM, Chain, etc.)
+		public var slot:int;					// weapon slot
 		
-		public var cooldownCounter:int = 0;
-		public var cooldownReset:int = 15;
+		public var cooldownCounter:int = 0;		// actual cooldown timer, 0 if ready to fire
+		public var cooldownReset:int = 15;		// amount to set the cooldown to after firing
 		
-		public var useHeat:Boolean = false;
-		public var heat:Number = 0;
-		public var heatMax:Number = 0;
-		public var heatReduce:Number = 0;
+		public var useHeat:Boolean = false;		// if TRUE, use heat and prevent firing if overheated
+		public var heat:Number = 0;				// the current amount of heat
+		public var heatMax:Number = 0;			// the max amount of heat before locking up
+		public var heatReduce:Number = 0;		// the amount of heat to decrease by when locked up per step
 		
 		public var projectileParams:Object = new Object();
 		public var projectileLife:int = -1;
-		public var projectileRange:int = -1;
+		public var projectileRange:int = -1;	// uses life to determine when to despawn
 		
-		public var ammoMax:int = 100;
-		public var ammo:int = ammoMax;
+		public var ammoMax:int = 100;			// max reserve ammo
+		public var ammo:int = ammoMax;			// current ammo
 
-		public var cost:int = 0;
-
+		public var cost:int = 0;				// cost of this weapon in the shop
+		public var costAmmo:int;				// cost per 1 ammo for this weapon in the shop
+		
 		public function ABST_Weapon(_cg:ContainerGame, _slot:int) 
 		{
 			cg = _cg;
 			turret = cg.game.mc_turret;
 			slot = _slot;
+			
+			projectileParams["target"] = true
 		}
 		
 		public function step():void
 		{
-			if (cooldownCounter > 0)
-			{
+			if (cooldownCounter > 0)		// GUI updated in Turret
 				cooldownCounter--;
-				// -- TODO update cooldown indicator
-			}
 
 			if (useHeat && heat > 0)		// TODO update heat indicator
 			{
@@ -71,6 +72,7 @@ package deltabattery.weapons
 		}
 		
 		// returns new remaining ammo
+		// can also removeAmmo with a -amt
 		public function addAmmo(amt:int):int
 		{
 			ammo += amt;

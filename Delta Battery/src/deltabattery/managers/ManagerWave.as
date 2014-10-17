@@ -1,5 +1,7 @@
 package deltabattery.managers {
+	import cobaltric.ABST_Container;
 	import cobaltric.ContainerGame;
+	import deltabattery.projectiles.ABST_Missile;
 	import flash.geom.Point;
 	
 	/**	Directs enemy spawns throughout the game
@@ -26,15 +28,17 @@ package deltabattery.managers {
 		private var spawnVarianceY:int = 50;
 		
 		private var targetX:int = 390;
-		private var targetY:int = 160;
+		private var targetY:int = 150;
 		private var targetVarianceX:int = 80;
-		private var targetVarianceY:int = 40;
+		private var targetVarianceY:int = 30;
 		
 		private var dayFlag:int = 0;	// 0 day, 1 sunset, 2 night
 		
 		public function ManagerWave(_cg:ContainerGame, _wave:int = 1)
 		{
 			super(_cg);
+			
+			trace("Starting with wave: " + _wave);
 			
 			manMiss = cg.manMiss;
 			manArty = cg.manArty;
@@ -53,7 +57,7 @@ package deltabattery.managers {
 			switch (wave)
 			{
 				case 1:
-					enemiesRemaining = 8;
+					enemiesRemaining = 4;
 					
 					spawnDelay = 30 * 2;		// 2 seconds initial delay
 					spawnMin = 30;				// 1 second minimum
@@ -61,7 +65,7 @@ package deltabattery.managers {
 					spawnRandom = .98;
 				break;
 				case 2:
-					enemiesRemaining = 14;
+					enemiesRemaining = 6;
 					
 					spawnDelay = 30 * 2;
 					spawnMin = 20;
@@ -69,7 +73,7 @@ package deltabattery.managers {
 					spawnRandom = .98;
 				break;
 				case 3:
-					enemiesRemaining = 25;
+					enemiesRemaining = 10;
 					
 					spawnDelay = 30 * 2;
 					spawnMin = 15;
@@ -77,10 +81,10 @@ package deltabattery.managers {
 					spawnRandom = .97;
 				break;
 				default:		// crazy demo
-					enemiesRemaining = 60;
+					enemiesRemaining = 80;
 					
-					spawnDelay = 30 * 4;
-					spawnMin = 5;
+					spawnDelay = 30 * 1;
+					spawnMin = 3;
 					spawnMax = -15;
 					spawnRandom = .3;
 		
@@ -117,15 +121,30 @@ package deltabattery.managers {
 			
 			if (enemiesRemaining == 0)
 			{
-				if (!manMiss.hasObjects())
+				//if (!manMiss.hasObjects())		// TODO
+				var done:Boolean = true;
+				
+				var proj:Array = cg.getProjectileArray();
+				var p:ABST_Missile;
+				for (var i:int = proj.length - 1; i >= 0; i--)
+				{
+					p = proj[i];
+					if (p.type == 0)
+					{
+						done = false;
+						break;
+					}
+				}
+				if (done)
 					endWave();
 				return;
 			}
 
 			spawnDelay--;
-			if (spawnDelay <= 0 && Math.random() > spawnRandom)
+			// TODO make better, loool
+			if ((spawnDelay <= 0 && Math.random() > spawnRandom) || spawnDelay < spawnMax)
 			{
-				if (wave > 1 && Math.random() > .6)		// TODO remove magic number .6
+				if (wave == 3 || (wave > 2 && Math.random() > .6))		// TODO remove magic number .6
 				{
 				manArty.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
 															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY) + 100),
@@ -134,7 +153,7 @@ package deltabattery.managers {
 				
 				}
 															  
-				else
+				else if (wave != 3)
 				{
 				manMiss.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
 															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
@@ -146,8 +165,6 @@ package deltabattery.managers {
 				enemiesRemaining--;
 				cg.game.mc_gui.mc_statusCenter.tf_status.text = enemiesRemaining + " projectile(s) left."
 				
-				// TODO detect if should transition from middle of day -> sunset to sunset -> night
-				//	(conditions for sunset -> night are met during day -> sunset)
 				// TODO change hardcoded enemiesRemaining to variables
 				if (dayFlag == 0 && enemiesRemaining == 5)
 				{

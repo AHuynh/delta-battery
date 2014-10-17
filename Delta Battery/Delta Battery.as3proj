@@ -57,10 +57,10 @@
     <element path="MissileTarget.swc" />
     <element path="ArtilleryStandard.swc" />
     <element path="ExplosionStandard.swc" />
-    <element path="ParticleArtillery.swc" />
     <element path="ContainerMenu.swc" />
-    <element path="ParticleSmoke01.swc" />
     <element path="Game.swc" />
+    <element path="ParticleSmoke01.swc" />
+    <element path="ParticleArtillery.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

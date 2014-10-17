@@ -5,17 +5,19 @@ package deltabattery.particles
 	import deltabattery.managers.ManagerParticle;
 	import flash.geom.Point;
 	
-	/**
-	 * ...
-	 * @author Alexander Huynh
+	/**	A MovieClip acting as a particle.
+	 *
+	 * 	Disappears once its animation is complete.
+	 * 
+	 *	@author Alexander Huynh
 	 */
 	public class Particle extends ABST_Base 
 	{
 		protected var man:ManagerParticle;
-		public var mc:MovieClip;
-		protected var mcTotal:int;		// mc.totalFrames
+		public var mc:MovieClip;				// the actual particle MovieClip
+		protected var mcTotal:int;				// mc.totalFrames
 		
-		public var dx:Number;
+		public var dx:Number;	// amount to move the particle by per step
 		public var dy:Number;
 		public var g:Number;	// gravity
 		
@@ -37,12 +39,12 @@ package deltabattery.particles
 				mc.rotation = getRand( -180, 180);
 				rotSpd = getRand( -.5, .5);
 			}
+			
 			mc.scaleX = mc.scaleY = getRand(.8, 1);
-			
-			
 			mcTotal = mc.totalFrames;
 		}
 		
+		// returns TRUE if this particle should be removed, FALSE otherwise
 		public function step():Boolean
 		{
 			if (mc.currentFrame == mcTotal)

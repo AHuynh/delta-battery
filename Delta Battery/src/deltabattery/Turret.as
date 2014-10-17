@@ -1,7 +1,9 @@
 package deltabattery 
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.weapons.ABST_Weapon;
 	import deltabattery.weapons.Weapon_Chain;
+	import deltabattery.weapons.Weapon_DeltaStrike;
 	import deltabattery.weapons.Weapon_RAAM;
 	import deltabattery.weapons.Weapon_SAM;
 	import flash.display.MovieClip;
@@ -17,17 +19,19 @@ package deltabattery
 	public class Turret extends ABST_Base
 	{
 		public var cg:ContainerGame;
-		public var turret:MovieClip;			// the actual MovieClip
+		public var turret:MovieClip;			// the actual Turret MovieClip
 		
-		public var rightMouseDown:Boolean;		// if the right mouse is currently down
+		public var rightMouseDown:Boolean;		// TRUE if the right mouse is currently down
 		
+		// array of objects extending ABST_Weapons
 		public var weaponPrimary:Array = [null, null, null];
 		public var weaponSecondary:Array = [null, null, null];
+		public var weaponSpecial:ABST_Weapon;
 		
-		private var weaponMC:Array;				// array of GUI objects
+		private var weaponMC:Array;				// array of GUI objects (weapon icons)
 
-		public var activePrimary:int = 0;		// index in array
-		public var activeSecondary:int = 0;		// index in array
+		public var activePrimary:int = 0;		// index in array for LEFT
+		public var activeSecondary:int = 0;		// index in array for RIGHT
 		
 		// turret rotation limits
 		public const TURRET_LIMIT_R:Number = -90;		// straight up
@@ -39,9 +43,11 @@ package deltabattery
 			turret = _turret;
 			turret.addEventListener(Event.ADDED_TO_STAGE, init);
 			
+			// setup default weapons
 			weaponPrimary[0] = new Weapon_SAM(cg, 0);
-			weaponPrimary[1] = new Weapon_RAAM(cg, 1);
+			weaponPrimary[1] = new Weapon_RAAM(cg, 1);		// TODO remove this weapon
 			weaponSecondary[0] = new Weapon_Chain(cg, 0);
+			weaponSpecial = new Weapon_DeltaStrike(cg);
 		}
 		
 		private function init(e:Event):void
@@ -54,11 +60,12 @@ package deltabattery
 			turret.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			
 			var gui:MovieClip = cg.game.mc_gui;
-			weaponMC = [gui.wep_1, gui.wep_2, null, gui.wep_4, null, null, null, null];
+			weaponMC = [gui.wep_1, gui.wep_2, null, gui.wep_4, null, null, null, gui.wep_8];
 			
 			// setup weapons
 			weaponMC[1].gotoAndStop("raam");
 			weaponMC[3].gotoAndStop("chain");
+			weaponMC[7].gotoAndStop("delta");
 			for (var i:int = 0; i < weaponMC.length; i++)
 				if (weaponMC[i])
 				{
@@ -67,6 +74,8 @@ package deltabattery
 				}
 			weaponMC[0].selected.visible = true;
 			weaponMC[3].selected.visible = true;
+			weaponMC[7].selected.visible = true;
+			weaponMC[7].tf_number.text = "S";
 		}
 		
 		// called by ContainerGame
@@ -75,12 +84,14 @@ package deltabattery
 			var i:int;
 			if (rightMouseDown)
 			{
+				if (cg.game.mc_gui.newEnemy.visible) return;
 				var newAmmo:int = weaponSecondary[activeSecondary].fire();
 				weaponMC[3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[0].ammo / weaponSecondary[0].ammoMax)));
 				if (newAmmo != -1)
 					cg.game.mc_gui.tf_ammoS.text = newAmmo;
 			}
 
+			// update all weapons
 			for (i = 0; i < 3; i++)
 			{
 				if (weaponPrimary[i])
@@ -94,10 +105,18 @@ package deltabattery
 					weaponMC[i + 3].reload.y = -20 + ((weaponSecondary[i].cooldownCounter / weaponSecondary[i].cooldownReset) * 40);		// TODO move to ABST_Weapon.
 				}
 			}
+			
+			if (weaponSpecial)
+			{
+				weaponSpecial.step();
+				weaponMC[7].reload.y = -20 + ((weaponSpecial.cooldownCounter / weaponSpecial.cooldownReset) * 40);		// TODO move to ABST_Weapon.
+			}
 		}
 
 		private function onMouseLeftDown(e:MouseEvent):void
 		{
+			if (!cg.gameActive) return;
+			if (cg.game.mc_gui.newEnemy.visible) return;
 			var newAmmo:int = weaponPrimary[activePrimary].fire();
 			if (newAmmo != -1)
 			{
@@ -131,6 +150,8 @@ package deltabattery
 		// called by Container Game
 		public function updateMouse():void
 		{
+			if (!cg.gameActive) return;
+			
 			// face the turret towards the mouse
 			var rot:Number = getAngle(0, 0, turret.mouseX, turret.mouseY);
 			
@@ -143,12 +164,19 @@ package deltabattery
 			//trace(TURRET_LIMIT_R + " | " + (rot + 360) + " | " + TURRET_LIMIT_L);
 		}
 		
+		
 		private function onKeyboard(e:KeyboardEvent):void
 		{
+			if (!cg.gameActive) return;
+			
 			var changed:int = -1;
 			
 			switch (e.keyCode)
 			{
+				case 32:	// SPACE
+					var newAmmo:int = weaponSpecial.fire();
+					weaponMC[7].ammo.y = 16.65 + (35 * (1 - (weaponSpecial.ammo / weaponSpecial.ammoMax)));
+				break;
 				case 49:	// 1
 					if (weaponPrimary[0])
 					{

@@ -5,8 +5,9 @@ package deltabattery.managers
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	
-	/**
-	 * @author Alexander Huynh
+	/**	An AI program that controls the turret automatically
+	 * 
+	 *@author Alexander Huynh
 	 */
 	public class AutoPlayer extends ABST_Manager 
 	{

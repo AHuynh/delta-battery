@@ -8,10 +8,12 @@
 	{
 		public var menu:ContainerMenu;
 		public var lvl:uint;
+		private var eng:Engine;
 		
-		public function ContainerIntro()
+		public function ContainerIntro(_eng:Engine)
 		{
 			super();
+			eng = _eng;
 			
 			menu = new ContainerMenu();
 			addChild(menu);
@@ -26,13 +28,13 @@
 			switch (e.target)
 			{
 				case menu.btn_level0:
-					lvl = 0;
-				break;
-				case menu.btn_level1:
 					lvl = 1;
 				break;
+				case menu.btn_level1:
+					lvl = 4;
+				break;
 				case menu.btn_level2:
-					lvl = 2;
+					lvl = 7;
 				break;
 			}
 			
@@ -41,10 +43,8 @@
 			menu.btn_level2.removeEventListener(MouseEvent.CLICK, onLevel);
 			
 			menu.destroy();
-			
+			eng.startWave = lvl;
 			completed = true;
-			
-			// -- TODO have Engine utilize lvl
 		}
 	}
 }
