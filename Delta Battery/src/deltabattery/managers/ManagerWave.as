@@ -161,12 +161,12 @@
 				
 				}
 				
-				else if (wave == 4)
+				else if (wave >= 4)
 				{
 				manMiss.spawnProjectile("fast", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
-															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
-													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
-														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
+														  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
+												new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
+														  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
 				}											  
 				
 															  
