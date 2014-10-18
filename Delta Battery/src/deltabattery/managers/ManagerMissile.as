@@ -1,4 +1,4 @@
-package deltabattery.managers
+﻿package deltabattery.managers
 {
 	import cobaltric.ContainerGame;
 	import deltabattery.projectiles.ABST_Missile;
@@ -46,6 +46,9 @@ package deltabattery.managers
 		{
 			switch (proj)
 			{
+				case proj == "fast":
+					addObject(new Missile_Fast(cg, new MissileFast(), origin, target, type, params));
+				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));
 			}

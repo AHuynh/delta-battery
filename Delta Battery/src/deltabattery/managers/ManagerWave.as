@@ -1,4 +1,4 @@
-package deltabattery.managers {
+﻿package deltabattery.managers {
 	import cobaltric.ABST_Container;
 	import cobaltric.ContainerGame;
 	import deltabattery.projectiles.ABST_Missile;
@@ -144,7 +144,15 @@ package deltabattery.managers {
 			// TODO make better, loool
 			if ((spawnDelay <= 0 && Math.random() > spawnRandom) || spawnDelay < spawnMax)
 			{
-				if (wave == 3 || (wave > 2 && Math.random() > .6))		// TODO remove magic number .6
+				if (wave < 3)
+				{
+				manMiss.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
+															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
+													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
+														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
+				}	
+				
+				else if (wave == 3 || (wave > 2 && Math.random() > .6))		// TODO remove magic number .6
 				{
 				manArty.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
 															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY) + 100),
@@ -152,14 +160,17 @@ package deltabattery.managers {
 														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
 				
 				}
-															  
-				else if (wave != 3)
+				
+				else if (wave == 4)
 				{
-				manMiss.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
+				manMiss.spawnProjectile("fast", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
 															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
 													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
 														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
 				}											  
+				
+															  
+														  
 				
 				spawnDelay = spawnMin;
 				enemiesRemaining--;

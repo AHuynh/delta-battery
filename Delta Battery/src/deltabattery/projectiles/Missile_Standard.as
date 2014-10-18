@@ -1,4 +1,4 @@
-package deltabattery.projectiles 
+﻿package deltabattery.projectiles 
 {
 	import cobaltric.ContainerGame;
 	import flash.display.MovieClip;

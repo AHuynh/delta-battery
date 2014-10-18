@@ -1,4 +1,4 @@
-package deltabattery.projectiles
+﻿package deltabattery.projectiles
 {
 	import cobaltric.ContainerGame;
 	import deltabattery.ABST_Base;
@@ -44,7 +44,7 @@ package deltabattery.projectiles
 		protected var awardMoney:Boolean = true;
 		
 		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _origin:Point,
-								     _target:Point, _type:int = 0, params:Object = null) 
+								     _target:Point, _type:int = 0, params:Object)
 		{
 			cg = _cg;
 			mc = _mc;		
