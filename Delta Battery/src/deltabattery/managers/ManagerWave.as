@@ -22,10 +22,21 @@
 		private var spawnMax:int;		// maximum counter value
 		private var spawnRandom:Number;
 		
-		private var spawnX:int = -420;
-		private var spawnY:int = -200;
-		private var spawnVarianceX:int = 20;
-		private var spawnVarianceY:int = 50;
+		private var spawnLoc:Object = new Object();
+		/*	spawnLoc["type"] -> [null, [(x1, y1), (x2, y2)], null]
+		 * 
+		 * 	let arr be spawnLoc["type"]
+		 * 	arr				null if not able to spawn in this wave
+		 * 	arr[]			regions to spawn in
+		 * 	arr[][0..1]		upper left and lower right corners of
+		 * 					spawn region
+		 */
+		
+		private var spawnType:Array;
+		/*	chance (weights) of given projectile to spawn
+		 * 	[missile, artillery] ...
+		 *      0         1             9
+		 */
 		
 		private var targetX:int = 390;
 		private var targetY:int = 150;
@@ -34,17 +45,23 @@
 		
 		private var dayFlag:int = 0;	// 0 day, 1 sunset, 2 night
 		
+		// region helpers
+		private const R_CORNER_SMALL:Array = [new Point( -450, -350), new Point( -410, -310)];
+		private const R_CORNER_LARGE:Array = [new Point( -500, -400), new Point( -410, -310)];
+		
+		private const R_LEFT_TOP:Array = [new Point( -450, -300), new Point( -410, -150)];
+		
+		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
+		
 		public function ManagerWave(_cg:ContainerGame, _wave:int = 1)
 		{
 			super(_cg);
-			
-			trace("Starting with wave: " + _wave);
 			
 			manMiss = cg.manMiss;
 			manArty = cg.manArty;
 			wave = _wave;
 			
-			// TODO change later
+			resetSpawnType();
 			startWave();
 		}
 		
@@ -53,47 +70,84 @@
 			waveActive = true;
 			dayFlag = 0;
 			advanceTime();		// reset sky/ocean
+			resetSpawnType();	// reset probabilities of all projectiles spawning to 0
 			
 			switch (wave)
 			{
+				// standard missile
 				case 1:
-					enemiesRemaining = 4;
+					enemiesRemaining = 8;
+			
+					// enable missiles - (corner)
+					spawnLoc["missile"] = [R_LEFT_TOP];
+					
+					// set spawn probabilities
+					spawnType[0] = 1;			// 100% missile
 					
 					spawnDelay = 30 * 2;		// 2 seconds initial delay
-					spawnMin = 30;				// 1 second minimum
-					spawnMax = 30 * -1;			// 1 second maximum
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 4;			// 4 seconds maximum
 					spawnRandom = .98;
 				break;
+				// faster standard missile
 				case 2:
-					enemiesRemaining = 6;
+					enemiesRemaining = 12;
+					
+					// set spawn probabilities
+					spawnType[0] = 1;			// 100% missile
 					
 					spawnDelay = 30 * 2;
 					spawnMin = 20;
 					spawnMax = 25 * -1;
 					spawnRandom = .98;
 				break;
+				// artillery
 				case 3:
 					enemiesRemaining = 10;
 					
+					// enable projectiles
+					spawnLoc["artillery"] = [R_ARTY_NORM];
+					
+					// set spawn probabilities
+					spawnType[1] = 1;			// 100% artillery
+					
 					spawnDelay = 30 * 2;
-					spawnMin = 15;
-					spawnMax = 20 * -1;
+					spawnMin = 30 * 2 + 15;		// 2.5 seconds minimum
+					spawnMax = -30 * 4;
 					spawnRandom = .97;
+				break;
+				// missiles + artillery
+				case 4:
+					enemiesRemaining = 18;
+					
+					// enable projectiles
+					spawnLoc["missile"] = [R_LEFT_TOP];
+					spawnLoc["artillery"] = [R_ARTY_NORM];
+					
+					// set spawn probabilities
+					spawnType[0] = 3;			// 75% missile
+					spawnType[1] = 1;			// 25% artillery
+					
+					spawnDelay = 30 * 2;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
 				break;
 				default:		// crazy demo
 					enemiesRemaining = 80;
+					
+					// set spawn probabilities
+					spawnType[0] = 1;			// 50% missile
+					spawnType[1] = 1;			// 50% artillery
 					
 					spawnDelay = 30 * 1;
 					spawnMin = 3;
 					spawnMax = -15;
 					spawnRandom = .3;
-		
-					spawnX = -400;
-					spawnY = -240;
-					spawnVarianceX = 300;
 			}
 		}
 		
+		// no argument	instantaneous day
 		// "day"		day -> sunset
 		// "sunset"		sunset -> night
 		public function advanceTime(t:String = null):void
@@ -119,9 +173,9 @@
 		{
 			if (!waveActive) return;
 			
+			// if no more spawning, check if no enemy threats are left
 			if (enemiesRemaining == 0)
 			{
-				//if (!manMiss.hasObjects())		// TODO
 				var done:Boolean = true;
 				
 				var proj:Array = cg.getProjectileArray();
@@ -141,47 +195,46 @@
 			}
 
 			spawnDelay--;
+
 			// TODO make better, loool
 			if ((spawnDelay <= 0 && Math.random() > spawnRandom) || spawnDelay < spawnMax)
 			{
-				if (wave < 3)
+				switch (choose(spawnType))
 				{
-				manMiss.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
-															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
-													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
-														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
-				}	
-				
-				else if (wave == 3 || (wave > 2 && Math.random() > .6))		// TODO remove magic number .6
-				{
-				manArty.spawnProjectile("standard", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
-															  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY) + 100),
-													new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
-														 	  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
-				
+					// missile
+					case 0:
+						// TODO other missile types
+						manMiss.spawnProjectile("standard", getSpawnLocation("missile"), getTarget());
+					break;
+					// artillery
+					case 1:
+						manArty.spawnProjectile("standard", getSpawnLocation("artillery"), getTarget());
+					break;
+					default:
+						trace("WARN! Didn't spawn anything...");
 				}
 				
+				/*
 				else if (wave >= 4)
 				{
 				manMiss.spawnProjectile("fast", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
 														  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
 												new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
 														  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
-				}											  
-				
-															  
-														  
+				}	*/										  
+							  
 				
 				spawnDelay = spawnMin;
 				enemiesRemaining--;
-				cg.game.mc_gui.mc_statusCenter.tf_status.text = enemiesRemaining + " projectile(s) left."
-				
-				// TODO change hardcoded enemiesRemaining to variables
+				//cg.game.mc_gui.mc_statusCenter.tf_status.text = enemiesRemaining + " projectile(s) left."
+	
+				// advance time from day to sunset
 				if (dayFlag == 0 && enemiesRemaining == 5)
 				{
 					dayFlag++;
 					advanceTime("day");
 				}
+				// advance time from sunset to night
 				else if (dayFlag == 1 && enemiesRemaining <= 2)
 				{
 					if (cg.game.bg.ocean.currentFrame < 152)		// magic number :c
@@ -191,8 +244,54 @@
 				}
 
 			}
-			if (spawnDelay < spawnMax)
+	
+			if (spawnDelay < spawnMax)		// ???
 				spawnDelay = spawnMin;
+		}
+		
+		/**	Determines random spawn location based on rules for a given projectile type
+		 * 
+		 * @param	type	name of projectile to spawn (ex "missile")
+		 * @return			restricted randomly-generated spawn point
+		 */
+		private function getSpawnLocation(type:String):Point
+		{
+			var regions:Array = spawnLoc[type];
+			if (!regions) return null;
+			
+			var region:Array = regions[int(getRand(0, regions.length - 1))];
+			return new Point(getRand(region[0].x, region[1].x), getRand(region[0].y, region[1].y));
+		}
+		
+		private function getTarget():Point
+		{
+			return new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
+							 targetY + -2 * targetVarianceY + getRand(0, targetVarianceY));
+		}
+		
+		// picks 1 index given an array of choices with elements as weights
+		private function choose(choiceWeights:Array):int
+		{
+			var sum:int = 0;
+			var i:int;
+			for (i = 0; i < choiceWeights.length; i++)
+				sum += choiceWeights[i];
+				
+			var rand:int = getRand(0, sum-1);
+			for (i = 0; i < choiceWeights.length; i++)
+			{
+				if (rand < choiceWeights[i])
+					return i;
+				rand -= choiceWeights[i];
+			}
+			
+			trace("WARN! choose() returning -1...");
+			return -1;
+		}
+		
+		private function resetSpawnType():void
+		{
+			spawnType = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 		}
 	}
 }

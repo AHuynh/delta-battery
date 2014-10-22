@@ -44,7 +44,7 @@
 		protected var awardMoney:Boolean = true;
 		
 		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _origin:Point,
-								     _target:Point, _type:int = 0, params:Object)
+								     _target:Point, _type:int = 0, params:Object = null)
 		{
 			cg = _cg;
 			mc = _mc;		
@@ -134,8 +134,7 @@
 		protected function checkTarget(dest:Boolean = true):void
 		{
 			if (type == 1) return;				// ignore player projectiles
-			//if (mc.y < 120) return;			// don't explode until low enough
-			if (abs(mc.x - targetMC.x) < 100 && abs(mc.y - targetMC.y) < 50 && Math.random() > .8)
+			if (abs(mc.x - targetMC.x) < 100 && abs(mc.y - targetMC.y + 50) < 50 && Math.random() > .8)
 			{
 				cg.damageCity(this);
 				if (dest)

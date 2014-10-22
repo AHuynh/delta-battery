@@ -1,8 +1,7 @@
 ﻿package deltabattery.managers
 {
 	import cobaltric.ContainerGame;
-	import deltabattery.projectiles.ABST_Missile;
-	import deltabattery.projectiles.Missile_Standard;
+	import deltabattery.projectiles.*;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
@@ -47,7 +46,7 @@
 			switch (proj)
 			{
 				case proj == "fast":
-					addObject(new Missile_Fast(cg, new MissileFast(), origin, target, type, params));
+					addObject(new Missile_Fast(cg, new MissileStandard(), origin, target, type, params));
 				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));

@@ -16,7 +16,7 @@
 		
 		public function Missile_Fast(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
-			var newParams:Object = {veloctiy:(2 * (Math.random() * 2 + 4))};
+			var newParams:Object = {velocity:(2 * (Math.random() * 2 + 4))};
 			super(_cg, _mc, _origin, _target, _type, newParams);
 		}
 	}
