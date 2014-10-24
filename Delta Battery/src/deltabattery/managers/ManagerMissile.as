@@ -35,7 +35,7 @@
 		
 		/**	Spawn a gravity-ignoring missile
 		 * 
-		 *	@proj		the type of projectile to spawn
+		 *	@proj		the type of projectile to spawn with choices: [fast, fastT, big, rocket, standard, LASM]
 		 * 	@origin		the starting location of the projectile
 		 * 	@target		where the projectile will head toward
 		 * 	@type		the affiliation that this projectile has (0 enemy; 1 player)
@@ -45,8 +45,23 @@
 		{
 			switch (proj)
 			{
-				case proj == "fast":
-					addObject(new Missile_Fast(cg, new MissileStandard(), origin, target, type, params));
+				case "fast":
+					addObject(new Missile_Fast(cg, new MissileFast(), origin, target, type, params));
+				break;
+				case "fastT":	// turret RAAM
+					addObject(new Missile_Standard(cg, new MissileFast(), origin, target, type, params));
+				break;
+				case "big":
+					addObject(new Missile_Standard(cg, new MissileBig(), origin, target, type, params));
+				break;
+				case "rocket":
+					addObject(new Missile_Fast(cg, new MissileRocket(), origin, target, type, params));
+				break;
+				case "cluster":
+					addObject(new Missile_Cluster(cg, new MissileBig(), origin, target, type, params));	// TODO cluster GFX
+				break;
+				case "LASM":
+					addObject(new Missile_LASM(cg, new MissileStandard(), origin, target, type, params));	// TODO LASM GFX
 				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));

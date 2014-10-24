@@ -45,9 +45,29 @@ package deltabattery
 			
 			// setup default weapons
 			weaponPrimary[0] = new Weapon_SAM(cg, 0);
-			weaponPrimary[1] = new Weapon_RAAM(cg, 1);		// TODO remove this weapon
+			//weaponPrimary[1] = new Weapon_RAAM(cg, 1);		// TODO remove this weapon
 			weaponSecondary[0] = new Weapon_Chain(cg, 0);
 			weaponSpecial = new Weapon_DeltaStrike(cg);
+		}
+		
+		
+		/**
+		 * 
+		 * @param	weapon		the weapon to use
+		 * @param	slot		0 <= slot <= 7
+		 */
+		public function enableWeapon(weapon:ABST_Weapon, slot:int):void
+		{
+			if (slot == 7)
+				weaponSpecial = weapon;
+			else if (slot == 6)
+				return;
+			else if (slot > 2)
+				weaponSecondary[slot - 3] = weapon;
+			else
+				weaponPrimary[slot] = weapon;
+			
+			weaponMC[slot].visible = true;
 		}
 		
 		private function init(e:Event):void
@@ -60,10 +80,13 @@ package deltabattery
 			turret.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			
 			var gui:MovieClip = cg.game.mc_gui;
-			weaponMC = [gui.wep_1, gui.wep_2, null, gui.wep_4, null, null, null, gui.wep_8];
+			weaponMC = [gui.wep_1, gui.wep_2, gui.wep_3, gui.wep_4, null, null, null, gui.wep_8];		// TODO complete
 			
 			// setup weapons
 			weaponMC[1].gotoAndStop("raam");
+			weaponMC[1].visible = false;
+			weaponMC[2].gotoAndStop("big");
+			weaponMC[2].visible = false;
 			weaponMC[3].gotoAndStop("chain");
 			weaponMC[7].gotoAndStop("delta");
 			for (var i:int = 0; i < weaponMC.length; i++)
@@ -97,19 +120,19 @@ package deltabattery
 				if (weaponPrimary[i])
 				{
 					weaponPrimary[i].step();
-					weaponMC[i].reload.y = -20 + ((weaponPrimary[i].cooldownCounter / weaponPrimary[i].cooldownReset) * 40);		// TODO move to ABST_Weapon.
+					weaponMC[i].reload.y = -20 + ((weaponPrimary[i].cooldownCounter / weaponPrimary[i].cooldownReset) * 40);
 				}
 				if (weaponSecondary[i])
 				{
 					weaponSecondary[i].step();
-					weaponMC[i + 3].reload.y = -20 + ((weaponSecondary[i].cooldownCounter / weaponSecondary[i].cooldownReset) * 40);		// TODO move to ABST_Weapon.
+					weaponMC[i + 3].reload.y = -20 + ((weaponSecondary[i].cooldownCounter / weaponSecondary[i].cooldownReset) * 40);
 				}
 			}
 			
 			if (weaponSpecial)
 			{
 				weaponSpecial.step();
-				weaponMC[7].reload.y = -20 + ((weaponSpecial.cooldownCounter / weaponSpecial.cooldownReset) * 40);		// TODO move to ABST_Weapon.
+				weaponMC[7].reload.y = -20 + ((weaponSpecial.cooldownCounter / weaponSpecial.cooldownReset) * 40);
 			}
 		}
 
@@ -164,6 +187,29 @@ package deltabattery
 			//trace(TURRET_LIMIT_R + " | " + (rot + 360) + " | " + TURRET_LIMIT_L);
 		}
 		
+		private function reloadAll():void
+		{
+			// reload all weapons
+			for (var i:int = 0; i < 3; i++)
+			{
+				if (weaponPrimary[i])
+				{
+					weaponPrimary[i].reload();
+					weaponMC[i].reload.y = 20;
+				}
+				if (weaponSecondary[i])
+				{
+					weaponSecondary[i].reload();
+					weaponMC[i + 3].reload.y = 20;
+				}
+			}
+			
+			if (weaponSpecial)
+			{
+				weaponSpecial.reload();
+				weaponMC[7].reload.y = 20;
+			}
+		}
 		
 		private function onKeyboard(e:KeyboardEvent):void
 		{

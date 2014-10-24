@@ -28,6 +28,8 @@
 		protected var partInterval:int = partCount;		// frames inbetween particle spawn
 		protected var partType:String = "";				// type of particle
 		
+		protected var explosionScale:Number = 1;		// scale factor on size of explosion
+		
 		protected var dist:Number;						// distance to the target
 		protected var prevDist:Number;					// distance to the target 1 frame before
 
@@ -53,6 +55,13 @@
 			
 			type = _type;
 			
+			if (!mc || !origin)		// ???
+			{
+				markedForDestroy = true;
+				cleanup(null);
+				return;
+			}
+			
 			mc.x = origin.x;
 			mc.y = origin.y;
 			
@@ -74,6 +83,8 @@
 					partInterval = params["partInterval"];
 				if (params["explode"] != null)
 					createExplosion = params["explode"];
+				if (params["explosionScale"] != null)
+					explosionScale = params["explosionScale"];
 			}
 			
 			if (useTarget)
@@ -82,6 +93,8 @@
 				tgt.x = target.x;
 				tgt.y = target.y;
 				cg.game.c_main.addChild(tgt);
+				if (cg.game.bg.ocean.currentFrame > 152) 	// post-sunset
+					tgt.gotoAndStop(2);						// white
 			}
 
 			mc.rotation = getAngle(origin.x, origin.y, target.x, target.y);
@@ -163,7 +176,7 @@
 			timerKill.start();
 			
 			if (createExplosion)
-				cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type);
+				cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type, explosionScale);
 
 			if (tgt)
 			{

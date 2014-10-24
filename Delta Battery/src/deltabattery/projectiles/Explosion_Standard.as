@@ -12,9 +12,9 @@ package deltabattery.projectiles
 	public class Explosion_Standard extends ABST_Explosion 
 	{
 		
-		public function Explosion_Standard(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int=0) 
+		public function Explosion_Standard(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int=0, _scale:Number = 1) 
 		{
-			super(_par, _mc, _origin, _type);
+			super(_par, _mc, _origin, _type, _scale);
 		}
 	}
 }

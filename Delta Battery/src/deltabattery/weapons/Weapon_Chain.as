@@ -17,9 +17,9 @@ package deltabattery.weapons
 			super(_cg, _slot);
 			name = "CHAIN";
 			
-			cooldownReset = 7;
-			projectileLife = 15;
-			ammo = ammoMax = 100;
+			cooldownReset = 10;
+			projectileLife = 13;
+			ammo = ammoMax = 50;
 		}
 		
 		override protected function createProjectile():void

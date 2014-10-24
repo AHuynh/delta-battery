@@ -34,8 +34,8 @@
 		
 		private var spawnType:Array;
 		/*	chance (weights) of given projectile to spawn
-		 * 	[missile, artillery] ...
-		 *      0         1             9
+		 * 	[missile, artillery, fast, big, cluster, LASM] ...
+		 *      0         1        2    3      4	  5  	 9
 		 */
 		
 		private var targetX:int = 390;
@@ -50,8 +50,13 @@
 		private const R_CORNER_LARGE:Array = [new Point( -500, -400), new Point( -410, -310)];
 		
 		private const R_LEFT_TOP:Array = [new Point( -450, -300), new Point( -410, -150)];
+		private const R_LEFT_LASM:Array = [new Point( -450, -250), new Point( -410, -150)];
 		
 		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
+		
+		// param helpers
+		private const P_FAST:Object = { explosionScale: .75 };
+		private const P_BIG:Object = { explosionScale: 2.25 };
 		
 		public function ManagerWave(_cg:ContainerGame, _wave:int = 1)
 		{
@@ -133,6 +138,64 @@
 					spawnMax = -30 * 3;			// 3 seconds maximum
 					spawnRandom = .96;
 				break;
+				
+				case 9:			// test
+					enemiesRemaining = 4;
+					
+					// enable projectiles
+					spawnLoc["cluster"] = [R_LEFT_TOP];
+					
+					// set spawn probabilities
+					spawnType[4] = 1;			// 100% cluster
+					
+					spawnDelay = 0;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
+				break;
+				case 8:			// test
+					enemiesRemaining = 4;
+					
+					// enable projectiles
+					spawnLoc["fast"] = [R_LEFT_TOP];
+					
+					// set spawn probabilities
+					spawnType[2] = 1;			// 100% fast
+					
+					spawnDelay = 0;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
+				break;
+				case 7:			// test
+					enemiesRemaining = 4;
+					
+					// enable projectiles
+					spawnLoc["big"] = [R_LEFT_TOP];
+					
+					// set spawn probabilities
+					spawnType[3] = 1;			// 100% big
+					
+					spawnDelay = 0;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
+				break;
+				case 10:			// test
+					enemiesRemaining = 4;
+					
+					// enable projectiles
+					spawnLoc["LASM"] = [R_LEFT_LASM];
+					
+					// set spawn probabilities
+					spawnType[5] = 1;			// 100% LASM
+					
+					spawnDelay = 0;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
+				break;
+				
 				default:		// crazy demo
 					enemiesRemaining = 80;
 					
@@ -201,27 +264,33 @@
 			{
 				switch (choose(spawnType))
 				{
-					// missile
+					// standard missile
 					case 0:
-						// TODO other missile types
 						manMiss.spawnProjectile("standard", getSpawnLocation("missile"), getTarget());
 					break;
 					// artillery
 					case 1:
 						manArty.spawnProjectile("standard", getSpawnLocation("artillery"), getTarget());
 					break;
+					// fast
+					case 2:
+						manMiss.spawnProjectile("fast", getSpawnLocation("fast"), getTarget(), 0, P_FAST);
+					break;
+					// big
+					case 3:
+						manMiss.spawnProjectile("big", getSpawnLocation("big"), getTarget(), 0, P_BIG);
+					break;
+					// cluster
+					case 4:
+						manMiss.spawnProjectile("cluster", getSpawnLocation("cluster"), getTarget());
+					break;
+					// LASM
+					case 5:
+						manMiss.spawnProjectile("LASM", getSpawnLocation("LASM"), getTarget());
+					break;
 					default:
 						trace("WARN! Didn't spawn anything...");
-				}
-				
-				/*
-				else if (wave >= 4)
-				{
-				manMiss.spawnProjectile("fast", new Point(spawnX + -2 * spawnVarianceX + getRand(0, spawnVarianceX),
-														  spawnY + -2 * spawnVarianceY + getRand(0, spawnVarianceY)),
-												new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
-														  targetY + -2 * targetVarianceY + getRand(0, targetVarianceY)));
-				}	*/										  
+				}								  
 							  
 				
 				spawnDelay = spawnMin;

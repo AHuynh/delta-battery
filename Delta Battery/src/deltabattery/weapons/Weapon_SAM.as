@@ -19,7 +19,7 @@ package deltabattery.weapons
 		{
 			super(_cg, _slot);
 			name = "SAM";
-			projectileParams["velocity"] = 7;
+			projectileParams["velocity"] = 8;
 			
 			//SoundPlayer.play("sfx_missile");
 			//(new sfx_missile as Sound).play();

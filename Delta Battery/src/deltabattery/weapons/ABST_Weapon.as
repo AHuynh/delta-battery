@@ -11,28 +11,22 @@ package deltabattery.weapons
 	{		
 		protected var cg:ContainerGame;	
 		protected var turret:MovieClip;			// the Turret MovieClip
-		protected const TURRET_ID:int = 1;		// .. ???
+		protected const TURRET_ID:int = 1;		// type to use
 		
 		public var name:String;					// display name for the weapon (SAM, RAAM, Chain, etc.)
 		public var slot:int;					// weapon slot
 		
 		public var cooldownCounter:int = 0;		// actual cooldown timer, 0 if ready to fire
-		public var cooldownReset:int = 15;		// amount to set the cooldown to after firing
-		
-		public var useHeat:Boolean = false;		// if TRUE, use heat and prevent firing if overheated
-		public var heat:Number = 0;				// the current amount of heat
-		public var heatMax:Number = 0;			// the max amount of heat before locking up
-		public var heatReduce:Number = 0;		// the amount of heat to decrease by when locked up per step
+		public var cooldownReset:int = 25;		// amount to set the cooldown to after firing
 		
 		public var projectileParams:Object = new Object();
 		public var projectileLife:int = -1;
 		public var projectileRange:int = -1;	// uses life to determine when to despawn
 		
-		public var ammoMax:int = 100;			// max reserve ammo
+		public var ammoMax:int = 50;			// max reserve ammo
 		public var ammo:int = ammoMax;			// current ammo
 
-		public var cost:int = 0;				// cost of this weapon in the shop
-		public var costAmmo:int;				// cost per 1 ammo for this weapon in the shop
+		public var costAmmo:int = 1;			// cost per 1 ammo for this weapon in the shop
 		
 		public function ABST_Weapon(_cg:ContainerGame, _slot:int) 
 		{
@@ -47,13 +41,11 @@ package deltabattery.weapons
 		{
 			if (cooldownCounter > 0)		// GUI updated in Turret
 				cooldownCounter--;
-
-			if (useHeat && heat > 0)		// TODO update heat indicator
-			{
-				heat -= heatReduce;
-				if (heat < 0)
-					heat = 0;
-			}
+		}
+		
+		public function reload():void
+		{
+			cooldownCounter = 0;
 		}
 
 		// returns new remaining ammo, or -1 if couldn't fire

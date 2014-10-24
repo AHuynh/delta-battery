@@ -27,7 +27,7 @@ package deltabattery.projectiles
 		
 		private var origin:Point;
 		
-		public function ABST_Explosion(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int = 0) 
+		public function ABST_Explosion(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int = 0, scale:Number = 1) 
 		{
 			par = _par;
 			mc = _mc;		
@@ -38,10 +38,12 @@ package deltabattery.projectiles
 			mc.x = origin.x;
 			mc.y = origin.y;
 			
+			mc.scaleX = mc.scaleY = scale;
+			
 			mc.rotation = getRand( -180, 180);
 			
-			range = 30;		// TODO set dynamically
-			SoundPlayer.play("sfx_explosion");
+			range = 30 * scale;
+			//SoundPlayer.play("sfx_explosion");
 		}
 		
 		public function step(manMiss:ManagerMissile, manArty:ManagerArtillery):Boolean
@@ -51,7 +53,8 @@ package deltabattery.projectiles
 			for (i = manMiss.objArr.length - 1; i >= 0; i--)
 			{
 				miss = manMiss.objArr[i]
-				if (type == miss.type) continue;
+				if (miss.type == 1) continue;		// ignore player projectiles
+				//if (type == miss.type) continue;
 
 				if (getDistance(mc.x, mc.y, miss.mc.x, miss.mc.y) < range)
 					miss.destroy();

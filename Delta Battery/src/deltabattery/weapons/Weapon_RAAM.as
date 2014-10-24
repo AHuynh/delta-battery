@@ -19,15 +19,16 @@ package deltabattery.weapons
 			
 			projectileParams["velocity"] = 18;
 			projectileParams["partInterval"] = 2;
+			projectileParams["explosionScale"] = .7;
 			
 			ammo = ammoMax = 30;
-			cooldownReset = 25;
+			cooldownReset = 45;
 		}
 		
 		override protected function createProjectile():void
 		{
 			// -- TODO change?
-			cg.manMiss.spawnProjectile("standard", new Point(turret.x, turret.y - 15),
+			cg.manMiss.spawnProjectile("fastT", new Point(turret.x, turret.y - 15),
 												   new Point(cg.mx, cg.my),
 										TURRET_ID, projectileParams);
 		}

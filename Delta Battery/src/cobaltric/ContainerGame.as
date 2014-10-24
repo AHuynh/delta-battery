@@ -1,5 +1,6 @@
 ﻿package cobaltric
 {	
+	import deltabattery.Armory;
 	import deltabattery.managers.ABST_Manager;
 	import deltabattery.managers.AutoPlayer;
 	import deltabattery.managers.ManagerArtillery;
@@ -55,6 +56,7 @@
 		public var my:Number = 0;
 		
 		private var shop:MovieClip;			// reference to the shop MovieClip
+		public var armory:Armory;
 		
 		private var startWave:int = 1;
 	
@@ -112,6 +114,8 @@
 			shop.visible = false;
 			shop.btn_nextDay.addEventListener(MouseEvent.CLICK, onShopDone);
 			
+			armory = new Armory(this);
+			
 			// setup tutorial
 			tutorialFlag = true;						// TODO set based on chosen day
 			game.mc_gui.tutorial.gotoAndPlay("in");		// TODO set
@@ -155,8 +159,8 @@
 				}
 			}
 			
-			
-			turret.step();		// update the Turret
+			if (gameActive)
+				turret.step();		// update the Turret
 			updateMoney();
 			updateHP();
 			//ai.step();
@@ -247,6 +251,7 @@
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 120;
+			gameActive = false;
 		}
 		
 		// updates the displayed money to match the actual money

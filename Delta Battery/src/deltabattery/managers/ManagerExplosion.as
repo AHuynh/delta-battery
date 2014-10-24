@@ -37,10 +37,10 @@ package deltabattery.managers {
 			}
 		}
 		
-		public function spawnExplosion(origin:Point, type:int = 0):void
+		public function spawnExplosion(origin:Point, type:int = 0, scale:Number = 1):void
 		{
 			// TODO switch case for different explosions?
-			var m:ABST_Explosion = new Explosion_Standard(cg.game.c_main, new ExplosionStandard(), origin, type);
+			var m:ABST_Explosion = new Explosion_Standard(cg.game.c_main, new ExplosionStandard(), origin, type, scale);
 			objArr.push(m);
 			cg.game.c_main.addChild(m.mc);
 			
