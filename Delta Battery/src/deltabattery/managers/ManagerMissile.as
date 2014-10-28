@@ -63,6 +63,9 @@
 				case "LASM":
 					addObject(new Missile_LASM(cg, new MissileStandard(), origin, target, type, params));	// TODO LASM GFX
 				break;
+				case "bomber":
+					addObject(new Bomber(cg, new MissileStandard(), origin, target, type, params));	// TODO Bomber GFX
+				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));
 			}
