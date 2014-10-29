@@ -7,8 +7,8 @@
 	import flash.geom.Point;
 	import flash.utils.Timer;
 	
-	/**	A generic, gravity-ignoring projectile
-	 * 
+	/**	
+	 *	A generic, gravity-ignoring projectile
 	 * 	@author Alexander Huynh
 	 */
 	public class ABST_Missile extends ABST_Base 
@@ -17,6 +17,7 @@
 		public var mc:MovieClip;						// the MovieClip corresponding to this missile
 		
 		public var type:int;							// affilation, 0 - enemy, 1 - player
+		public var typeSmart:int;						// type for smart weapons to use (i.e. DELTA STRIKE)
 		public var damage:Number;						// damage to deal to the city
 		
 		public var origin:Point;						// spawn location
@@ -33,17 +34,16 @@
 		protected var dist:Number;						// distance to the target
 		protected var prevDist:Number;					// distance to the target 1 frame before
 
-		public var velocity:Number;
-		public var rot:Number;
+		public var velocity:Number;						// velocity (speed) of this missile
+		public var rot:Number;							// rotation in rads - handled automatically
 		
 		protected var createExplosion:Boolean;			// if TRUE, spawn an explosion upon destruction
 		public var markedForDestroy:Boolean;			// helper for destroy
 		public var readyToDestroy:Boolean;				// helper for destroy
-		
 		protected var timerKill:Timer;					// helper for destroy
-		protected var tgt:MissileTarget;				// + indicator on player-made projectiles
 		
-		protected var awardMoney:Boolean = true;
+		protected var tgt:MissileTarget;				// + indicator on player-made projectiles
+		protected var awardMoney:Boolean = true;		// if TRUE, money will be affected upon destruction
 		
 		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _origin:Point,
 								     _target:Point, _type:int = 0, params:Object = null)
@@ -53,40 +53,43 @@
 			origin = _origin;
 			target = _target;
 			
-			type = _type;
+			type = typeSmart = _type;
 			
-			if (!mc || !origin)		// ???
+			// some magic to prevent some edge case from erroring - kill if invalid parameter(s)
+			if (!mc || !origin || !target)
 			{
 				markedForDestroy = true;
 				cleanup(null);
 				return;
 			}
-			
+
 			mc.x = origin.x;
 			mc.y = origin.y;
 			
-			targetMC = cg.game.city;
-			
+			targetMC = cg.game.city;			// default target is city MC
+
 			// default values
 			var useTarget:Boolean = false;
 			damage = 9 + getRand(0, 2);
-			velocity = Math.random() * 2 + 4;
+			velocity = 4 + getRand(0, 2);
 			createExplosion = true;
-			
+
+			// apply custom values if present
 			if (params)
 			{
-				if (params["target"] != null)
+				if (params["target"])
 					useTarget = params["target"];
-				if (params["velocity"] != null)
+				if (params["velocity"])
 					velocity = params["velocity"];
-				if (params["partInterval"] != null)
+				if (params["partInterval"])
 					partInterval = params["partInterval"];
-				if (params["explode"] != null)
+				if (params["explode"])
 					createExplosion = params["explode"];
-				if (params["explosionScale"] != null)
+				if (params["explosionScale"])
 					explosionScale = params["explosionScale"];
 			}
 			
+			// spawn missile target marker (player-fired missiles)
 			if (useTarget)
 			{
 				tgt = new MissileTarget();
@@ -103,6 +106,11 @@
 			dist = prevDist = getDistance(origin.x, origin.y, target.x, target.y);
 		}
 		
+		/**
+		 * Main driving function; called 30/sec by ContainerGame.
+		 * 
+		 * @return	TRUE if object needs to be removed
+		 */
 		public function step():Boolean
 		{
 			if (!markedForDestroy)
@@ -114,24 +122,24 @@
 				mc.x += dx;
 				mc.y += dy;
 				
-				updateParticle(dx, dy);
-				checkTarget();
+				updateParticle(dx, dy);		// update/spawn particles
+				checkTarget();				// check if hit city
 
 				dist = getDistance(mc.x, mc.y, target.x, target.y);
-				
-				// TODO replace magic numbers
-				// destroy if within range of target
+
+				// destroy if too far out horizontally OR close to target OR moving away from target OR too low vertically
 				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist || mc.y > 370))
 					destroy();
 				else
 					prevDist = dist;
 			}
-			
-			// returns TRUE if this object needs to be removed
+
 			return readyToDestroy;
 		}
 		
-		// spawns a particle if necessary
+		/**
+		 *	spawns a particle if necessary; update particle counter 
+		 */
 		protected function updateParticle(dx:Number, dy:Number):void
 		{
 			if (partEnabled && --partCount == 0)
@@ -140,10 +148,12 @@
 				cg.manPart.spawnParticle(partType, new Point(mc.x, mc.y), 0, dx * .1, dy * .10, .05);
 			}
 		}
-		
-		// if this projectile is close to the city, with a 20% chance of happening per frame,
-		// destroy this projectile and damage the city
-		// dest = TRUE always except when called in destroy(), below
+
+		/**
+		 * if this projectile is close to the city, with a 20% chance of happening per frame,
+		 * destroy this projectile and damage the city
+		 * @param	dest	TRUE always except when called in destroy(), see below
+		 */
 		protected function checkTarget(dest:Boolean = true):void
 		{
 			if (type == 1) return;				// ignore player projectiles
@@ -158,7 +168,9 @@
 			}
 		}
 
-		// kill this projectile, spawning an explosion if spawnExplosion is TRUE
+		/**
+		 *	kill this projectile, spawning an explosion if spawnExplosion is TRUE 
+		 */
 		public function destroy():void
 		{
 			if (markedForDestroy) return;		// already going to be destroyed, quit

@@ -23,9 +23,9 @@
 		private var spawnRandom:Number;
 		
 		private var spawnLoc:Object = new Object();
-		/*	spawnLoc["type"] -> [null, [(x1, y1), (x2, y2)], null]
+		/*	spawnLoc[type] -> [null, [(x1, y1), (x2, y2)], null]
 		 * 
-		 * 	let arr be spawnLoc["type"]
+		 * 	let arr be spawnLoc[type]
 		 * 	arr				null if not able to spawn in this wave
 		 * 	arr[]			regions to spawn in
 		 * 	arr[][0..1]		upper left and lower right corners of
@@ -34,9 +34,16 @@
 		
 		private var spawnType:Array;
 		/*	chance (weights) of given projectile to spawn
-		 * 	[missile, artillery, fast, big, cluster, LASM, bomber, helicopter] ...
-		 *      0         1        2    3      4	  5  	 6         7        9
 		 */
+		private const MISSILE:int 	= 0;
+		private const ARTY:int 		= 1;
+		private const FAST:int 		= 2;
+		private const BIG:int 		= 3;
+		private const CLUSTER:int 	= 4;
+		private const LASM:int 		= 5;
+		private const BOMBER:int 	= 6;
+		private const HELI:int 		= 7;
+		private const PLANE:int 	= 8;
 		
 		private var targetX:int = 390;
 		private var targetY:int = 150;
@@ -51,6 +58,7 @@
 		
 		private const R_LEFT_TOP:Array = [new Point( -450, -300), new Point( -410, -150)];
 		private const R_LEFT_LASM:Array = [new Point( -450, -250), new Point( -410, -150)];
+		private const R_RIGHT_LASM:Array = [new Point( 450, -250), new Point( 410, -150)];
 		private const R_LEFT_CENTER:Array = [new Point( -500, -75), new Point( -450, 75)];
 		
 		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
@@ -85,10 +93,10 @@
 					enemiesRemaining = 8;
 			
 					// enable missiles - (corner)
-					spawnLoc["missile"] = [R_LEFT_TOP];
+					spawnLoc[MISSILE] = [R_LEFT_TOP];
 					
 					// set spawn probabilities
-					spawnType[0] = 1;			// 100% missile
+					spawnType[MISSILE] = 1;			// 100% missile
 					
 					spawnDelay = 30 * 2;		// 2 seconds initial delay
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -100,7 +108,7 @@
 					enemiesRemaining = 12;
 					
 					// set spawn probabilities
-					spawnType[0] = 1;			// 100% missile
+					spawnType[MISSILE] = 1;			// 100% missile
 					
 					spawnDelay = 30 * 2;
 					spawnMin = 20;
@@ -112,10 +120,10 @@
 					enemiesRemaining = 10;
 					
 					// enable projectiles
-					spawnLoc["artillery"] = [R_ARTY_NORM];
+					spawnLoc[ARTY] = [R_ARTY_NORM];
 					
 					// set spawn probabilities
-					spawnType[1] = 1;			// 100% artillery
+					spawnType[ARTY] = 1;			// 100% artillery
 					
 					spawnDelay = 30 * 2;
 					spawnMin = 30 * 2 + 15;		// 2.5 seconds minimum
@@ -127,12 +135,12 @@
 					enemiesRemaining = 18;
 					
 					// enable projectiles
-					spawnLoc["missile"] = [R_LEFT_TOP];
-					spawnLoc["artillery"] = [R_ARTY_NORM];
+					spawnLoc[MISSILE] = [R_LEFT_TOP];
+					spawnLoc[ARTY] = [R_ARTY_NORM];
 					
 					// set spawn probabilities
-					spawnType[0] = 3;			// 75% missile
-					spawnType[1] = 1;			// 25% artillery
+					spawnType[MISSILE] = 3;			// 75% missile
+					spawnType[ARTY] = 1;			// 25% artillery
 					
 					spawnDelay = 30 * 2;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -144,10 +152,10 @@
 					enemiesRemaining = 4;
 					
 					// enable projectiles
-					spawnLoc["cluster"] = [R_LEFT_TOP];
+					spawnLoc[CLUSTER] = [R_LEFT_TOP];
 					
 					// set spawn probabilities
-					spawnType[4] = 1;			// 100% cluster
+					spawnType[CLUSTER] = 1;			// 100% cluster
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -158,10 +166,10 @@
 					enemiesRemaining = 4;
 					
 					// enable projectiles
-					spawnLoc["fast"] = [R_LEFT_TOP];
+					spawnLoc[FAST] = [R_LEFT_TOP];
 					
 					// set spawn probabilities
-					spawnType[2] = 1;			// 100% fast
+					spawnType[FAST] = 1;			// 100% fast
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -169,13 +177,17 @@
 					spawnRandom = .96;
 				break;
 				case 7:			// test
-					enemiesRemaining = 4;
+					enemiesRemaining = 16;
 					
 					// enable projectiles
-					spawnLoc["helicopter"] = [R_LEFT_CENTER];
+					spawnLoc[HELI] = [R_LEFT_CENTER];
+					spawnLoc[BOMBER] = [R_LEFT_LASM];
+					spawnLoc[PLANE] = [R_RIGHT_LASM];
 					
 					// set spawn probabilities
-					spawnType[7] = 1;			// 100% big
+					spawnType[HELI] = 1;	
+					spawnType[BOMBER] = 1;
+					spawnType[PLANE] = 1;		
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -186,10 +198,10 @@
 					enemiesRemaining = 4;
 					
 					// enable projectiles
-					spawnLoc["LASM"] = [R_LEFT_LASM];
+					spawnLoc[LASM] = [R_LEFT_LASM];
 					
 					// set spawn probabilities
-					spawnType[5] = 1;			// 100% LASM
+					spawnType[LASM] = 1;			// 100% LASM
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -201,12 +213,12 @@
 					enemiesRemaining = 80;
 					
 					// enable projectiles
-					spawnLoc["missile"] = [R_LEFT_TOP];
-					spawnLoc["artillery"] = [R_ARTY_NORM];
+					spawnLoc[MISSILE] = [R_LEFT_TOP];
+					spawnLoc[ARTY] = [R_ARTY_NORM];
 					
 					// set spawn probabilities
-					spawnType[0] = 1;			// 50% missile
-					spawnType[1] = 1;			// 50% artillery
+					spawnType[MISSILE] = 1;			// 50% missile
+					spawnType[ARTY] = 1;			// 50% artillery
 					
 					spawnDelay = 30 * 1;
 					spawnMin = 3;
@@ -269,36 +281,32 @@
 			{
 				switch (choose(spawnType))
 				{
-					// standard missile
-					case 0:
-						manMiss.spawnProjectile("standard", getSpawnLocation("missile"), getTarget());
+					case MISSILE:
+						manMiss.spawnProjectile("standard", getSpawnLocation(MISSILE), getTarget());
 					break;
-					// artillery
-					case 1:
-						manArty.spawnProjectile("standard", getSpawnLocation("artillery"), getTarget());
+					case ARTY:
+						manArty.spawnProjectile("standard", getSpawnLocation(ARTY), getTarget());
 					break;
-					// fast
-					case 2:
-						manMiss.spawnProjectile("fast", getSpawnLocation("fast"), getTarget(), 0, P_FAST);
+					case FAST:
+						manMiss.spawnProjectile("fast", getSpawnLocation(FAST), getTarget(), 0, P_FAST);
 					break;
-					// big
-					case 3:
-						manMiss.spawnProjectile("big", getSpawnLocation("big"), getTarget(), 0, P_BIG);
+					case BIG:
+						manMiss.spawnProjectile("big", getSpawnLocation(BIG), getTarget(), 0, P_BIG);
 					break;
-					// cluster
-					case 4:
-						manMiss.spawnProjectile("cluster", getSpawnLocation("cluster"), getTarget());
+					case CLUSTER:
+						manMiss.spawnProjectile("cluster", getSpawnLocation(CLUSTER), getTarget());
 					break;
-					// LASM
-					case 5:
-						manMiss.spawnProjectile("LASM", getSpawnLocation("LASM"), getTarget());
+					case LASM:
+						manMiss.spawnProjectile("LASM", getSpawnLocation(LASM), getTarget());
 					break;
-					case 6:
-						manMiss.spawnProjectile("bomber", getSpawnLocation("bomber"), getTarget());
+					case BOMBER:
+						manMiss.spawnProjectile("bomber", getSpawnLocation(BOMBER), getTarget());
 					break;
-					case 7:
-						manMiss.spawnProjectile("helicopter", getSpawnLocation("helicopter"), new Point(0 + (Math.random() * 150 - 75),
-																										0 + (Math.random() * 100 - 50)));
+					case HELI:
+						manMiss.spawnProjectile("helicopter", getSpawnLocation(HELI), new Point(getRand(-75, 75), getRand(-50, 50)));
+					break;
+					case PLANE:
+						manMiss.spawnProjectile("plane", getSpawnLocation(PLANE), new Point(-500, 0));
 					break;
 					default:
 						trace("WARN! Didn't spawn anything...");
@@ -335,7 +343,7 @@
 		 * @param	type	name of projectile to spawn (ex "missile")
 		 * @return			restricted randomly-generated spawn point
 		 */
-		private function getSpawnLocation(type:String):Point
+		private function getSpawnLocation(type:int):Point
 		{
 			var regions:Array = spawnLoc[type];
 			if (!regions) return null;

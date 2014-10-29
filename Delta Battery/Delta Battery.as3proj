@@ -62,9 +62,14 @@
     <element path="ParticleArtillery.swc" />
     <element path="Selected.swc" />
     <element path="MissileBig.swc" />
+    <element path="Game.swc" />
+    <element path="Helicopter.swc" />
+    <element path="Bomber.swc" />
     <element path="MissileFast.swc" />
     <element path="MissileRocket.swc" />
-    <element path="Game.swc" />
+    <element path="ShipPassenger.swc" />
+    <element path="Satellite.swc" />
+    <element path="Airplane.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

@@ -3,6 +3,7 @@ package deltabattery.weapons
 	import cobaltric.ContainerGame;
 	import deltabattery.managers.ABST_Manager;
 	import deltabattery.projectiles.ABST_Missile;
+	import deltabattery.projectiles.ABST_Vehicle;
 	import deltabattery.Turret;
 	
 	/**
@@ -72,11 +73,11 @@ package deltabattery.weapons
 			for (var i:int = proj.length - 1; i >= 0; i--)
 			{
 				m = proj[i];
-				if (m.type == 1) continue;			// ignore player projectiles
+				if (m.typeSmart == 1) continue;		// ignore player projectiles
 				if (m.markedForDestroy) continue;
 				
 				dist = getDistance(turret.x, turret.y, m.mc.x, m.mc.y);
-				if (dist > 680) continue;		// TODO magic number - range
+				if (dist > 680) continue;			// TODO magic number - range
 				if (dist < minDist)
 				{
 					minDist = dist;
@@ -91,6 +92,8 @@ package deltabattery.weapons
 				cg.game.c_part.graphics.lineStyle(1, 0xFF0000, .5);
 				cg.game.c_part.graphics.moveTo(turret.x, turret.y);
 				cg.game.c_part.graphics.lineTo(tgt.mc.x, tgt.mc.y);
+				if (tgt is ABST_Vehicle)
+					(tgt as ABST_Vehicle).hp = 0;
 				tgt.destroy();
 				delay = delayMax;
 			}

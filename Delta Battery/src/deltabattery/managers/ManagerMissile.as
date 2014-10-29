@@ -64,10 +64,13 @@
 					addObject(new Missile_LASM(cg, new MissileStandard(), origin, target, type, params));	// TODO LASM GFX
 				break;
 				case "bomber":
-					addObject(new Bomber(cg, new MissileStandard(), origin, target, type, params));	// TODO Bomber GFX
+					addObject(new Vehicle_Bomber(cg, new Bomber(), origin, target, type, params));
 				break;
 				case "helicopter":
-					addObject(new Helicopter(cg, new MissileStandard(), origin, target, type, params));	// TODO Helicopter GFX
+					addObject(new Vehicle_Helicopter(cg, new Helicopter(), origin, target, type, params));
+				break;
+				case "plane":
+					addObject(new Vehicle_PlanePassenger(cg, new Airplane(), origin, target, type, params));
 				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));
