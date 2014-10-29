@@ -34,8 +34,8 @@
 		
 		private var spawnType:Array;
 		/*	chance (weights) of given projectile to spawn
-		 * 	[missile, artillery, fast, big, cluster, LASM] ...
-		 *      0         1        2    3      4	  5  	 9
+		 * 	[missile, artillery, fast, big, cluster, LASM, bomber] ...
+		 *      0         1        2    3      4	  5  	 6      9
 		 */
 		
 		private var targetX:int = 390;
@@ -171,10 +171,10 @@
 					enemiesRemaining = 4;
 					
 					// enable projectiles
-					spawnLoc["big"] = [R_LEFT_TOP];
+					spawnLoc["bomber"] = [R_LEFT_LASM];
 					
 					// set spawn probabilities
-					spawnType[3] = 1;			// 100% big
+					spawnType[6] = 1;			// 100% big
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -291,6 +291,9 @@
 					// LASM
 					case 5:
 						manMiss.spawnProjectile("LASM", getSpawnLocation("LASM"), getTarget());
+					break;
+					case 6:
+						manMiss.spawnProjectile("bomber", getSpawnLocation("bomber"), getTarget());
 					break;
 					default:
 						trace("WARN! Didn't spawn anything...");
