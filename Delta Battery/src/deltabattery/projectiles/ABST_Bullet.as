@@ -40,6 +40,7 @@ package deltabattery.projectiles {
 				mc.x += velocity * Math.cos(rot);
 				mc.y += velocity * Math.sin(rot);
 				
+				checkTarget();
 				life--;
 				
 				// TODO replace magic numbers
