@@ -34,8 +34,8 @@
 		
 		private var spawnType:Array;
 		/*	chance (weights) of given projectile to spawn
-		 * 	[missile, artillery, fast, big, cluster, LASM, bomber] ...
-		 *      0         1        2    3      4	  5  	 6      9
+		 * 	[missile, artillery, fast, big, cluster, LASM, bomber, helicopter] ...
+		 *      0         1        2    3      4	  5  	 6         7        9
 		 */
 		
 		private var targetX:int = 390;
@@ -51,6 +51,7 @@
 		
 		private const R_LEFT_TOP:Array = [new Point( -450, -300), new Point( -410, -150)];
 		private const R_LEFT_LASM:Array = [new Point( -450, -250), new Point( -410, -150)];
+		private const R_LEFT_CENTER:Array = [new Point( -500, -75), new Point( -450, 75)];
 		
 		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
 		
@@ -171,10 +172,10 @@
 					enemiesRemaining = 4;
 					
 					// enable projectiles
-					spawnLoc["bomber"] = [R_LEFT_LASM];
+					spawnLoc["helicopter"] = [R_LEFT_CENTER];
 					
 					// set spawn probabilities
-					spawnType[6] = 1;			// 100% big
+					spawnType[7] = 1;			// 100% big
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -294,6 +295,10 @@
 					break;
 					case 6:
 						manMiss.spawnProjectile("bomber", getSpawnLocation("bomber"), getTarget());
+					break;
+					case 7:
+						manMiss.spawnProjectile("helicopter", getSpawnLocation("helicopter"), new Point(0 + (Math.random() * 150 - 75),
+																										0 + (Math.random() * 100 - 50)));
 					break;
 					default:
 						trace("WARN! Didn't spawn anything...");

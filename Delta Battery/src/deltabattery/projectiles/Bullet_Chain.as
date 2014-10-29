@@ -14,7 +14,7 @@ package deltabattery.projectiles
 	{
 		
 		public function Bullet_Chain(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point,
-									 _type:int = 0, _life:int = 15, stats:Object = null) 
+									 _type:int = 0, _life:int = 20, stats:Object = null) 
 		{			
 			super(_cg, _mc, _origin, _target, _type, _life, stats);
 			
