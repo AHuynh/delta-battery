@@ -11,6 +11,7 @@ package deltabattery.projectiles
 	public class Missile_Cluster extends ABST_Missile 
 	{
 		private var airburst:int;				// time to burst
+		private var rocketParams:Object;
 		
 		public function Missile_Cluster(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
@@ -21,6 +22,9 @@ package deltabattery.projectiles
 				params["velocity"] = 2;
 				params["partInterval"] = 10;
 			}
+			
+			rocketParams = new Object();
+			rocketParams["velocity"] = 6;
 			
 			super(_cg, _mc, _origin, _target, _type, params);
 			airburst = 150 + getRand(0, 90);
@@ -45,9 +49,9 @@ package deltabattery.projectiles
 				{
 					// spawn rockets
 					createExplosion = false;
-					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x, target.y), type);
-					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x + 30, target.y - 30), type);
-					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x - 30, target.y + 30), type);
+					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x, target.y), type, rocketParams);
+					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x + 30, target.y - 30), type, rocketParams);
+					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x - 30, target.y + 30), type, rocketParams);
 					destroy();
 				}
 			}

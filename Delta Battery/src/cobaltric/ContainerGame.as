@@ -83,7 +83,7 @@
 			game = new Game();
 			addChild(game);
 			game.x -= 129;
-			game.y -= 440;
+			game.y -= 446;
 			//game.mc_gui.mc_statusCenter.tf_status.text = "Wave 1 begun!";
 			game.mc_gui.mc_statusCenter.visible = false;
 			game.mc_gui.mc_statusHuge.visible = false;
@@ -214,7 +214,7 @@
 			{
 				cityHP = 0;
 				game.city.gotoAndStop(game.city.totalFrames);
-				// TODO game over
+				//completed = true;		// TODO game over
 			}
 			else		// update the visual state of the city
 			{

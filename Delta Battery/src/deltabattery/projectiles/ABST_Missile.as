@@ -147,7 +147,7 @@
 		protected function checkTarget(dest:Boolean = true):void
 		{
 			if (type == 1) return;				// ignore player projectiles
-			if (abs(mc.x - targetMC.x) < 100 && abs(mc.y - targetMC.y + 50) < 50 && Math.random() > .8)
+			if (abs(mc.x - targetMC.x) < 100 && abs(mc.y - (targetMC.y + 50)) < 50 && Math.random() > .8)
 			{
 				cg.damageCity(this);
 				if (dest)

@@ -199,6 +199,10 @@
 				default:		// crazy demo
 					enemiesRemaining = 80;
 					
+					// enable projectiles
+					spawnLoc["missile"] = [R_LEFT_TOP];
+					spawnLoc["artillery"] = [R_ARTY_NORM];
+					
 					// set spawn probabilities
 					spawnType[0] = 1;			// 50% missile
 					spawnType[1] = 1;			// 50% artillery
