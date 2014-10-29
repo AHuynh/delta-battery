@@ -66,6 +66,9 @@
 				case "bomber":
 					addObject(new Bomber(cg, new MissileStandard(), origin, target, type, params));	// TODO Bomber GFX
 				break;
+				case "helicopter":
+					addObject(new Helicopter(cg, new MissileStandard(), origin, target, type, params));	// TODO Helicopter GFX
+				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));
 			}

@@ -9,6 +9,7 @@
 	import deltabattery.managers.ManagerExplosion;
 	import deltabattery.managers.ManagerParticle;
 	import deltabattery.managers.ManagerWave;
+	import deltabattery.projectiles.ABST_Bullet;
 	import deltabattery.projectiles.ABST_Missile;
 	import deltabattery.Turret;
 	import flash.display.MovieClip;
@@ -202,13 +203,22 @@
 		 * 
 		 * 	@m		The missile that is damaging the city
 		 */
-		public function damageCity(m:ABST_Missile):void
+		public function damageCity(param:*):void
 		{
-			cityHP -= m.damage;
-			cityHPCounter = 30;		// reset the slack counter
+			var life:Number;
+			if (param is ABST_Missile) {
+				cityHP -= param.damage;
+				cityHPCounter = 30;		// reset the slack counter
 			
-			var life:Number = cityHP / cityHPMax;
-			game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar (primary)
+				life = cityHP / cityHPMax;
+				game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar (primary)
+			} else if (param is ABST_Bullet) {
+				cityHP -= param.damage;
+				cityHPCounter = 30;		// reset the slack counter
+			
+				life = cityHP / cityHPMax;
+				game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar (primary)
+			}
 			
 			if (cityHP <= 0)
 			{
