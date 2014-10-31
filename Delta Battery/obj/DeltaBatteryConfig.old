@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'10/29/2014'</value>
+      <value>'10/31/2014'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -35,6 +35,7 @@
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\src</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
+    <include-libraries />
     <library-path append="true">
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\BulletStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileStandard.swc</path-element>
@@ -54,6 +55,9 @@
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ShipPassenger.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Satellite.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Airplane.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ShipBattle.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileCruise.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ArtilleryBomb.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>

@@ -33,7 +33,10 @@ package deltabattery.projectiles
 				mc.x += velocity;
 
 				if (mc.x < 380 && timer % 90 == 0)
-					cg.manMiss.spawnProjectile("big", new Point(mc.x, mc.y), new Point(cg.game.city.x, cg.game.city.y));
+				{
+					var params:Object = { velocity: velocity };
+					cg.manMiss.spawnProjectile("bomb", new Point(mc.x, mc.y + 10), new Point(cg.game.city.x, cg.game.city.y), 0, params);
+				}
 				
 				if ((Math.abs(mc.x) > 800 || mc.y > 370))
 					destroy();

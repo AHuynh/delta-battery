@@ -48,7 +48,7 @@
   </build>
   <!-- SWC Include Libraries -->
   <includeLibraries>
-    <!-- example: <element path="..." /> -->
+    <element path="SomeTest" />
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
@@ -70,6 +70,9 @@
     <element path="ShipPassenger.swc" />
     <element path="Satellite.swc" />
     <element path="Airplane.swc" />
+    <element path="ShipBattle.swc" />
+    <element path="MissileCruise.swc" />
+    <element path="ArtilleryBomb.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
@@ -81,7 +84,7 @@
   </rslPaths>
   <!-- Intrinsic Libraries -->
   <intrinsics>
-    <!-- example: <element path="..." /> -->
+    <element path="Library\AS3\frameworks\Flex3" />
   </intrinsics>
   <!-- Assets to embed into the output SWF -->
   <library>

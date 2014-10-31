@@ -128,7 +128,7 @@
 				dist = getDistance(mc.x, mc.y, target.x, target.y);
 
 				// destroy if too far out horizontally OR close to target OR moving away from target OR too low vertically
-				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist || mc.y > 370))
+				if ((Math.abs(mc.x) > 800 || dist < 5 || dist > prevDist || mc.y > 170))
 					destroy();
 				else
 					prevDist = dist;
