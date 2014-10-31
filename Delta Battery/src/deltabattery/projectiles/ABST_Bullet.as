@@ -15,7 +15,7 @@ package deltabattery.projectiles {
 	 */
 	public class ABST_Bullet extends ABST_Missile 
 	{
-		private var life:int;
+		protected var life:int;
 		
 		public function ABST_Bullet(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, 
 									_type:int = 0, _life:int = 15, stats:Object = null) 

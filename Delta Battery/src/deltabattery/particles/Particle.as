@@ -23,7 +23,7 @@ package deltabattery.particles
 		
 		public var rotSpd:Number = 0;
 		
-		public function Particle(_man:ManagerParticle, _mc:MovieClip, origin:Point, rot:Number = 0, _dx:Number = 0, _dy:Number = 0, _g:Number = 0) 
+		public function Particle(_man:ManagerParticle, _mc:MovieClip, origin:Point, rot:Number, _dx:Number = 0, _dy:Number = 0, _g:Number = 0) 
 		{
 			super();
 			man = _man;
@@ -34,11 +34,13 @@ package deltabattery.particles
 			dx = _dx; dy = _dy;
 			g = _g;
 			
-			if (rot == 0)
+			if (!rot)
 			{
 				mc.rotation = getRand( -180, 180);
 				rotSpd = getRand( -.5, .5);
 			}
+			else
+				mc.rotation = rot;
 			
 			mc.scaleX = mc.scaleY = getRand(.8, 1);
 			mcTotal = mc.totalFrames;

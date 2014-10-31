@@ -18,12 +18,9 @@ package deltabattery.projectiles
 		{			
 			super(_cg, _mc, _origin, _target, _type, _life, stats);
 			
-			
-			// temporary tracer
+			// tracer
 			if (Math.random() > .8)
 				mc.gotoAndStop("tracer");
-				
-			// TODO use stats
 		}
 	}
 }

@@ -32,6 +32,22 @@ package deltabattery.managers
 		{
 			return objArr.length > 0;
 		}
+		
+		public function destroy():void
+		{
+			trace(this + " destroying...");
+			var mc:MovieClip;
+			for (var i:int = 0; i < objArr.length; i++)
+			{
+				if (!mc) continue;
+				mc.cleanup();
+				if (MovieClip(mc.parent).contains(mc))
+					MovieClip(mc.parent).removeChild(mc);
+				mc = null;
+			}
+			objArr = null;
+			cg = null;
+		}
 	}
 
 }

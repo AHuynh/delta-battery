@@ -5,6 +5,7 @@ package deltabattery.managers
 	import deltabattery.projectiles.ABST_Bullet;
 	import deltabattery.projectiles.ABST_Missile;
 	import deltabattery.projectiles.Bullet_Chain;
+	import deltabattery.projectiles.Bullet_Flak;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
@@ -75,6 +76,9 @@ package deltabattery.managers
 		{
 			switch (proj)
 			{
+				case "flak":
+					addObject(new Bullet_Flak(cg, new BulletStandard(), origin, target, type, life, params));
+				break;
 				default:		// "chain"
 					addObject(new Bullet_Chain(cg, new BulletStandard(), origin, target, type, life, params));
 			}

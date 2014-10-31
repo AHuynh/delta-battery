@@ -11,6 +11,7 @@ package deltabattery.projectiles
 	public class Missile_Cluster extends ABST_Missile 
 	{
 		private var airburst:int;				// time to burst
+		private var warning:MovieClip;			// visual warning
 		private var rocketParams:Object;
 		
 		public function Missile_Cluster(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
@@ -52,7 +53,20 @@ package deltabattery.projectiles
 					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x, target.y), type, rocketParams);
 					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x + 30, target.y - 30), type, rocketParams);
 					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x - 30, target.y + 30), type, rocketParams);
+					for (var i:int = 0; i < 3 + getRand(0, 3); i++)
+						cg.manPart.spawnParticle(partType, new Point(mc.x, mc.y), 0, dx * .1, dy * .10, .05);
 					destroy();
+				}
+				// warning
+				else if (airburst == 45)
+				{
+					warning = new SpecialWarning();
+					mc.addChild(warning);
+				}
+				else if (warning)
+				{
+					warning.gotoAndStop(warning.currentFrame + 1);
+					warning.rotation += (airburst < 10 ? 0 : 4);
 				}
 			}
 			

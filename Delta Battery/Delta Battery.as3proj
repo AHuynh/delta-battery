@@ -57,12 +57,10 @@
     <element path="MissileTarget.swc" />
     <element path="ArtilleryStandard.swc" />
     <element path="ExplosionStandard.swc" />
-    <element path="ContainerMenu.swc" />
     <element path="ParticleSmoke01.swc" />
     <element path="ParticleArtillery.swc" />
     <element path="Selected.swc" />
     <element path="MissileBig.swc" />
-    <element path="Game.swc" />
     <element path="Helicopter.swc" />
     <element path="Bomber.swc" />
     <element path="MissileFast.swc" />
@@ -73,6 +71,9 @@
     <element path="ShipBattle.swc" />
     <element path="MissileCruise.swc" />
     <element path="ArtilleryBomb.swc" />
+    <element path="ContainerMenu.swc" />
+    <element path="SpecialWarning.swc" />
+    <element path="Game.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

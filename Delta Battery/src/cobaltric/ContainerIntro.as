@@ -18,29 +18,30 @@
 			menu = new ContainerMenu();
 			addChild(menu);
 			
-			menu.btn_level0.addEventListener(MouseEvent.CLICK, onLevel);
-			menu.btn_level1.addEventListener(MouseEvent.CLICK, onLevel);
-			menu.btn_level2.addEventListener(MouseEvent.CLICK, onLevel);
+			menu.menu_credits.visible = false;
+			menu.menu_main.btn_level0.addEventListener(MouseEvent.CLICK, onLevel);
+			menu.menu_main.btn_level1.addEventListener(MouseEvent.CLICK, onLevel);
+			menu.menu_main.btn_level2.addEventListener(MouseEvent.CLICK, onLevel);
 		}
 		
 		private function onLevel(e:MouseEvent):void
 		{			
 			switch (e.target)
 			{
-				case menu.btn_level0:
+				case menu.menu_main.btn_level0:
 					lvl = 1;
 				break;
-				case menu.btn_level1:
+				case menu.menu_main.btn_level1:
 					lvl = 4;
 				break;
-				case menu.btn_level2:
+				case menu.menu_main.btn_level2:
 					lvl = 7;
 				break;
 			}
-			
-			menu.btn_level0.removeEventListener(MouseEvent.CLICK, onLevel);
-			menu.btn_level1.removeEventListener(MouseEvent.CLICK, onLevel);
-			menu.btn_level2.removeEventListener(MouseEvent.CLICK, onLevel);
+
+			menu.menu_main.btn_level0.removeEventListener(MouseEvent.CLICK, onLevel);
+			menu.menu_main.btn_level1.removeEventListener(MouseEvent.CLICK, onLevel);
+			menu.menu_main.btn_level2.removeEventListener(MouseEvent.CLICK, onLevel);
 			
 			menu.destroy();
 			eng.startWave = lvl;

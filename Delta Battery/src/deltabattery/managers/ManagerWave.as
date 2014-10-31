@@ -132,17 +132,49 @@
 				break;
 				// missiles + artillery
 				case 4:
-					enemiesRemaining = 18;
+					enemiesRemaining = 5;
 					
 					// enable projectiles
-					spawnLoc[MISSILE] = [R_LEFT_TOP];
-					spawnLoc[ARTY] = [R_ARTY_NORM];
+					//spawnLoc[MISSILE] = [R_LEFT_TOP];
+					//spawnLoc[ARTY] = [R_ARTY_NORM];
+					spawnLoc[CLUSTER] = [R_LEFT_TOP];
 					
 					// set spawn probabilities
-					spawnType[MISSILE] = 3;			// 75% missile
-					spawnType[ARTY] = 1;			// 25% artillery
+					//spawnType[MISSILE] = 3;			// 75% missile
+					//spawnType[ARTY] = 1;			// 25% artillery
+					spawnType[CLUSTER] = 1;			// 100% cluster
 					
 					spawnDelay = 30 * 2;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
+				break;
+				case 5:			// test
+					enemiesRemaining = 6;
+					
+					// enable projectiles
+					spawnLoc[HELI] = [R_LEFT_CENTER];
+					
+					// set spawn probabilities
+					spawnType[HELI] = 1;			// 100% cluster
+					
+					spawnDelay = 0;
+					spawnMin = 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 3;			// 3 seconds maximum
+					spawnRandom = .96;
+				break;
+				case 6:			// test
+					enemiesRemaining = 9;
+					
+					// enable projectiles
+					spawnLoc[BOMBER] = [R_LEFT_LASM];
+					spawnLoc[PLANE] = [R_RIGHT_LASM];
+					
+					// set spawn probabilities
+					spawnType[BOMBER] = 3;
+					spawnType[PLANE] = 1;		
+					
+					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
 					spawnMax = -30 * 3;			// 3 seconds maximum
 					spawnRandom = .96;

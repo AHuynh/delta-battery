@@ -2,6 +2,7 @@ package deltabattery
 {
 	import cobaltric.ContainerGame;
 	import deltabattery.weapons.ABST_Weapon;
+	import deltabattery.weapons.Weapon_Flak;
 	import deltabattery.weapons.Weapon_HES;
 	import deltabattery.weapons.Weapon_RAAM;
 	import flash.display.MovieClip;
@@ -21,7 +22,7 @@ package deltabattery
 		private var upgArr:Array;	// list of upgrade buttons
 		private var lvlArr:Array;	// list of upgrade levels
 		
-		private var wepCost:Array = [500, 500, 2100, 3000];
+		private var wepCost:Array = [500, 500, 250, 3000];
 								  // fast  big   flak  laser
 								  // null if purchased
 		private var upgCost:Array = [500, 700, 900];
@@ -184,6 +185,8 @@ package deltabattery
 				case "FLAK":
 					aoi = wepArr;
 					ioi = 2;
+					weapon = new Weapon_Flak(cg, 4);
+					slot = 4;
 				break;
 				case "LASER":
 					aoi = wepArr;

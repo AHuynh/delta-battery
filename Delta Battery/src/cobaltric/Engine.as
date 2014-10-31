@@ -44,23 +44,23 @@
 				case 0:
 					container = new ContainerGame(startWave);
 					gameState++;
-					trace("Intro Container completed!");
 				break;
-				case 1:
+				/*case 1:
 					container = new ContainerOutro();
 					gameState++;
-					trace("Game Container completed!");
-				break;
-				case 2:
+				break;*/
+				case 1:
 					gameState = 0;
 					container = new ContainerIntro(this);
-					trace("Outro Container completed!");
 				break;
 			}
 			
 			addChild(container);
-			container.x = stage.width * .5;
-			container.y = stage.height * .5;
+			if (gameState == 1)
+			{
+				container.x = stage.width * .5;
+				container.y = stage.height * .5;
+			}	
 		}
 		
 		private function onAddedToStage(e:Event):void

@@ -27,6 +27,8 @@
 		public var turretGrace:int;			// if not 0, don't let things fire (i.e. right after game starts)
 		
 		public var gameActive:Boolean;		// TRUE if game is active (ex: unpaused)
+		public var prevActive:Boolean;		// helper to remember gameActive while paused
+		public var paused:Boolean;			// TRUE if pause screen is up
 		
 		public var tutorialFlag:Boolean;	// TRUE if day 1 chosen and tutorial didn't show
 		public var infoFlag:Boolean;		// TRUE if info box at new wave needs to show
@@ -85,9 +87,22 @@
 			addChild(game);
 			game.x -= 129;
 			game.y -= 446;
-			//game.mc_gui.mc_statusCenter.tf_status.text = "Wave 1 begun!";
 			game.mc_gui.mc_statusCenter.visible = false;
 			game.mc_gui.mc_statusHuge.visible = false;
+			
+			// pause menu
+			game.mc_pause.visible = false;
+			game.mc_pause.btn_resume.addEventListener(MouseEvent.CLICK, onPause);
+			game.mc_pause.btn_quit.addEventListener(MouseEvent.CLICK, onQuit);
+			game.mc_gui.btn_pause.addEventListener(MouseEvent.CLICK, onPause);
+			game.mc_gui.btn_help.addEventListener(MouseEvent.CLICK, onHelp);
+			
+			// game over menu
+			game.mc_lose.visible = false;
+			game.mc_lose.btn_quit.addEventListener(MouseEvent.CLICK, onQuit);
+			
+			// text
+			game.mc_gui.tf_wave.text = startWave;
 			
 			// initialize managers
 			manPart = new ManagerParticle(this);
@@ -160,8 +175,9 @@
 				}
 			}
 			
-			if (gameActive)
-				turret.step();		// update the Turret
+			if (!gameActive) return completed;
+			
+			turret.step();		// update the Turret
 			updateMoney();
 			updateHP();
 			//ai.step();
@@ -170,7 +186,7 @@
 			for (var i:int = manLen; i >= 0; i--)
 				managers[i].step();
 			
-			return false;
+			return completed;
 		}
 		
 		private function infoAck(e:MouseEvent):void
@@ -206,13 +222,8 @@
 		public function damageCity(param:*):void
 		{
 			var life:Number;
-			if (param is ABST_Missile) {
-				cityHP -= param.damage;
-				cityHPCounter = 30;		// reset the slack counter
-			
-				life = cityHP / cityHPMax;
-				game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar (primary)
-			} else if (param is ABST_Bullet) {
+			if (param is ABST_Missile || param is ABST_Bullet)
+			{
 				cityHP -= param.damage;
 				cityHPCounter = 30;		// reset the slack counter
 			
@@ -224,7 +235,9 @@
 			{
 				cityHP = 0;
 				game.city.gotoAndStop(game.city.totalFrames);
-				//completed = true;		// TODO game over
+				game.mc_lose.visible = true;
+				game.mc_lose.tf_day.text = "Day " + manWave.wave;
+				gameActive = false;
 			}
 			else		// update the visual state of the city
 			{
@@ -247,6 +260,7 @@
 			manWave.startWave();
 			game.mc_gui.shop.visible = false;
 			infoFlag = true;
+			turret.reloadAll();
 			game.mc_gui.newEnemy.gotoAndPlay("in");
 			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 5 ? 5 : manWave.wave);		// TODO change 5 (max wave)
 		}
@@ -262,6 +276,38 @@
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 120;
 			gameActive = false;
+		}
+		
+		private function onPause(e:MouseEvent):void
+		{
+			paused = !paused;
+			turretGrace = 10;
+			if (paused)
+			{
+				prevActive = gameActive;
+				gameActive = false;
+			}
+			else
+				gameActive = prevActive;
+
+			game.mc_pause.visible = paused;
+		}
+		
+		private function onHelp(e:MouseEvent):void
+		{
+			turretGrace = 10;
+			tutorialFlag = true;
+			game.mc_gui.tutorial.gotoAndPlay("in");
+			game.mc_gui.tutorial.mc.gotoAndStop(1);
+			gameActive = false;
+		}
+		
+		private function onQuit(e:MouseEvent):void
+		{
+			turretGrace = 10;
+			turret.destroy(null);
+			tutorialFlag = infoFlag = false;
+			completed = true;
 		}
 		
 		// updates the displayed money to match the actual money
@@ -318,6 +364,8 @@
 		
 		private function destroy(e:Event):void
 		{
+			for (var i:int = manLen; i >= 0; i--)
+				managers[i].destroy();
 			removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			removeEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		}
