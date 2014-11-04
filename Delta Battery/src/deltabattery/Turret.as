@@ -37,6 +37,9 @@ package deltabattery
 		// turret rotation limits
 		public const TURRET_LIMIT_R:Number = -90;		// straight up
 		public const TURRET_LIMIT_L:Number = 175;		// slightly lower than directly left
+		
+		private var prevX:Number = 0;
+		private var prevY:Number = 0;
 
 		public function Turret(_cg:ContainerGame, _turret:MovieClip) 
 		{
@@ -110,6 +113,28 @@ package deltabattery
 		// called by ContainerGame
 		public function step():void 
 		{
+			// update the mouse
+			var currX:Number = turret.mouseX;
+			var currY:Number = turret.mouseY;
+			
+			if (currX != prevX || currY != prevY)
+			{
+				prevX = currX;
+				prevY = currY;
+				
+				// face the turret towards the mouse
+				var rot:Number = getAngle(0, 0, turret.mouseX, turret.mouseY);
+				
+				//var rot:Number = getAngle(0, 0, cg.mx, cg.my);
+				/*if (Math.abs(rot) > TURRET_LIMIT_L)
+					rot = TURRET_LIMIT_L;
+				else if (rot > TURRET_LIMIT_R && turret.mouseX > turret.x)
+					rot = TURRET_LIMIT_R;*/
+				turret.mc_cannon.rotation = rot;
+				//trace(TURRET_LIMIT_R + " | " + (rot + 360) + " | " + TURRET_LIMIT_L);
+			}
+			// end updaing mouse
+			
 			var i:int;
 			if (rightMouseDown)
 			{
@@ -175,23 +200,6 @@ package deltabattery
 		private function onMouseRightUp(e:MouseEvent):void
 		{
 			rightMouseDown = false;
-		}
-		
-		// called by Container Game
-		public function updateMouse():void
-		{
-			if (!cg.gameActive) return;
-			
-			// face the turret towards the mouse
-			var rot:Number = getAngle(0, 0, turret.mouseX, turret.mouseY);
-			
-			//var rot:Number = getAngle(0, 0, cg.mx, cg.my);
-			/*if (Math.abs(rot) > TURRET_LIMIT_L)
-				rot = TURRET_LIMIT_L;
-			else if (rot > TURRET_LIMIT_R && turret.mouseX > turret.x)
-				rot = TURRET_LIMIT_R;*/
-			turret.mc_cannon.rotation = rot;
-			//trace(TURRET_LIMIT_R + " | " + (rot + 360) + " | " + TURRET_LIMIT_L);
 		}
 		
 		public function reloadAll():void

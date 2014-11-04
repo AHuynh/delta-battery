@@ -44,6 +44,7 @@
 		private const BOMBER:int 	= 6;
 		private const HELI:int 		= 7;
 		private const PLANE:int 	= 8;
+		private const SHIP:int 		= 9;
 		
 		private var targetX:int = 390;
 		private var targetY:int = 150;
@@ -60,6 +61,7 @@
 		private const R_LEFT_LASM:Array = [new Point( -450, -250), new Point( -410, -150)];
 		private const R_RIGHT_LASM:Array = [new Point( 450, -250), new Point( 410, -150)];
 		private const R_LEFT_CENTER:Array = [new Point( -500, -75), new Point( -450, 75)];
+		private const R_RIGHT_BOT:Array = [new Point( 150, 160), new Point( 150, 170)];
 		
 		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
 		
@@ -164,15 +166,18 @@
 					spawnRandom = .96;
 				break;
 				case 6:			// test
-					enemiesRemaining = 9;
+				case 7:
+					enemiesRemaining = 14;
 					
 					// enable projectiles
 					spawnLoc[BOMBER] = [R_LEFT_LASM];
 					spawnLoc[PLANE] = [R_RIGHT_LASM];
+					spawnLoc[SHIP] = [R_RIGHT_BOT];
 					
 					// set spawn probabilities
 					spawnType[BOMBER] = 3;
 					spawnType[PLANE] = 1;		
+					spawnType[SHIP] = 1;		
 					
 					spawnDelay = 0;
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -208,7 +213,7 @@
 					spawnMax = -30 * 3;			// 3 seconds maximum
 					spawnRandom = .96;
 				break;
-				case 7:			// test
+				case 15:			// test
 					enemiesRemaining = 16;
 					
 					// enable projectiles
@@ -340,14 +345,15 @@
 					case PLANE:
 						manMiss.spawnProjectile("plane", getSpawnLocation(PLANE), new Point(-500, 0));
 					break;
+					case SHIP:
+						manMiss.spawnProjectile("ship", getSpawnLocation(SHIP), new Point(300, 0));
+					break;
 					default:
 						trace("WARN! Didn't spawn anything...");
 				}								  
-							  
 				
 				spawnDelay = spawnMin;
 				enemiesRemaining--;
-				//cg.game.mc_gui.mc_statusCenter.tf_status.text = enemiesRemaining + " projectile(s) left."
 	
 				// advance time from day to sunset
 				if (dayFlag == 0 && enemiesRemaining == 5)
@@ -360,6 +366,7 @@
 				{
 					if (cg.game.bg.ocean.currentFrame < 152)		// magic number :c
 						return;
+					cg.game.bg.cacheAsBitmap = false;
 					dayFlag++;
 					advanceTime("sunset");
 				}
@@ -386,8 +393,8 @@
 		
 		private function getTarget():Point
 		{
-			return new Point(targetX + -2 * targetVarianceX + getRand(0, targetVarianceX),
-							 targetY + -2 * targetVarianceY + getRand(0, targetVarianceY));
+			return new Point(targetX + getRand(-targetVarianceX, targetVarianceX),
+							 targetY + getRand(-targetVarianceY, targetVarianceY));
 		}
 		
 		// picks 1 index given an array of choices with elements as weights
@@ -412,7 +419,13 @@
 		
 		private function resetSpawnType():void
 		{
-			spawnType = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+			if (spawnType)
+			{
+				for (var i:int = 0; i < spawnType.length; i++)
+					spawnType[i] = 0;
+			}
+			else
+				spawnType = [];
 		}
 	}
 }

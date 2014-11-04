@@ -77,7 +77,7 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.REMOVED_FROM_STAGE, destroy);
-			addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+			//addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 			
 			// disable right click menu
 			stage.showDefaultContextMenu = false;
@@ -89,6 +89,7 @@
 			game.y -= 446;
 			game.mc_gui.mc_statusCenter.visible = false;
 			game.mc_gui.mc_statusHuge.visible = false;
+			game.bg.cacheAsBitmap = true;
 			
 			// pause menu
 			game.mc_pause.visible = false;
@@ -116,11 +117,12 @@
 			
 			// setup the Turret
 			turret = new Turret(this, game.mc_turret);
-			turret.updateMouse();
+			//turret.step();
 			turret.turret.mc_cannon.deltaStrike.visible = false;
 			
 			// setup city
 			cityHP = cityHPMax = cityHPSlack = 100;
+			game.city.cacheAsBitmap = true;
 			
 			// setup autoplayer
 			//ai = new AutoPlayer(this, manMiss);
@@ -263,6 +265,7 @@
 			turret.reloadAll();
 			game.mc_gui.newEnemy.gotoAndPlay("in");
 			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 5 ? 5 : manWave.wave);		// TODO change 5 (max wave)
+			game.bg.cacheAsBitmap = true;
 		}
 		
 		// end the current wave, enabling the shop, etc.
@@ -333,14 +336,14 @@
 		}
 		
 		// called when the mouse is moved
-		protected function updateMouse(e:MouseEvent):void
+		/*protected function updateMouse(e:MouseEvent):void
 		{
 			if (!gameActive) return;
 
 			mx = mouseX - game.x;
 			my = mouseY - game.y;
 			turret.updateMouse();			
-		}
+		}*/
 		
 		// get a list of all live projectiles
 		public function getProjectileArray():Array
@@ -367,7 +370,7 @@
 			for (var i:int = manLen; i >= 0; i--)
 				managers[i].destroy();
 			removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
-			removeEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+			//removeEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		}
 	}
 }

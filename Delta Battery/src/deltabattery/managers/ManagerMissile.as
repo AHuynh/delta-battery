@@ -32,7 +32,7 @@
 				}
 			}
 		}
-		
+
 		/**	Spawn a gravity-ignoring missile
 		 * 
 		 *	@proj		the type of projectile to spawn
@@ -74,6 +74,9 @@
 				break;
 				case "plane":
 					addObject(new Vehicle_PlanePassenger(cg, new Airplane(), origin, target, type, params));
+				break;
+				case "ship":
+					addObject(new Vehicle_ShipPassenger(cg, new ShipPassenger(), origin, target, type, params));
 				break;
 				default:		// "standard"
 					addObject(new Missile_Standard(cg, new MissileStandard(), origin, target, type, params));

@@ -53,12 +53,8 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="BulletStandard.swc" />
-    <element path="MissileStandard.swc" />
     <element path="MissileTarget.swc" />
     <element path="ArtilleryStandard.swc" />
-    <element path="ExplosionStandard.swc" />
-    <element path="ParticleSmoke01.swc" />
-    <element path="ParticleArtillery.swc" />
     <element path="Selected.swc" />
     <element path="MissileBig.swc" />
     <element path="Helicopter.swc" />
@@ -74,6 +70,10 @@
     <element path="ContainerMenu.swc" />
     <element path="SpecialWarning.swc" />
     <element path="Game.swc" />
+    <element path="ExplosionStandard.swc" />
+    <element path="ParticleArtillery.swc" />
+    <element path="ParticleSmoke01.swc" />
+    <element path="MissileStandard.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
