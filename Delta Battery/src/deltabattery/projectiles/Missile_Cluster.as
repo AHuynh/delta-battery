@@ -5,7 +5,10 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * Cluster missile.
+	 * 
+	 * After a set amount of time, splits into three small and fast rockets.
+	 * 
 	 * @author Alexander Huynh
 	 */
 	public class Missile_Cluster extends ABST_Missile 
@@ -16,21 +19,26 @@ package deltabattery.projectiles
 		
 		public function Missile_Cluster(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
-			
 			if (!params)
 			{
 				params = new Object();
 				params["velocity"] = 2;
 				params["partInterval"] = 10;
 			}
-			
+			else
+			{
+				if (!params["velocity"])
+					params["velocity"] = 2;
+				params["partInterval"] = 10;
+			}
+
 			rocketParams = new Object();
 			rocketParams["velocity"] = 6;
-			
+
 			super(_cg, _mc, _origin, _target, _type, params);
 			airburst = 150 + getRand(0, 90);
 		}	
-		
+
 		override public function step():Boolean
 		{
 			if (!markedForDestroy)
@@ -38,10 +46,10 @@ package deltabattery.projectiles
 				// calculate and perform movement
 				var dx:Number = velocity * Math.cos(rot);
 				var dy:Number = velocity * Math.sin(rot);
-				
+
 				mc.x += dx;
 				mc.y += dy;
-				
+
 				updateParticle(dx, dy);
 				checkTarget();
 
