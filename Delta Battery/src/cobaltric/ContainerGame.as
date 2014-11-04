@@ -179,6 +179,9 @@
 			
 			if (!gameActive) return completed;
 			
+			mx = mouseX - game.x;
+			my = mouseY - game.y;
+			
 			turret.step();		// update the Turret
 			updateMoney();
 			updateHP();

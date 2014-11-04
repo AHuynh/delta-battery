@@ -63,6 +63,9 @@
 				case "LASM":
 					addObject(new Missile_LASM(cg, new MissileLASM(), origin, target, type, params));
 				break;
+				case "pop":
+					addObject(new Missile_Popup(cg, new MissileLASM(), origin, target, type, params));
+				break;
 				case "bomb":
 					addObject(new Artillery_Bomb(cg, new ArtilleryBomb(), origin, target, type, params));
 				break;

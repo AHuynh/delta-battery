@@ -46,6 +46,7 @@
 		private const PLANE:int 	= 8;
 		private const SHIP:int 		= 9;
 		private const SAT:int		= 10;
+		private const POPUP:int		= 11;
 		
 		private var targetX:int = 390;
 		private var targetY:int = 150;
@@ -60,9 +61,11 @@
 		
 		private const R_LEFT_TOP:Array = [new Point( -450, -300), new Point( -410, -150)];
 		private const R_LEFT_LASM:Array = [new Point( -450, -250), new Point( -410, -150)];
-		private const R_RIGHT_LASM:Array = [new Point( 450, -250), new Point( 410, -150)];
 		private const R_LEFT_CENTER:Array = [new Point( -500, -75), new Point( -450, 75)];
+		private const R_RIGHT_LASM:Array = [new Point( 450, -250), new Point( 410, -150)];
 		private const R_RIGHT_BOT:Array = [new Point( 150, 160), new Point( 150, 170)];
+		
+		private const R_SEA:Array = [new Point( -360, 120), new Point( -200, 130)];
 		
 		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
 		
@@ -93,17 +96,39 @@
 			{
 				// standard missile
 				case 1:
-					enemiesRemaining = 8;
+					enemiesRemaining = 100;
 			
 					// enable missiles - (corner)
-					spawnLoc[LASM] = [R_LEFT_TOP];
+					spawnLoc[MISSILE] = [R_LEFT_TOP];
+					spawnLoc[ARTY] = [R_ARTY_NORM];
+					spawnLoc[FAST] = [R_LEFT_TOP];
+					spawnLoc[BIG] = [R_LEFT_TOP];
+					spawnLoc[CLUSTER] = [R_LEFT_TOP];
+					spawnLoc[LASM] = [R_LEFT_LASM];
+					spawnLoc[BOMBER] = [R_LEFT_LASM];
+					spawnLoc[HELI] = [R_LEFT_CENTER];
+					spawnLoc[PLANE] = [R_RIGHT_LASM];
+					spawnLoc[SHIP] = [R_RIGHT_BOT];
+					spawnLoc[SAT] = [R_LEFT_TOP];
+					spawnLoc[POPUP] = [R_SEA];
 					
 					// set spawn probabilities
-					spawnType[LASM] = 1;			// 100% missile
+					spawnType[MISSILE] = 5;
+					spawnType[ARTY] = 4;
+					spawnType[FAST] = 4;
+					spawnType[BIG] = 4;
+					spawnType[CLUSTER] = 3;
+					spawnType[LASM] = 3;
+					spawnType[BOMBER] = 2;
+					spawnType[HELI] = 2;
+					spawnType[PLANE] = 1;
+					spawnType[SHIP] = 1;
+					spawnType[SAT] = 1;
+					spawnType[POPUP] = 2;
 					
 					spawnDelay = 30 * 2;		// 2 seconds initial delay
-					spawnMin = 30 * 2;			// 2 seconds minimum
-					spawnMax = -30 * 4;			// 4 seconds maximum
+					spawnMin = 15;// 30 * 2;			// 2 seconds minimum
+					spawnMax = -30 * 1.5;// 4;			// 4 seconds maximum
 					spawnRandom = .98;
 				break;
 				// faster standard missile
@@ -336,6 +361,9 @@
 					break;
 					case LASM:
 						manMiss.spawnProjectile("LASM", getSpawnLocation(LASM), getTarget());
+					break;
+					case POPUP:
+						manMiss.spawnProjectile("pop", getSpawnLocation(POPUP), getTarget());
 					break;
 					case BOMBER:
 						manMiss.spawnProjectile("bomber", getSpawnLocation(BOMBER), getTarget());
