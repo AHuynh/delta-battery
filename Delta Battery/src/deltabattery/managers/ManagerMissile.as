@@ -61,13 +61,16 @@
 					addObject(new Missile_Cluster(cg, new MissileBig(), origin, target, type, params));	// TODO cluster GFX
 				break;
 				case "LASM":
-					addObject(new Missile_LASM(cg, new MissileStandard(), origin, target, type, params));
+					addObject(new Missile_LASM(cg, new MissileLASM(), origin, target, type, params));
 				break;
 				case "bomb":
 					addObject(new Artillery_Bomb(cg, new ArtilleryBomb(), origin, target, type, params));
 				break;
 				case "bomber":
 					addObject(new Vehicle_Bomber(cg, new Bomber(), origin, target, type, params));
+				break;
+				case "satellite":
+					addObject(new Vehicle_Satellite(cg, new Satellite(), origin, target, type, params));
 				break;
 				case "helicopter":
 					addObject(new Vehicle_Helicopter(cg, new Helicopter(), origin, target, type, params));

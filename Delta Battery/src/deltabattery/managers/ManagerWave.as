@@ -45,6 +45,7 @@
 		private const HELI:int 		= 7;
 		private const PLANE:int 	= 8;
 		private const SHIP:int 		= 9;
+		private const SAT:int		= 10;
 		
 		private var targetX:int = 390;
 		private var targetY:int = 150;
@@ -95,10 +96,10 @@
 					enemiesRemaining = 8;
 			
 					// enable missiles - (corner)
-					spawnLoc[MISSILE] = [R_LEFT_TOP];
+					spawnLoc[LASM] = [R_LEFT_TOP];
 					
 					// set spawn probabilities
-					spawnType[MISSILE] = 1;			// 100% missile
+					spawnType[LASM] = 1;			// 100% missile
 					
 					spawnDelay = 30 * 2;		// 2 seconds initial delay
 					spawnMin = 30 * 2;			// 2 seconds minimum
@@ -338,6 +339,9 @@
 					break;
 					case BOMBER:
 						manMiss.spawnProjectile("bomber", getSpawnLocation(BOMBER), getTarget());
+					break;
+					case SAT:
+						manMiss.spawnProjectile("satellite", getSpawnLocation(SAT), getTarget());
 					break;
 					case HELI:
 						manMiss.spawnProjectile("helicopter", getSpawnLocation(HELI), new Point(getRand(-75, 75), getRand(-50, 50)));

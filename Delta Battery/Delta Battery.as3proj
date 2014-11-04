@@ -74,6 +74,7 @@
     <element path="ParticleArtillery.swc" />
     <element path="ParticleSmoke01.swc" />
     <element path="MissileStandard.swc" />
+    <element path="MissileLASM.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
