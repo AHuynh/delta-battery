@@ -26,7 +26,7 @@ package deltabattery.projectiles
 			super(_cg, _mc, _origin, _target, _type, params);
 			
 			typeSmart = 1;		// teach DELTA STRIKE to ignore this
-			reward = -500;
+			money = -500;
 			hp = hpMax = 13;
 		}
 		
@@ -40,7 +40,7 @@ package deltabattery.projectiles
 				// destroy if out of bounds
 				if (mc.x < -450)
 				{
-					reward *= -1;		// earn money instead of losing it
+					money *= -1;		// earn money instead of losing it
 					destroy();
 				}
 			}

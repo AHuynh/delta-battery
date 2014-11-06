@@ -5,11 +5,11 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * Cluster missile.
+	 *	A cluster missile.
 	 * 
-	 * After a set amount of time, splits into three small and fast rockets.
+	 *	After a set amount of time, splits into three small and fast rockets.
 	 * 
-	 * @author Alexander Huynh
+	 *	@author Alexander Huynh
 	 */
 	public class Missile_Cluster extends ABST_Missile 
 	{
@@ -34,9 +34,12 @@ package deltabattery.projectiles
 
 			rocketParams = new Object();
 			rocketParams["velocity"] = 6;
+			rocketParams["money"] = 50;
 
 			super(_cg, _mc, _origin, _target, _type, params);
 			airburst = 150 + getRand(0, 90);
+			
+			money = 400;
 		}	
 
 		override public function step():Boolean
@@ -63,6 +66,7 @@ package deltabattery.projectiles
 					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(target.x - 30, target.y + 30), type, rocketParams);
 					for (var i:int = 0; i < 3 + getRand(0, 3); i++)
 						cg.manPart.spawnParticle(partType, new Point(mc.x, mc.y), 0, dx * .1, dy * .10, .05);
+					awardMoney = false;
 					destroy();
 				}
 				// warning

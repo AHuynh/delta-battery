@@ -5,7 +5,11 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * A laser-firing satellite.
+	 * 
+	 * Flies in a curving pattern and fires 'lasers' (bullets) every now and then.
+	 * Hard to hit, but fragile.
+	 * 
 	 * @author Alexander Huynh
 	 */
 	public class Vehicle_Satellite extends ABST_Vehicle 
@@ -33,6 +37,9 @@ package deltabattery.projectiles
 
 			dirX = 1;
 			dirY = 1;
+			
+			hp = hpMax = 3;
+			money = 600;
 		}
 		
 		override public function step():Boolean
@@ -63,8 +70,11 @@ package deltabattery.projectiles
 				mc.x += dx;
 				mc.y += dy;
 
-				if (mc.x > -150 && timer % 150 == 0)
+				if (mc.x > -150 && timer == 150)
+				{
+					timer = 0;
 					cg.manBull.spawnProjectile("chain", new Point(mc.x, mc.y), new Point(cg.game.city.x, cg.game.city.y));
+				}
 			}
 			
 			timer++;

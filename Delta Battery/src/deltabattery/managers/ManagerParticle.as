@@ -47,6 +47,24 @@ package deltabattery.managers
 			}
 		}
 		
+		/**
+		 *	Removes all particles from the stage, storing them in the warehouse.
+		 */
+		public function clear():void
+		{	
+			var part:Particle;
+			for (var i:int = objArr.length - 1; i >= 0; i--)
+			{
+				part = objArr[i];
+				if (cg.game.c_part.contains(part.mc))
+					cg.game.c_part.removeChild(part.mc);
+				particleFactory[part.factoryKey][0].splice(part.factoryIndex, 1);	// remove particle from active
+				particleFactory[part.factoryKey][1].push(part);						// store particle in warehouse
+			}
+			
+			objArr = [];
+		}
+		
 		/**	Spawn a particle (or use an existing, idle one from the warehouse if one exists)
 		 * 
 		 *	@proj		the type of projectile to spawn

@@ -23,7 +23,7 @@ package deltabattery.projectiles
 
 			super(_cg, _mc, _origin, _target, _type, params);
 
-			reward = -700;
+			money = -700;
 			hp = hpMax = 25;
 			type = 1;
 		}

@@ -43,7 +43,9 @@
 		protected var timerKill:Timer;					// helper for destroy
 		
 		protected var tgt:MissileTarget;				// + indicator on player-made projectiles
+		
 		protected var awardMoney:Boolean = true;		// if TRUE, money will be affected upon destruction
+		protected var money:int = 100;					// money awarded if the player shoots this down
 		
 		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _origin:Point,
 								     _target:Point, _type:int = 0, params:Object = null)
@@ -98,6 +100,7 @@
 				cg.game.c_main.addChild(tgt);
 				if (cg.game.bg.ocean.currentFrame > 152) 	// post-sunset
 					tgt.gotoAndStop(2);						// white
+				trace("Missile target spawned with frame: " + tgt.currentFrame);
 			}
 
 			mc.rotation = getAngle(origin.x, origin.y, target.x, target.y);
@@ -169,16 +172,18 @@
 		}
 
 		/**
-		 *	kill this projectile, spawning an explosion if spawnExplosion is TRUE 
+		 *	Kill this projectile, spawning an explosion if spawnExplosion is TRUE 
+		 * 	Awards up to 50% extra money based on how close the explosion was to this projectile.
+		 * 
+		 *	@param distance		The distance between this and what destroyed it (or nothing if n/a)
 		 */
-		public function destroy():void
+		public function destroy(distance:Number = 40):void
 		{
 			if (markedForDestroy) return;		// already going to be destroyed, quit
 			checkTarget(false);
-			
-			// TODO calculate money
+
 			if (awardMoney && type == 0)
-				cg.addMoney(100 + 50 * (velocity / 6));
+				cg.addMoney(money + money * (distance < 40 ? -.0125 * distance + .5 : 0));
 			
 			markedForDestroy = true;
 			mc.visible = false;

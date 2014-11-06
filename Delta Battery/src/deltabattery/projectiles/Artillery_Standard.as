@@ -4,12 +4,12 @@ package deltabattery.projectiles
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
-	/**	Standard artillery projectile
+	/**
+	 *	Standard artillery projectile
 	 *
-	 * 	Basic arillery
-	 *	Enemy: 		Standard Artillery (Wave 2+)
+	 *	A projectile following a parabolic arc, initialized with some initial negative y velocity.
 	 * 
-	 * @author Alexander Huynh
+	 *	@author Alexander Huynh
 	 */
 	public class Artillery_Standard extends ABST_Artillery 
 	{
@@ -23,6 +23,8 @@ package deltabattery.projectiles
 			// override super
 			dx = velocity * Math.cos(rot) * 2;
 			dy = -velocity * Math.sin(rot) * 1.5;	
+			
+			money = 125;
 		}
 	}
 }

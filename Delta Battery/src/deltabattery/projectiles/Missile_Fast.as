@@ -6,8 +6,7 @@
 	
 	/**	Fast Missile
 	 *
-	 *  Missile with twice the standard velocity
-	 * 	Enemy:			Fast Missile (Wave 4)     //TODO decide if wave 4 is a good place
+	 *  Missile with twice the standard velocity.
 	 * 
 	 * @author Gavin Figueroa
 	 */
@@ -16,8 +15,14 @@
 		
 		public function Missile_Fast(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
-			var newParams:Object = {velocity:(2 * (Math.random() * 2 + 4))};
-			super(_cg, _mc, _origin, _target, _type, newParams);
+			if (!params)
+				params = { velocity:(2 * (Math.random() * 2 + 4)) };
+			else
+				params["velocity"] = 2 * (Math.random() * 2 + 4);
+				
+			super(_cg, _mc, _origin, _target, _type, params);
+			
+			money = params["money"] ? params["money"] : 125;
 		}
 	}
 }

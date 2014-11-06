@@ -26,6 +26,7 @@ package deltabattery.projectiles
 			super(_cg, _mc, _origin, _target, _type, params);
 			
 			hp = hpMax = 8;
+			money = 500;
 		}
 		
 		override public function step():Boolean

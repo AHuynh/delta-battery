@@ -23,6 +23,8 @@ package deltabattery.projectiles
 				params["velocity"] = 2 + Math.random();
 			
 			super(_cg, _mc, _origin, _target, _type, params);
+			
+			money = 750;
 		}
 		
 		override public function step():Boolean

@@ -5,9 +5,9 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * Long-range Air-to-Surface Missile
+	 * Long-range Air-to-Surface Missile.
 	 * 
-	 * Travels horizontally until over its target, then dives straight down
+	 * Travels horizontally until over its target, then dives straight down.
 	 * 
 	 * @author Alexander Huynh
 	 */
@@ -20,9 +20,11 @@ package deltabattery.projectiles
 		{
 			originalY = _target.y;
 			_target.y = _origin.y;
-			_target.x = 250 + getRand(50);
+			_target.x = 250 + getRand(50);		// TODO y u no work with passed-in target?
 			
 			super(_cg, _mc, _origin, _target, _type, params);
+			
+			money = 125;
 		}
 		
 		override public function step():Boolean

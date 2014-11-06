@@ -5,8 +5,12 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * ...
-	 * @author Alexander Huynh
+	 *	Popup Missile.
+	 * 
+	 * 	Appears near the bottom with an upwards velocity. After reaching its peak, ignites its
+	 * 	thrusters and speeds towards its target.
+	 * 
+	 *	@author Alexander Huynh
 	 */
 	public class Missile_Popup extends ABST_Missile 
 	{
@@ -14,7 +18,7 @@ package deltabattery.projectiles
 		private var dy:Number;
 		private const g:Number = 0.06;
 
-		private var popup:Boolean = true;		// TRUE pre-ignite
+		private var popup:Boolean = true;		// TRUE if pre-ignite, FALSE if travelling as normal
 		
 		public function Missile_Popup(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
@@ -22,6 +26,8 @@ package deltabattery.projectiles
 			
 			dy = -5 + getRand(0, 1.5);
 			dx = 0;
+			
+			money = 150;
 		}
 		
 		override public function step():Boolean
@@ -31,23 +37,23 @@ package deltabattery.projectiles
 				mc.x += dx;
 				mc.y += dy;
 				
-				if (popup)
+				if (popup)		// travelling upwards
 				{
-					if (dy > 0)
+					if (dy > 0)		// ignite the thrusters and travel as normal
 					{
 						popup = false;
 						velocity *= 1.4;
 						dx = velocity * Math.cos(rot);
 						dy = velocity * Math.sin(rot);
 					}
-					else
+					else			// still travelling upwards
 					{
 						mc.rotation = getAngle(mc.x, mc.y, target.x, target.y);
 						rot = degreesToRadians(mc.rotation);
 						dy += g;
 					}
 				}
-				else
+				else			// travelling as normal
 				{
 					updateParticle(dx, dy);
 					checkTarget();

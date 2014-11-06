@@ -5,11 +5,21 @@ package deltabattery
 	import deltabattery.weapons.Weapon_Flak;
 	import deltabattery.weapons.Weapon_HES;
 	import deltabattery.weapons.Weapon_RAAM;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.display.SimpleButton;
 	import flash.events.MouseEvent;
 
 	/**
-	 * ...
+	 * Controls the shop with new weapons and upgrades.
+	 * 
+	 * Buying weapons
+	 * Any of the 4 extra weapons can be bought for the same price.
+	 * Subsequent purchases are more expensive. (wepPrices)
+	 * 
+	 * Buying upgrades
+	 * Each upgrade attribute has an individual upgrade price.
+	 * 
 	 * @author Alexander Huynh
 	 */
 	public class Armory 
@@ -19,12 +29,17 @@ package deltabattery
 		
 		private var wepArr:Array;	// list of weapon buttons
 		private var selArr:Array;	// list of 'selected' MC's on weapon buttons
+		private var ammArr:Array;	// list of ammo TextFields
 		private var upgArr:Array;	// list of upgrade buttons
 		private var lvlArr:Array;	// list of upgrade levels
 		
-		private var wepCost:Array = [500, 500, 250, 3000];
-								  // fast  big   flak  laser
-								  // null if purchased
+		private var wepStatus:Array = [false, false, false, false];
+									// fast  big   flak  laser
+									// true if purchased
+		private const wepPrices:Array = [1000, 2500, 5000, 10000];						  
+									// cost to buy the 1st, 2nd, etc weapon
+		private const wepCount:int = 0;		// number of weapons bought
+		
 		private var upgCost:Array = [500, 700, 900];
 								  // expl speed reload
 		
@@ -41,7 +56,7 @@ package deltabattery
 			// setup armory MovieClip
 			arm.tf_title.text = "";
 			arm.tf_subtitle.text = "";
-			arm.tf_desc.text = "Click an upgrade to view information.";
+			arm.tf_desc.text = "Click an item to view information.";
 			arm.btn_purchase.visible = false;
 			arm.ammoGroup.visible = false;
 			arm.tf_price.text = "";
@@ -50,32 +65,53 @@ package deltabattery
 					  arm.btn_arm_flak, arm.btn_arm_laser];
 			selArr = [];
 			
+			ammArr = [arm.ammoGroup.tf_l, arm.ammoGroup.tf_c, arm.ammoGroup.tf_r];
+			
 			upgArr = [arm.btn_arm_explosion, arm.btn_arm_speed,
 					  arm.btn_arm_reload];
 			lvlArr = [arm.lvl_explosion, arm.lvl_speed,
 					  arm.lvl_reload];
+			
+			arm.btn_purchase.addEventListener(MouseEvent.CLICK, onPurchase);
+			arm.mc_tutorial.btn_resume.addEventListener(MouseEvent.CLICK, onResume);
+		}
+		
+		private function addSelected(btn:SimpleButton, showX:Boolean):void
+		{
+			var select:MovieClip = new Selected();
+			select.x = btn.x; select.y = btn.y;
+			select.buttonMode = select.mouseEnabled = select.mouseChildren = false;
+			select.lock.visible = showX;
+			selArr.push(select);
+			arm.addChild(select);
+		}
+		
+		// acknowledge Armory upgrade guide
+		private function onResume(e:MouseEvent):void
+		{
+			arm.mc_tutorial.visible = false;
+			arm.mc_tutorial.btn_resume.removeEventListener(MouseEvent.CLICK, onResume);
 					  
+			// add 'selected' overlays
 			var select:MovieClip;
 			var i:int;
 			for (i = 0; i < wepArr.length; i++)
 			{
 				wepArr[i].addEventListener(MouseEvent.CLICK, onWeapon);
-				select = new Selected();
-				select.x = wepArr[i].x; select.y = wepArr[i].y;
-				select.buttonMode = select.mouseChildren = false;
-				selArr.push(select);
-				//select.lock.visible = false;
-				arm.addChild(select);
+				addSelected(wepArr[i], true);
 			}
 			for (i = 0; i < upgArr.length; i++)
 			{
 				upgArr[i].addEventListener(MouseEvent.CLICK, onUpgrade);
-				lvlArr[i].buttonMode = lvlArr[i].mouseChildren = false;
+				addSelected(upgArr[i], false);
+				lvlArr[i].buttonMode = lvlArr[i].mouseEnabled = lvlArr[i].mouseChildren = false;
 			}
-			
-			arm.btn_purchase.addEventListener(MouseEvent.CLICK, onPurchase);
 		}
 		
+		/**
+		 * Callback when a button is pressed.
+		 * @param	e	the corresponding MouseEvent
+		 */
 		private function onWeapon(e:MouseEvent):void
 		{
 			var ind:int = -1;
@@ -114,16 +150,32 @@ package deltabattery
 					ind = 3;
 				break;
 			}
+			
 			if (ind == -1) return;
-			arm.btn_purchase.visible = wepCost[ind];
-			arm.ammoGroup.visible = !wepCost[ind];
-			arm.tf_price.text = wepCost[ind] ? "$" + wepCost[ind] : "";
-			boi = arm.tf_title.text;
-			for (var i:int = 0; i < selArr.length; i++)
+			
+			// update lower right panel
+			arm.btn_purchase.visible = !wepStatus[ind];
+			arm.ammoGroup.visible = wepStatus[ind];
+			arm.tf_price.text = !wepStatus[ind] ? "$" + wepPrices[wepCount] : "";
+			
+			// update ammo if weapon is purchased
+			if (wepStatus[ind])
+			{
+				/*ammArr[0].text = cg.turret.
+				ammArr[1].text =
+				ammArr[2].text =*/
+			}
+			
+			boi = arm.tf_title.text;						// set button of interest
+			for (var i:int = 0; i < selArr.length; i++)		// update overlays
 				selArr[i].gotoAndStop("unselected");
 			selArr[ind].gotoAndPlay("selected");
 		}
 		
+		/**
+		 * Callback when a button is pressed.
+		 * @param	e	the corresponding MouseEvent
+		 */
 		private function onUpgrade(e:MouseEvent):void
 		{
 			var ind:int = -1;
@@ -153,6 +205,11 @@ package deltabattery
 			arm.ammoGroup.visible = false;
 			arm.tf_price.text = "$" + upgCost[ind];
 			boi = arm.tf_title.text;
+			
+			boi = arm.tf_title.text;						// set button of interest
+			for (var i:int = 0; i < selArr.length; i++)		// update overlays
+				selArr[i].gotoAndStop("unselected");
+			selArr[ind+4].gotoAndPlay("selected");
 		}
 		
 		private function onPurchase(e:MouseEvent):void
@@ -208,15 +265,17 @@ package deltabattery
 			
 			cg.addMoney( -price);
 			
+			// if a weapon was selected with index ioi
 			if (aoi == wepArr)
 			{
 				cg.turret.enableWeapon(weapon, slot);
 				selArr[ioi].lock.visible = false;
-			}
+				wepStatus[ioi] = true;
 				
-			arm.btn_purchase.visible = false;
-			arm.ammoGroup.visible = true;
-			arm.tf_price.text = "";	
+				arm.btn_purchase.visible = false;
+				arm.ammoGroup.visible = true;
+				arm.tf_price.text = "";	
+			}
 		}
 	}
 }

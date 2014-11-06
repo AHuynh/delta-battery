@@ -50,14 +50,15 @@ package deltabattery.projectiles
 		{
 			var miss:ABST_Missile;	
 			var i:int;
+			var d:Number;
 			for (i = manMiss.objArr.length - 1; i >= 0; i--)
 			{
 				miss = manMiss.objArr[i]
 				if (miss.type == 1) continue;		// ignore player projectiles
-				//if (type == miss.type) continue;
 
-				if (getDistance(mc.x, mc.y, miss.mc.x, miss.mc.y) < range)
-					miss.destroy();
+				d = getDistance(mc.x, mc.y, miss.mc.x, miss.mc.y);
+				if (d < range)
+					miss.destroy(d);
 			}
 			
 			var arty:ABST_Artillery;			

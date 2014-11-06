@@ -5,8 +5,12 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * ...
-	 * @author Alexander Huynh
+	 *	A powerful but inaccurate projectile.
+	 * 
+	 * 	Damages projectiles it passes through and creates a small explosion once it arrives at its target.
+	 * 	Grows more inaccurate the further away it is aimed.
+	 * 
+	 *	@author Alexander Huynh
 	 */
 	public class Bullet_Flak extends ABST_Bullet 
 	{
@@ -15,6 +19,10 @@ package deltabattery.projectiles
 		{
 			dist = getDistance(_origin.x, _origin.y, _target.x, _target.y);
 			
+			// apply the accuracy modifier
+			// range   variance
+			//  100       20
+			//  500      100
 			var accScale:Number;
 			if (dist < 100)
 				accScale = 1;

@@ -4,13 +4,12 @@
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
-	/**	Standard Missile
+	/**
+	 *	Standard Missile.
 	 *
-	 * 	Basic missile
-	 * 	Player Weapon:	SAM
-	 * 	Enemy:			Standard Missile (Wave 1+)
+	 * 	A basic missile. Travels from its origin to its target.
 	 * 
-	 * @author Alexander Huynh
+	 *	@author Alexander Huynh
 	 */
 	public class Missile_Standard extends ABST_Missile 
 	{

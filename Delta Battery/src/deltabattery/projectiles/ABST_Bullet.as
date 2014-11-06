@@ -29,8 +29,6 @@ package deltabattery.projectiles {
 			params["explode"] = false;		// don't explode
 			
 			super(_cg, _mc, _origin, _target, _type, params);
-			
-			// -- TODO use stats
 		}
 		
 		override public function step():Boolean
@@ -51,7 +49,7 @@ package deltabattery.projectiles {
 			return readyToDestroy;
 		}
 		
-		override public function destroy():void
+		override public function destroy(distance:Number = 0):void
 		{
 			cleanup(null);
 		}

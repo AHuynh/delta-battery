@@ -5,8 +5,10 @@ package deltabattery.projectiles
 	import flash.geom.Point;
 	
 	/**
-	 * ...
-	 * @author Alexander Huynh
+	 *	A projectile that is affected by gravity and constantly
+	 * 	rotates to face the direction it is travelling in.
+	 * 
+	 *	@author Alexander Huynh
 	 */
 	public class ABST_Artillery extends ABST_Missile 
 	{

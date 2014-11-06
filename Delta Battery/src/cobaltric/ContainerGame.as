@@ -42,7 +42,7 @@
 		public var manBull:ManagerBullet;
 		public var manExpl:ManagerExplosion;
 		
-		public var money:int;				// actual money
+		public var money:int = 999999;				// actual money
 		private var moneyDisplay:int;		// displayed money (for 'increasing' slack effect)
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
@@ -276,12 +276,11 @@
 		public function endWave():void
 		{
 			game.mc_gui.tf_wave.text = manWave.wave;
-			//game.mc_gui.mc_statusCenter.tf_status.visible = true;
-			//game.mc_gui.mc_statusCenter.tf_status.text = "Wave " + (manWave.wave - 1) + " complete!";
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 120;
 			gameActive = false;
+			manPart.clear();
 		}
 		
 		private function onPause(e:MouseEvent):void

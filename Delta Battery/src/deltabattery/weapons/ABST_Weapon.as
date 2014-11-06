@@ -17,13 +17,13 @@ package deltabattery.weapons
 		public var slot:int;					// weapon slot
 		
 		public var cooldownCounter:int = 0;		// actual cooldown timer, 0 if ready to fire
-		public var cooldownReset:int = 25;		// amount to set the cooldown to after firing
+		public var cooldownReset:int = 20;		// amount to set the cooldown to after firing
 		
 		public var projectileParams:Object = new Object();
 		public var projectileLife:int = -1;
 		public var projectileRange:int = -1;	// uses life to determine when to despawn
 		
-		public var ammoMax:int = 50;			// max reserve ammo
+		public var ammoMax:int = 70;			// max reserve ammo
 		public var ammo:int = ammoMax;			// current ammo
 
 		public var costAmmo:int = 1;			// cost per 1 ammo for this weapon in the shop

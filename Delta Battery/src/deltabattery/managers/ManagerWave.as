@@ -96,8 +96,8 @@
 			{
 				// standard missile
 				case 1:
-					enemiesRemaining = 100;
-			
+					enemiesRemaining = 0;
+
 					// enable missiles - (corner)
 					spawnLoc[MISSILE] = [R_LEFT_TOP];
 					spawnLoc[ARTY] = [R_ARTY_NORM];
@@ -111,7 +111,7 @@
 					spawnLoc[SHIP] = [R_RIGHT_BOT];
 					spawnLoc[SAT] = [R_LEFT_TOP];
 					spawnLoc[POPUP] = [R_SEA];
-					
+
 					// set spawn probabilities
 					spawnType[MISSILE] = 5;
 					spawnType[ARTY] = 4;
@@ -289,7 +289,7 @@
 					spawnRandom = .3;
 			}
 		}
-		
+
 		// no argument	instantaneous day
 		// "day"		day -> sunset
 		// "sunset"		sunset -> night
@@ -304,14 +304,14 @@
 			cg.game.bg.sky.gotoAndPlay(t);
 			cg.game.bg.ocean.gotoAndPlay(t);
 		}
-		
+
 		public function endWave():void
 		{
 			waveActive = false;
 			wave++;
 			cg.endWave();
 		}
-		
+
 		override public function step():void
 		{
 			if (!waveActive) return;
@@ -348,7 +348,7 @@
 						manMiss.spawnProjectile("standard", getSpawnLocation(MISSILE), getTarget());
 					break;
 					case ARTY:
-						manArty.spawnProjectile("standard", getSpawnLocation(ARTY), getTarget());
+						manArty.spawnProjectile("artillery", getSpawnLocation(ARTY), getTarget());
 					break;
 					case FAST:
 						manMiss.spawnProjectile("fast", getSpawnLocation(FAST), getTarget(), 0, P_FAST);
