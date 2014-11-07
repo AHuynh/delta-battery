@@ -20,9 +20,6 @@ package deltabattery.weapons
 			super(_cg, _slot);
 			name = "SAM";
 			projectileParams["velocity"] = 8;
-			
-			//SoundPlayer.play("sfx_missile");
-			//(new sfx_missile as Sound).play();
 		}
 		
 		override protected function createProjectile():void
@@ -30,6 +27,8 @@ package deltabattery.weapons
 			cg.manMiss.spawnProjectile("standard", new Point(turret.x, turret.y - 15),
 												   new Point(cg.mx, cg.my),
 										TURRET_ID, projectileParams);
+										
+			SoundPlayer.play("sfx_launch_standard");
 		}
 	}
 }

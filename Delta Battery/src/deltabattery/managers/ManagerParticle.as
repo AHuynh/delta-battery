@@ -2,6 +2,7 @@ package deltabattery.managers
 {
 	import cobaltric.ContainerGame;
 	import deltabattery.particles.Particle;
+	import deltabattery.particles.ParticlePopup;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
@@ -21,6 +22,8 @@ package deltabattery.managers
 		private const SMOKE:int		= 0;
 		private const ARTY:int		= 1;
 		
+		private var popArr:Array = [];
+		
 		public function ManagerParticle(_cg:ContainerGame) 
 		{
 			super(_cg);
@@ -33,7 +36,8 @@ package deltabattery.managers
 		override public function step():void
 		{			
 			var part:Particle;
-			for (var i:int = objArr.length - 1; i >= 0; i--)
+			var i:int;
+			for (i = objArr.length - 1; i >= 0; i--)
 			{
 				part = objArr[i];
 				if (part.step())
@@ -43,6 +47,17 @@ package deltabattery.managers
 					objArr.splice(i, 1);
 					particleFactory[part.factoryKey][0].splice(part.factoryIndex, 1);	// remove particle from active
 					particleFactory[part.factoryKey][1].push(part);						// store particle in warehouse
+				}
+			}
+
+			for (i = popArr.length - 1; i >= 0; i--)
+			{
+				part = popArr[i];
+				if (part.step())
+				{
+					if (cg.game.c_part.contains(part.mc))
+						cg.game.c_part.removeChild(part.mc);
+					popArr.splice(i, 1);
 				}
 			}
 		}
@@ -65,12 +80,26 @@ package deltabattery.managers
 			objArr = [];
 		}
 		
-		/**	Spawn a particle (or use an existing, idle one from the warehouse if one exists)
+		/**
+		 * Spawn a money earned indicator.
 		 * 
-		 *	@proj		the type of projectile to spawn
-		 * 	@origin		the starting location of the projectile
-		 * 	@target		where the projectile will head toward
-		 * 	@params		parameters for the projectile
+		 * @param	position
+		 * @param	amount
+		 */
+		public function popup(position:Point, amount:int):void
+		{
+			var pop:ParticlePopup = new ParticlePopup(this, new MoneyPopup(), position, amount, cg.game.bg.ocean.currentFrame < 152)
+			popArr.push(pop);
+			cg.game.c_part.addChild(pop.mc);
+		}
+		
+		/**
+		 * Spawn a particle (or use an existing, idle one from the warehouse if one exists)
+		 * 
+		 * @proj		the type of projectile to spawn
+		 * @origin		the starting location of the projectile
+		 * @target		where the projectile will head toward
+		 * @params		parameters for the projectile
 		 */
 		public function spawnParticle(proj:String, origin:Point, rot:Number = 0, dx:Number = 0, dy:Number = 0, g:Number = 0):void
 		{

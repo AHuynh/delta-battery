@@ -40,6 +40,8 @@ package deltabattery
 		
 		private var prevX:Number = 0;
 		private var prevY:Number = 0;
+		
+		private var noAmmoGrace:int = 0;
 
 		public function Turret(_cg:ContainerGame, _turret:MovieClip) 
 		{
@@ -83,7 +85,7 @@ package deltabattery
 			turret.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			
 			var gui:MovieClip = cg.game.mc_gui;
-			weaponMC = [gui.wep_1, gui.wep_2, gui.wep_3, gui.wep_4, gui.wep_5, gui.wep_6, null, gui.wep_8];		// TODO complete
+			weaponMC = [gui.wep_1, gui.wep_2, gui.wep_3, gui.wep_4, gui.wep_5, gui.wep_6, gui.wep_7, gui.wep_8];
 			
 			// setup weapons
 			weaponMC[1].gotoAndStop("raam");
@@ -144,6 +146,9 @@ package deltabattery
 				weaponMC[activeSecondary + 3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[activeSecondary].ammo / weaponSecondary[activeSecondary].ammoMax)));
 				if (newAmmo != -1)
 					cg.game.mc_gui.tf_ammoS.text = newAmmo;
+				else if (noAmmoGrace == 0)
+					SoundPlayer.play("sfx_no_ammo");
+				noAmmoGrace = 15;
 			}
 
 			// update all weapons
@@ -166,6 +171,9 @@ package deltabattery
 				weaponSpecial.step();
 				weaponMC[7].reload.y = -20 + ((weaponSpecial.cooldownCounter / weaponSpecial.cooldownReset) * 40);
 			}
+			
+			if (noAmmoGrace > 0)
+				noAmmoGrace--;
 		}
 
 		private function onMouseLeftDown(e:MouseEvent):void
@@ -183,6 +191,8 @@ package deltabattery
 					cg.manPart.spawnParticle("", new Point(turret.x + getRand(-5, 5), turret.y + getRand(-5, 5)), 0, getRand(0, 1), getRand(0, 1), .05);
 				}
 			}
+			else
+				SoundPlayer.play("sfx_no_ammo");
 		}
 		
 		// TEMP
@@ -310,7 +320,16 @@ package deltabattery
 						cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
 					}
 				break;
-				// TODO 6
+				case 54:	// 6
+					if (weaponSecondary[2])
+					{
+						old = activeSecondary + 3;
+						activeSecondary = 2;
+						changed = 5;
+						cg.game.mc_gui.tf_weaponS.text = weaponSecondary[activeSecondary].name;
+						cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
+					}
+				break;
 			}
 		
 			if (changed == -1) return;

@@ -144,7 +144,7 @@
 			{
 				// standard missile
 				case 1:
-					enemiesRemaining = 6;
+					enemiesRemaining = 0;// 6;
 
 					// enable missiles
 					spawnLoc[MISSILE] = [R_LEFT_TOP];

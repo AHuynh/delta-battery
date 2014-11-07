@@ -1,6 +1,7 @@
 package deltabattery.weapons 
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.SoundPlayer;
 	import deltabattery.managers.ABST_Manager;
 	import deltabattery.projectiles.ABST_Missile;
 	import deltabattery.projectiles.ABST_Vehicle;
@@ -97,6 +98,7 @@ package deltabattery.weapons
 					(tgt as ABST_Vehicle).hp = 0;
 				tgt.destroy();
 				delay = delayMax;
+				SoundPlayer.play("sfx_launch_laser");
 			}
 		}
 		

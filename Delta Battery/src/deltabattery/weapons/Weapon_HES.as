@@ -1,6 +1,7 @@
 package deltabattery.weapons 
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.SoundPlayer;
 	import flash.geom.Point;
 	
 	/**
@@ -30,6 +31,7 @@ package deltabattery.weapons
 			cg.manMiss.spawnProjectile("big", new Point(turret.x, turret.y - 15),
 										new Point(cg.mx, cg.my),
 										TURRET_ID, projectileParams);
+			SoundPlayer.play("sfx_launch_big");
 		}
 		
 	}

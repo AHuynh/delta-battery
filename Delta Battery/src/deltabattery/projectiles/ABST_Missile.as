@@ -89,6 +89,8 @@
 					createExplosion = params["explode"];
 				if (params["explosionScale"])
 					explosionScale = params["explosionScale"];
+				if (params["damage"])
+					damage = params["damage"];
 					
 				if (params["upgradeV"])								// velocity upgrade
 					velocity *= params["upgradeV"];
@@ -189,7 +191,11 @@
 			checkTarget(false);
 
 			if (awardMoney && type == 0)
-				cg.addMoney(money + money * (distance < 40 ? -.0125 * distance + .5 : 0));
+			{
+				var m:int = money + money * (distance < 40 ? -.0125 * distance + .5 : 0)
+				cg.addMoney(m);
+				cg.manPart.popup(new Point(mc.x, mc.y - 20), m);
+			}
 			
 			markedForDestroy = true;
 			mc.visible = false;

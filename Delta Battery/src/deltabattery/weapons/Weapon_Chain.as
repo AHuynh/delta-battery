@@ -30,6 +30,7 @@ package deltabattery.weapons
 												new Point(cg.mx + getRand( -weaponSway * .5, weaponSway * .5),
 														  cg.my + getRand( -weaponSway * .5, weaponSway * .5)),
 										TURRET_ID, projectileLife, projectileParams);
+			SoundPlayer.play("sfx_launch_chain");
 		}
 	}
 }

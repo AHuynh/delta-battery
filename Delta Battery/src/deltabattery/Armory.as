@@ -1,9 +1,11 @@
 package deltabattery 
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.SoundPlayer;
 	import deltabattery.weapons.ABST_Weapon;
 	import deltabattery.weapons.Weapon_Flak;
 	import deltabattery.weapons.Weapon_HES;
+	import deltabattery.weapons.Weapon_Laser;
 	import deltabattery.weapons.Weapon_RAAM;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -79,7 +81,9 @@ package deltabattery
 					  arm.lvl_reload, arm.lvl_ammo];
 			
 			arm.btn_purchase.addEventListener(MouseEvent.CLICK, onPurchase);
+			arm.btn_purchase.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 			arm.mc_tutorial.btn_resume.addEventListener(MouseEvent.CLICK, onResume);
+			arm.mc_tutorial.btn_skip.addEventListener(MouseEvent.CLICK, onResume);
 		}
 		
 		private function addSelected(btn:SimpleButton, showX:Boolean):void
@@ -104,11 +108,13 @@ package deltabattery
 			for (i = 0; i < wepArr.length; i++)
 			{
 				wepArr[i].addEventListener(MouseEvent.CLICK, onWeapon);
+				wepArr[i].addEventListener(MouseEvent.MOUSE_OVER, overButton);
 				addSelected(wepArr[i], true);
 			}
 			for (i = 0; i < upgArr.length; i++)
 			{
 				upgArr[i].addEventListener(MouseEvent.CLICK, onUpgrade);
+				upgArr[i].addEventListener(MouseEvent.MOUSE_OVER, overButton);
 				addSelected(upgArr[i], false);
 				lvlArr[i].buttonMode = lvlArr[i].mouseEnabled = lvlArr[i].mouseChildren = false;
 			}
@@ -123,6 +129,8 @@ package deltabattery
 		 */
 		private function onWeapon(e:MouseEvent):void
 		{
+			onButton(e);
+			
 			var ind:int = -1;
 			switch (e.target.name)
 			{
@@ -178,6 +186,8 @@ package deltabattery
 		 */
 		private function onUpgrade(e:MouseEvent):void
 		{
+			onButton(e);
+			
 			var ind:int = setUpgDesc(e.target.name);
 			if (ind == -1) return;
 
@@ -238,6 +248,9 @@ package deltabattery
 		private function onPurchase(e:MouseEvent):void
 		{
 			if (!boi) return;
+			
+			onButton(e);
+			SoundPlayer.play("sfx_purchase");
 	
 			var price:int = int(arm.tf_price.text.substring(1));
 			if (price > cg.money) return;
@@ -253,7 +266,7 @@ package deltabattery
 				case "RAA":
 					aoi = wepArr;
 					ioi = 0;
-					weapon = new Weapon_RAAM(cg, 1);		// TODO complete for others
+					weapon = new Weapon_RAAM(cg, 1);
 					slot = 1;
 				break;
 				case "HE-":
@@ -268,9 +281,11 @@ package deltabattery
 					weapon = new Weapon_Flak(cg, 4);
 					slot = 4;
 				break;
-				case "LASE":
+				case "LAS":
 					aoi = wepArr;
 					ioi = 3;
+					weapon = new Weapon_Laser(cg, 5);
+					slot = 5;
 				break;
 				case "EXP":
 					aoi = upgArr;
@@ -303,6 +318,9 @@ package deltabattery
 				
 				arm.btn_purchase.visible = false;
 				arm.tf_price.text = "Owned!";	
+				
+				if (cg.newWepFlag == 0)
+					cg.newWepFlag = 1;
 			}
 			// if an upgrade was selected with index ioi
 			else if (aoi == upgArr)
@@ -318,6 +336,16 @@ package deltabattery
 			}
 			
 			cg.turret.upgradeAll();
+		}
+		
+		private function overButton(e:MouseEvent):void
+		{
+			SoundPlayer.play("sfx_menu_blip_over");
+		}
+		
+		private function onButton(e:MouseEvent):void
+		{
+			SoundPlayer.play("sfx_menu_blip");
 		}
 	}
 }

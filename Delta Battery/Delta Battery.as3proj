@@ -64,17 +64,19 @@
     <element path="Satellite.swc" />
     <element path="Airplane.swc" />
     <element path="ShipBattle.swc" />
-    <element path="MissileCruise.swc" />
     <element path="ArtilleryBomb.swc" />
-    <element path="ContainerMenu.swc" />
     <element path="SpecialWarning.swc" />
     <element path="ExplosionStandard.swc" />
     <element path="ParticleArtillery.swc" />
     <element path="ParticleSmoke01.swc" />
     <element path="MissileStandard.swc" />
     <element path="MissileLASM.swc" />
-    <element path="Game.swc" />
     <element path="MissileTarget.swc" />
+    <element path="MissilePop.swc" />
+    <element path="MoneyPopup.swc" />
+    <element path="MissileCruise.swc" />
+    <element path="Game.swc" />
+    <element path="ContainerMenu.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
@@ -93,6 +95,22 @@
     <asset path="src\sounds\SFX_missileNormFire.wav" update="..\Flash\SFX_missileNormFire.wav" />
     <asset path="src\sounds\SFX_explodeNorm.wav" update="..\Flash\SFX_explodeNorm.wav" />
     <asset path="src\sounds\SFX_chaingunNorm.wav" update="..\Flash\SFX_chaingunNorm.wav" />
+    <asset path="src\sound\db_bgm_1.mp3" update="..\Sound\db_bgm_1.mp3" />
+    <asset path="src\sound\db_bgm_2.mp3" update="..\Sound\db_bgm_2.mp3" />
+    <asset path="src\sound\db_explode_0.mp3" update="..\Sound\db_explode_0.mp3" />
+    <asset path="src\sound\db_explode_1.mp3" update="..\Sound\db_explode_1.mp3" />
+    <asset path="src\sound\db_explode_2.mp3" update="..\Sound\db_explode_2.mp3" />
+    <asset path="src\sound\db_launch_chain.mp3" update="..\Sound\db_launch_chain.mp3" />
+    <asset path="src\sound\db_launch_standard.mp3" update="..\Sound\db_launch_standard.mp3" />
+    <asset path="src\sound\db_launch_fast.mp3" update="..\Sound\db_launch_fast.mp3" />
+    <asset path="src\sound\db_explode_3.mp3" update="..\Sound\db_explode_3.mp3" />
+    <asset path="src\sound\db_launch_os_standard.mp3" update="..\Sound\db_launch_os_standard.mp3" />
+    <asset path="src\sound\db_launch_big.mp3" update="..\Sound\db_launch_big.mp3" />
+    <asset path="src\sound\db_menu_blip.mp3" update="..\Sound\db_menu_blip.mp3" />
+    <asset path="src\sound\db_menu_blip_over.mp3" update="..\Sound\db_menu_blip_over.mp3" />
+    <asset path="src\sound\db_no_ammo.mp3" update="..\Sound\db_no_ammo.mp3" />
+    <asset path="src\sound\db_purchase.mp3" update="..\Sound\db_purchase.mp3" />
+    <asset path="src\sound\db_launch_laser.mp3" update="..\Sound\db_launch_laser.mp3" />
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

@@ -28,6 +28,8 @@ package deltabattery.projectiles
 			dx = 0;
 			
 			money = 150;
+			damage = 7 + getRand(0, 2);
+			mc.gotoAndStop(mc.totalFrames);
 		}
 		
 		override public function step():Boolean
@@ -45,6 +47,7 @@ package deltabattery.projectiles
 						velocity *= 1.4;
 						dx = velocity * Math.cos(rot);
 						dy = velocity * Math.sin(rot);
+						mc.gotoAndPlay(1);
 					}
 					else			// still travelling upwards
 					{

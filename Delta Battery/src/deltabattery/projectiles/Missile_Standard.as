@@ -1,6 +1,7 @@
 ﻿package deltabattery.projectiles 
 {
 	import cobaltric.ContainerGame;
+	import deltabattery.SoundPlayer;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	
@@ -17,6 +18,9 @@
 		public function Missile_Standard(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
 			super(_cg, _mc, _origin, _target, _type, params);
+			
+			if (type == 0)
+				SoundPlayer.play("sfx_launch_os_standard");
 		}
 	}
 }

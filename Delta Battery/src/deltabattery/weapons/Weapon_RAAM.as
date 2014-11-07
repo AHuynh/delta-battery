@@ -28,10 +28,10 @@ package deltabattery.weapons
 		
 		override protected function createProjectile():void
 		{
-			// -- TODO change?
 			cg.manMiss.spawnProjectile("fastT", new Point(turret.x, turret.y - 15),
 												   new Point(cg.mx, cg.my),
-										TURRET_ID, projectileParams);
+										TURRET_ID, projectileParams);	
+			SoundPlayer.play("sfx_launch_fast");
 		}
 		
 	}

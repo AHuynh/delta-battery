@@ -21,6 +21,7 @@ package deltabattery.projectiles
 			// tracer
 			if (Math.random() > .8)
 				mc.gotoAndStop("tracer");
+			damage = 5 + getRand(0, 8);
 		}
 	}
 }

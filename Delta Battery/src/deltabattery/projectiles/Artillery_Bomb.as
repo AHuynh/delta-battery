@@ -23,6 +23,8 @@ package deltabattery.projectiles
 			mc.scaleX = mc.scaleY = .6;
 			
 			money = 50;
+			damage = 15 + getRand(0, 10);
+			explosionScale = 1.25;
 		}	
 	}
 }

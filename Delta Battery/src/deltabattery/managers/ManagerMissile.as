@@ -52,19 +52,19 @@
 					addObject(new Missile_Standard(cg, new MissileFast(), origin, target, type, params));
 				break;
 				case "big":
-					addObject(new Missile_Standard(cg, new MissileBig(), origin, target, type, params));
+					addObject(new Missile_Standard(cg, new MissileCruise(), origin, target, type, params));
 				break;
 				case "rocket":
 					addObject(new Missile_Fast(cg, new MissileRocket(), origin, target, type, params));
 				break;
 				case "cluster":
-					addObject(new Missile_Cluster(cg, new MissileBig(), origin, target, type, params));	// TODO cluster GFX
+					addObject(new Missile_Cluster(cg, new MissileBig(), origin, target, type, params));
 				break;
 				case "LASM":
 					addObject(new Missile_LASM(cg, new MissileLASM(), origin, target, type, params));
 				break;
 				case "pop":
-					addObject(new Missile_Popup(cg, new MissileLASM(), origin, target, type, params));
+					addObject(new Missile_Popup(cg, new MissilePop(), origin, target, type, params));
 				break;
 				case "bomb":
 					addObject(new Artillery_Bomb(cg, new ArtilleryBomb(), origin, target, type, params));

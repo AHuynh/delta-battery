@@ -22,6 +22,7 @@ package deltabattery.projectiles
 			
 			money = params["money"] ? params["money"] : 125;
 			params["explosionScale"] = 1.5;	
+			damage = 13 + getRand(0, 4);
 		}
 		
 	}

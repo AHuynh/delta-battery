@@ -54,7 +54,7 @@ package deltabattery.projectiles
 
 				if (life <= 0 || (Math.abs(mc.x) > 500 || dist < 5 || dist > prevDist || mc.y > 170))
 				{
-					cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type, explosionScale);
+					cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type, explosionScale, true);
 					destroy();
 				}
 				else

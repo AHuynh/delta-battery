@@ -1,9 +1,11 @@
 ﻿package cobaltric
 {
+	import deltabattery.SoundPlayer;
 	import flash.display.MovieClip;
 	import flash.display.StageQuality;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.net.SharedObject;
 	
 	/**
 	 * Engine.as
@@ -18,11 +20,34 @@
 		private var container:ABST_Container;	// the currently active container
 		
 		public var startWave:int = 1;
+		public var scoreArr:Array;		// new score
+		
+		public var scoreData:Array;		// old scores
+		public var allowHigh:Boolean;
+		
+		public const SAVE_DATA:String = "DELT_BATT";
+		public var saveData:SharedObject = SharedObject.getLocal(SAVE_DATA, "/");
 		
 		public function Engine()
 		{
+			// try to load save data
+			if (saveData.data.sd_isValid)
+			{
+				scoreData = [];
+				for (var i:int = 0; i < 8; i++)
+				{
+					scoreData.push([saveData.data.sd_name[i],
+									saveData.data.sd_day[i],
+									saveData.data.sd_money[i]]);
+				}
+			}
+			else
+				newGame();
+				
+				
 			gameState = 0;
-			container = new ContainerIntro(this);
+			
+			container = new ContainerIntro(this, scoreData);
 			addChild(container);
 
 			// center the container
@@ -31,6 +56,18 @@
 			
 			addEventListener(Event.ENTER_FRAME, step);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			SoundPlayer.playBGM(true);
+				
+			//trace(scoreData[0] + " " + scoreData[1] + " " + scoreData[2]);
+		}
+		
+		public function newGame():void
+		{
+			save();		// new data
+			
+			scoreData = [["Cb Auto Turret", 10, 15000], ["Cb Auto Turret", 8, 10000], ["Cb Auto Turret", 6, 6000], ["Cb Auto Turret", 5, 4000],
+						 ["Cb Auto Turret", 4, 3000], ["Cb Auto Turret", 3, 2000], ["Cb Auto Turret", 2, 1500], ["Cb Auto Turret", 1, 500]];
 		}
 		
 		public function step(e:Event):void
@@ -42,16 +79,16 @@
 			switch (gameState)
 			{
 				case 0:
-					container = new ContainerGame(startWave);
+					container = new ContainerGame(this, startWave);
 					gameState++;
+					//SoundPlayer.playBGM(false);
+					SoundPlayer.stopBGM();
+					allowHigh = startWave == 1;
 				break;
-				/*case 1:
-					container = new ContainerOutro();
-					gameState++;
-				break;*/
 				case 1:
+					container = new ContainerIntro(this, scoreData, (allowHigh ? scoreArr : null));
 					gameState = 0;
-					container = new ContainerIntro(this);
+					SoundPlayer.playBGM(true);
 				break;
 			}
 			
@@ -71,13 +108,40 @@
 		
 		private function onKeyPress(e:KeyboardEvent):void
 		{
-			if (!container.stage) return;
+			if (!container.stage)
+				return;
+			if (gameState == 0 && (container as ContainerIntro).menu.mc_high.visible)
+				return;
 			if (e.keyCode == 76)		// -- 1
 				container.stage.quality = StageQuality.LOW;
 			else if (e.keyCode == 77)	// -- 2
 				container.stage.quality = StageQuality.MEDIUM;
 			else if (e.keyCode == 72)	// -- 3
 				container.stage.quality = StageQuality.HIGH;
+		}
+		
+		public function save(scoreData:Array = null):void
+		{ 
+			saveData.clear();
+			if (!scoreData)
+				scoreData = [["Cb Auto Turret", 10, 15000], ["Cb Auto Turret", 8, 10000], ["Cb Auto Turret", 6, 6000], ["Cb Auto Turret", 5, 4000],
+							 ["Cb Auto Turret", 4, 3000], ["Cb Auto Turret", 3, 2000], ["Cb Auto Turret", 2, 1500], ["Cb Auto Turret", 1, 500]];
+			saveData.data.sd_name = [];
+			saveData.data.sd_day = [];
+			saveData.data.sd_money = [];
+			for (var i:int = 0; i < 8; i++)
+			{
+				saveData.data.sd_name.push(scoreData[i][0]);
+				saveData.data.sd_day.push(scoreData[i][1]);
+				saveData.data.sd_money.push(scoreData[i][2]);
+			}
+			saveData.data.sd_isValid = true;
+			saveData.flush();
+			
+			//trace("Saved...");
+			//trace(saveData.data.sd_name);
+			//trace(saveData.data.sd_day);
+			//trace(saveData.data.sd_money);
 		}
 	}
 	

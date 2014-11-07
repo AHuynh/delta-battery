@@ -35,6 +35,7 @@ package deltabattery.projectiles
 			rocketParams = new Object();
 			rocketParams["velocity"] = 6;
 			rocketParams["money"] = 50;
+			rocketParams["damage"] = 4;
 
 			super(_cg, _mc, _origin, _target, _type, params);
 			airburst = 150 + getRand(0, 90);

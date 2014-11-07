@@ -25,6 +25,7 @@ package deltabattery.projectiles
 			dy = -velocity * Math.sin(rot) * 1.5;	
 			
 			money = 125;
+			damage = 12 + getRand(0, 4);
 		}
 	}
 }

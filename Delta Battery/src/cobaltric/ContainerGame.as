@@ -1,6 +1,7 @@
 ﻿package cobaltric
 {	
 	import deltabattery.Armory;
+	import deltabattery.SoundPlayer;
 	import deltabattery.managers.ABST_Manager;
 	import deltabattery.managers.AutoPlayer;
 	import deltabattery.managers.ManagerArtillery;
@@ -23,6 +24,7 @@
 	 */
 	public class ContainerGame extends ABST_Container
 	{		
+		public var engine:Engine;
 		public var game:Game;				// the Game SWC, containing all the base assets
 		public var turret:Turret;			// the player's turret
 		public var turretGrace:int;			// if not 0, don't let things fire (i.e. right after game starts)
@@ -43,7 +45,7 @@
 		public var manBull:ManagerBullet;
 		public var manExpl:ManagerExplosion;
 		
-		public var money:int = 0;			// actual money
+		public var money:int = 999990;			// actual money
 		private var moneyDisplay:int;		// displayed money (for 'increasing' slack effect)
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
@@ -52,6 +54,7 @@
 		
 		private var cityHPSlack:Number;		// displayed HP of city (uses secondary 'ghost' HP bar)
 		private var cityHPCounter:int;		// delay before slack decreases
+		private var cityExplode:int = 0;	// explode city when it dies
 		
 		private var intermission:int;		// counter for in-between waves
 		
@@ -61,12 +64,14 @@
 		
 		private var shop:MovieClip;			// reference to the shop MovieClip
 		public var armory:Armory;
+		public var newWepFlag:int = 0;		// 0 not shown; 1 to be shown; 2 shown
 		
 		private var startWave:int = 1;
 	
-		public function ContainerGame(_startWave:int = 1)
+		public function ContainerGame(eng:Engine, _startWave:int = 1)
 		{
 			super();
+			engine = eng;
 			startWave = _startWave;
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -99,9 +104,18 @@
 			game.mc_gui.btn_pause.addEventListener(MouseEvent.CLICK, onPause);
 			game.mc_gui.btn_help.addEventListener(MouseEvent.CLICK, onHelp);
 			
-			// game over menu
+			game.mc_pause.btn_resume.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_pause.btn_quit.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_gui.btn_pause.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_gui.btn_help.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			
+			// game over menus
 			game.mc_lose.visible = false;
 			game.mc_lose.btn_quit.addEventListener(MouseEvent.CLICK, onQuit);
+			game.mc_lose.btn_quit.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_win.visible = false;
+			game.mc_win.btn_quit.addEventListener(MouseEvent.CLICK, onQuit);
+			game.mc_win.btn_quit.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 			
 			// text
 			game.mc_gui.tf_wave.text = startWave;
@@ -118,10 +132,15 @@
 			
 			// setup the Armory
 			armory = new Armory(this);
+			game.mc_gui.shop.mc_tutorial.btn_skip.addEventListener(MouseEvent.CLICK, armAck);
+			game.mc_gui.shop.mc_tutorial.btn_skip.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_gui.shop.mc_tutorial.btn_next.addEventListener(MouseEvent.CLICK, onButton);
+			game.mc_gui.shop.mc_tutorial.btn_next.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_gui.shop.mc_tutorial.btn_resume.addEventListener(MouseEvent.CLICK, armAck);
+			game.mc_gui.shop.mc_tutorial.btn_resume.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 			
 			// setup the Turret
 			turret = new Turret(this, game.mc_turret);
-			//turret.step();
 			turret.turret.mc_cannon.deltaStrike.visible = false;
 			turret.upgradeAll()
 			
@@ -136,17 +155,30 @@
 			shop = game.mc_gui.shop;
 			shop.visible = false;
 			shop.btn_nextDay.addEventListener(MouseEvent.CLICK, onShopDone);
-			
+			shop.btn_nextDay.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 			
 			// setup tutorial
-			tutorialFlag = true;						// TODO set based on chosen day
-			game.mc_gui.tutorial.gotoAndPlay("in");		// TODO set
+			tutorialFlag = true;
 			gameActive = false;
+			game.mc_gui.tutorial.gotoAndPlay("in");
+			game.mc_gui.newWeapon.visible = false;
+			game.mc_gui.newWeapon.stop();
+			game.mc_gui.newWeapon.mc.btn_resume.addEventListener(MouseEvent.CLICK, wepAck);
+			game.mc_gui.newWeapon.mc.btn_resume.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			
+			// (attach sound events)
+			game.mc_gui.tutorial.mc.btn_start.addEventListener(MouseEvent.CLICK, onButton);
+			game.mc_gui.tutorial.mc.btn_start.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_gui.tutorial.mc.btn_skip.addEventListener(MouseEvent.CLICK, onButton);
+			game.mc_gui.tutorial.mc.btn_skip.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			game.mc_gui.tutorial.mc.btn_next.addEventListener(MouseEvent.CLICK, onButton);
+			game.mc_gui.tutorial.mc.btn_next.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 			
 			// new wave indicator
 			infoFlag = true;
-			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 5 ? 5 : manWave.wave);
+			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 31 ? 31 : manWave.wave);
 			game.mc_gui.newEnemy.mc.btn_start.addEventListener(MouseEvent.CLICK, infoAck);
+			game.mc_gui.newEnemy.mc.btn_start.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 		}
 		
 		// called by Engine every frame
@@ -163,6 +195,11 @@
 				return false;
 			}
 			else if (infoFlag)
+			{
+				gameActive = false;
+				return false;
+			}
+			else if (newWepFlag == 2)
 			{
 				gameActive = false;
 				return false;
@@ -186,6 +223,10 @@
 			
 			if (!gameActive) return completed;
 			
+			if (cityExplode > 2)
+				if (--cityExplode % 3 == 0)
+					explodeCity();
+			
 			mx = mouseX - game.x;
 			my = mouseY - game.y;
 			
@@ -204,6 +245,24 @@
 			game.mc_gui.newEnemy.gotoAndPlay("out");
 			infoFlag = false;
 			gameActive = true;
+			SoundPlayer.play("sfx_menu_blip");
+		}
+		
+		private function wepAck(e:MouseEvent):void
+		{
+			game.mc_gui.newWeapon.gotoAndPlay("out");
+			newWepFlag = 3;
+			gameActive = true;
+			SoundPlayer.play("sfx_menu_blip");
+		}
+		
+		private function armAck(e:MouseEvent):void
+		{
+			game.mc_gui.shop.mc_tutorial.visible = false;
+			game.mc_gui.shop.mc_tutorial.buttonMode = false;
+			game.mc_gui.shop.mc_tutorial.mouseChildren = false;
+			game.mc_gui.shop.mc_tutorial.mouseEnabled = false;
+			SoundPlayer.play("sfx_menu_blip");
 		}
 		
 		// updates city's ghost HP bar
@@ -241,22 +300,19 @@
 				game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar (primary)
 			}
 			
-			if (cityHP <= 0)
+			if (cityHP <= 0 && cityExplode == 0)
 			{
 				cityHP = 0;
 				game.city.gotoAndStop(game.city.totalFrames);
+				cityExplode = 75;
 				
 				manWave.enemiesRemaining = 0;
-				for (var i:int = 0; i < 10 + getRand(0, 5); i++)
-				{
-					manExpl.spawnExplosion(new Point(game.city.x + getRand( -100, 100), game.city.y + getRand( -50, 50)), 1, getRand(.5, 2));
-					manPart.spawnParticle("smoke", new Point(game.city.x + getRand( -100, 100), game.city.y + getRand( -50, 50)), getRand(0, 360),
-										  getRand( -5, 5), getRand( -2, 2));
-				}
+				for (var i:int = 0; i < 7 + getRand(0, 3); i++)
+					explodeCity();
 			}
 			else		// update the visual state of the city
 			{
-				if (life < .35)
+				if (life < .30)
 					game.city.gotoAndStop(4);
 				else if (life < .5)
 					game.city.gotoAndStop(3);
@@ -264,9 +320,14 @@
 					game.city.gotoAndStop(2);
 				else
 					game.city.gotoAndStop(1);
-				// TODO make into a function?
-				//game.city.gotoAndStop(Math.round((cityHP / cityHPMax) * game.city.totalFrames));
 			}
+		}
+		
+		private function explodeCity():void
+		{
+			manExpl.spawnExplosion(new Point(game.city.x + getRand( -100, 100), game.city.y + getRand( -50, 50)), 1, getRand(.5, 2));
+			manPart.spawnParticle("smoke", new Point(game.city.x + getRand( -100, 100), game.city.y + getRand( -50, 50)), getRand(0, 360),
+								  getRand( -5, 5), getRand( -2, 2));
 		}
 		
 		// called by the "NEXT WAVE" button in the shop
@@ -277,8 +338,15 @@
 			infoFlag = true;
 			turret.reloadAll();
 			game.mc_gui.newEnemy.gotoAndPlay("in");
-			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 5 ? 5 : manWave.wave);		// TODO change 5 (max wave)
+			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 31 ? 31 : manWave.wave);
 			game.bg.cacheAsBitmap = true;
+			if (newWepFlag == 1)
+			{
+				newWepFlag = 2;
+				game.mc_gui.newWeapon.visible = true;
+				game.mc_gui.newWeapon.gotoAndPlay(1);
+			}
+			SoundPlayer.play("sfx_menu_blip");
 		}
 		
 		// end the current wave, enabling the shop, etc.
@@ -288,10 +356,16 @@
 			gameActive = false;
 			manPart.clear();
 
-			if (cityHP == 0)
+			if (cityHP <= 0)
 			{
 				game.mc_lose.visible = true;
 				game.mc_lose.tf_day.text = "Day " + manWave.wave;
+				return;
+			}
+			else if (manWave.wave == 31)
+			{
+				game.mc_win.visible = true;
+				game.mc_win.tf_day.text = "Day " + manWave.wave;
 				return;
 			}
 
@@ -314,6 +388,7 @@
 				gameActive = prevActive;
 
 			game.mc_pause.visible = paused;
+			SoundPlayer.play("sfx_menu_blip");
 		}
 		
 		private function onHelp(e:MouseEvent):void
@@ -323,6 +398,7 @@
 			game.mc_gui.tutorial.gotoAndPlay("in");
 			game.mc_gui.tutorial.mc.gotoAndStop(1);
 			gameActive = false;
+			SoundPlayer.play("sfx_menu_blip");
 		}
 		
 		private function onQuit(e:MouseEvent):void
@@ -331,6 +407,9 @@
 			turret.destroy(null);
 			tutorialFlag = infoFlag = false;
 			completed = true;
+			SoundPlayer.play("sfx_menu_blip");
+			
+			engine.scoreArr = [manWave.wave, money];
 		}
 		
 		// updates the displayed money to match the actual money
@@ -384,6 +463,16 @@
 		{  
 			return (Math.random() * (max - min + 1)) + min;  
 		} 
+		
+		private function overButton(e:MouseEvent):void
+		{
+			SoundPlayer.play("sfx_menu_blip_over");
+		}
+		
+		private function onButton(e:MouseEvent):void
+		{
+			SoundPlayer.play("sfx_menu_blip");
+		}
 		
 		private function destroy(e:Event):void
 		{

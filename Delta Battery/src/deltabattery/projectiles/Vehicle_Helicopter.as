@@ -13,6 +13,7 @@ package deltabattery.projectiles
 	public class Vehicle_Helicopter extends ABST_Vehicle 
 	{
 		private var timer:Number = 0;
+		private var rocketParams:Object;
 		
 		public function Vehicle_Helicopter(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int = 0, params:Object = null)
 		{
@@ -24,6 +25,11 @@ package deltabattery.projectiles
 				params["velocity"] = 2 + Math.random();
 			
 			super(_cg, _mc, _origin, _target, _type, params);
+			
+			rocketParams = new Object();
+			rocketParams["velocity"] = 6;
+			rocketParams["money"] = 50;
+			rocketParams["damage"] = 4;
 			
 			hp = hpMax = 8;
 			money = 500;
@@ -39,8 +45,10 @@ package deltabattery.projectiles
 				if (mc.x < target.x)
 					mc.x += velocity;
 
-				if (mc.x > -150 && timer % 150 == 0)
+				if (mc.x > -150 && timer % 120 == 0)
 					cg.manBull.spawnProjectile("chain", new Point(mc.x, mc.y), new Point(cg.game.city.x, cg.game.city.y));
+				if (mc.x > -250 && Math.random() > .7 && timer % 160 == 0)
+					cg.manMiss.spawnProjectile("rocket", new Point(mc.x, mc.y), new Point(cg.game.city.x, cg.game.city.y));
 			}
 			
 			timer++;

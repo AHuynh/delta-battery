@@ -25,6 +25,7 @@ package deltabattery.projectiles
 			super(_cg, _mc, _origin, _target, _type, params);
 			
 			money = 125;
+			damage = 7 + getRand(0, 2);
 		}
 		
 		override public function step():Boolean

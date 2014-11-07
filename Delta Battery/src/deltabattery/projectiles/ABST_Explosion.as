@@ -27,7 +27,7 @@ package deltabattery.projectiles
 		
 		private var origin:Point;
 		
-		public function ABST_Explosion(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int = 0, scale:Number = 1) 
+		public function ABST_Explosion(_par:MovieClip, _mc:MovieClip, _origin:Point, _type:int = 0, scale:Number = 1, flak:Boolean = false) 
 		{
 			par = _par;
 			mc = _mc;		
@@ -43,7 +43,15 @@ package deltabattery.projectiles
 			mc.rotation = getRand( -180, 180);
 			
 			range = 30 * scale;
-			//SoundPlayer.play("sfx_explosion");
+			
+			if (flak)
+				SoundPlayer.play("db_explode_3");
+			else if (scale > 1)
+				SoundPlayer.play("db_explode_0");
+			else if (scale == 1)
+				SoundPlayer.play("db_explode_1");
+			else
+				SoundPlayer.play("db_explode_2");
 		}
 		
 		public function step(manMiss:ManagerMissile, manArty:ManagerArtillery):Boolean

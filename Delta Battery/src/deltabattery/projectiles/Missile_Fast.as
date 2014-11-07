@@ -24,6 +24,7 @@
 			
 			money = params["money"] ? params["money"] : 125;
 			params["explosionScale"] = .5;	
+			damage = 4 + getRand(0, 2);
 		}
 	}
 }

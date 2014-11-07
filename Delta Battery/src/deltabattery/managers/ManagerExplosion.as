@@ -37,9 +37,9 @@ package deltabattery.managers {
 			}
 		}
 		
-		public function spawnExplosion(origin:Point, type:int = 0, scale:Number = 1):void
+		public function spawnExplosion(origin:Point, type:int = 0, scale:Number = 1, flak:Boolean = false):void
 		{
-			var m:ABST_Explosion = new Explosion_Standard(cg.game.c_main, new ExplosionStandard(), origin, type, scale);
+			var m:ABST_Explosion = new Explosion_Standard(cg.game.c_main, new ExplosionStandard(), origin, type, scale, flak);
 			objArr.push(m);
 			cg.game.c_main.addChild(m.mc);
 			
