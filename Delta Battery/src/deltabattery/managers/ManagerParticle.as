@@ -21,6 +21,8 @@ package deltabattery.managers
 		// factory keys
 		private const SMOKE:int		= 0;
 		private const ARTY:int		= 1;
+		private const SHELL:int		= 2;
+		private const DEBRIS:int	= 3;
 		
 		private var popArr:Array = [];
 		
@@ -31,6 +33,8 @@ package deltabattery.managers
 			particleFactory = new Object();
 			particleFactory[SMOKE] = [[], []];
 			particleFactory[ARTY] = [[], []];
+			particleFactory[SHELL] = [[], []];
+			particleFactory[DEBRIS] = [[], []];
 		}
 		
 		override public function step():void
@@ -108,6 +112,8 @@ package deltabattery.managers
 			switch (proj)
 			{
 				case "artillery":	key = ARTY;		break;
+				case "shell":		key = SHELL;	break;
+				case "debris":		key = DEBRIS;	break;
 				default:			key = SMOKE;
 			}
 			
@@ -127,6 +133,12 @@ package deltabattery.managers
 				{
 					case ARTY:
 						particle = addObject(new Particle(this, new ParticleArtillery(), origin, rot, dx, dy, g));
+					break;
+					case SHELL:
+						particle = addObject(new Particle(this, new ParticleShell(), origin, rot, dx, dy, g));
+					break;
+					case DEBRIS:
+						particle = addObject(new Particle(this, new ParticleDebris(), origin, rot, dx, dy, g));
 					break;
 					default:		// SMOKE
 						particle = addObject(new Particle(this, new ParticleSmoke01(), origin, 0, dx, dy, g));

@@ -64,7 +64,7 @@
 			arrName = [h.tf_name1, h.tf_name2, h.tf_name3, h.tf_name4, h.tf_name5, h.tf_name6, h.tf_name7, h.tf_name8];
 			arrDay = [h.tf_day1, h.tf_day2, h.tf_day3, h.tf_day4, h.tf_day5, h.tf_day6, h.tf_day7, h.tf_day8];
 			arrMoney = [h.tf_money1, h.tf_money2, h.tf_money3, h.tf_money4, h.tf_money5, h.tf_money6, h.tf_money7, h.tf_money8];
-			
+
 			if (newArr)		// [day, money]
 			{
 				//trace("Got new data: " + newArr);
@@ -119,6 +119,8 @@
 				}
 				
 			}
+			else
+				SoundPlayer.playBGM(true);
 			
 			for (var i:int = 0; i < 8; i++)
 			{
@@ -186,6 +188,9 @@
 			
 			resetFlag = false;
 			menu.mc_high.confirm.visible = false;
+			
+			if (!SoundPlayer.bgm)
+				SoundPlayer.playBGM(true);
 		}
 		
 		private function onReset(e:MouseEvent):void

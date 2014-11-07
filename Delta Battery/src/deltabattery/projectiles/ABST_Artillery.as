@@ -13,8 +13,6 @@ package deltabattery.projectiles
 	public class ABST_Artillery extends ABST_Missile 
 	{
 		protected var gravity:Number = .02;
-		protected var dx:Number;
-		protected var dy:Number;
 		
 		public function ABST_Artillery(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{

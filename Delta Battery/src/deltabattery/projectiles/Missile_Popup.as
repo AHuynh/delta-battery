@@ -14,8 +14,6 @@ package deltabattery.projectiles
 	 */
 	public class Missile_Popup extends ABST_Missile 
 	{
-		private var dx:Number;
-		private var dy:Number;
 		private const g:Number = 0.06;
 
 		private var popup:Boolean = true;		// TRUE if pre-ignite, FALSE if travelling as normal

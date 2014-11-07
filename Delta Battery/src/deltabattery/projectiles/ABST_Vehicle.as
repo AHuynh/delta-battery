@@ -53,7 +53,12 @@ package deltabattery.projectiles
 			timerKill.start();
 			
 			if (createExplosion)
+			{
 				cg.manExpl.spawnExplosion(new Point(mc.x, mc.y), type, explosionScale);
+				for (var i:int = 0; i < 7 + getRand(0, 6); i++)
+					cg.manPart.spawnParticle("debris", new Point(mc.x + getRand( -15, 15), mc.y + getRand( -10, 10)),
+											 getRand(0, 360), getRand(-.5, .5), getRand(0, .5), 1.5);
+			}
 
 			if (tgt)
 			{

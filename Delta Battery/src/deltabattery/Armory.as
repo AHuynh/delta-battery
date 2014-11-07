@@ -249,11 +249,15 @@ package deltabattery
 		{
 			if (!boi) return;
 			
-			onButton(e);
-			SoundPlayer.play("sfx_purchase");
-	
 			var price:int = int(arm.tf_price.text.substring(1));
-			if (price > cg.money) return;
+			if (price > cg.money)
+			{
+				SoundPlayer.play("sfx_no_ammo");
+				return;
+			}
+			
+			SoundPlayer.play("sfx_purchase");
+			
 	
 			var aoi:Array;		// array of interest 
 			var ioi:int;		// index of interest

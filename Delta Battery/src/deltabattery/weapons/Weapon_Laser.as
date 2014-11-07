@@ -25,7 +25,7 @@ package deltabattery.weapons
 
 			name = "LASER";
 			
-			gfxCount = gfxMax = 2;
+			gfxCount = gfxMax = 4;
 			
 			cooldownReset = cooldownBase = 30 * 5;
 			ammo = ammoMax = ammoBase = 5;

@@ -16,8 +16,6 @@ package deltabattery.projectiles
 	{
 		private var timer:Number = 0;
 		
-		private var dx:Number;
-		private var dy:Number;
 		private var dirX:int;
 		private var dirY:int;
 		private const ACCELY:Number = .15;

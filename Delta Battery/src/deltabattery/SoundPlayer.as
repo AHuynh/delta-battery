@@ -45,7 +45,7 @@ package deltabattery
 		[Embed(source="../sound/db_voice.mp3")]
 		private static var sfx_launch_voice:Class;
 
-		private static var bgm:SoundChannel;
+		public static var bgm:SoundChannel;
 		
 		public function SoundPlayer() 
 		{

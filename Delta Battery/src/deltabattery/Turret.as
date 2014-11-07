@@ -35,8 +35,8 @@ package deltabattery
 		public var activeSecondary:int = 0;		// index in array for RIGHT
 		
 		// turret rotation limits
-		public const TURRET_LIMIT_R:Number = -90;		// straight up
-		public const TURRET_LIMIT_L:Number = 175;		// slightly lower than directly left
+		public const TURRET_LIMIT_R:Number = 170;
+		public const TURRET_LIMIT_L:Number = 280;
 		
 		private var prevX:Number = 0;
 		private var prevY:Number = 0;
@@ -128,13 +128,15 @@ package deltabattery
 				// face the turret towards the mouse
 				var rot:Number = getAngle(0, 0, turret.mouseX, turret.mouseY);
 				
-				//var rot:Number = getAngle(0, 0, cg.mx, cg.my);
-				/*if (Math.abs(rot) > TURRET_LIMIT_L)
+
+				var r:Number = (rot + 360) % 360;
+				if (r > TURRET_LIMIT_L)
 					rot = TURRET_LIMIT_L;
-				else if (rot > TURRET_LIMIT_R && turret.mouseX > turret.x)
-					rot = TURRET_LIMIT_R;*/
+				else if (r < TURRET_LIMIT_R)
+					rot = TURRET_LIMIT_R;
+					
 				turret.mc_cannon.rotation = rot;
-				//trace(TURRET_LIMIT_R + " | " + (rot + 360) + " | " + TURRET_LIMIT_L);
+				//trace(TURRET_LIMIT_R + " | " + (rot + 360) % 360 + " | " + TURRET_LIMIT_L);
 			}
 			// end updating mouse
 			
@@ -144,11 +146,18 @@ package deltabattery
 				if (cg.game.mc_gui.newEnemy.visible) return;
 				var newAmmo:int = weaponSecondary[activeSecondary].fire();
 				weaponMC[activeSecondary + 3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[activeSecondary].ammo / weaponSecondary[activeSecondary].ammoMax)));
+				
 				if (newAmmo != -1)
+				{
 					cg.game.mc_gui.tf_ammoS.text = newAmmo;
-				else if (noAmmoGrace == 0)
+					if (activeSecondary != 2)
+						cg.manPart.spawnParticle("shell", new Point(turret.x + getRand(15, 10), turret.y + getRand( -20, -26)), 0, getRand(0, 1), getRand( -4, -3), .5);
+				}
+				else if (noAmmoGrace == 0 && weaponSecondary[activeSecondary].ammo == 0)
+				{
 					SoundPlayer.play("sfx_no_ammo");
-				noAmmoGrace = 15;
+					noAmmoGrace = 15;
+				}
 			}
 
 			// update all weapons

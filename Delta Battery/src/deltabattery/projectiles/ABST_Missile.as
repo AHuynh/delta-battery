@@ -47,6 +47,9 @@
 		protected var awardMoney:Boolean = true;		// if TRUE, money will be affected upon destruction
 		protected var money:int = 100;					// money awarded if the player shoots this down
 		
+		protected var dx:Number = 0;
+		protected var dy:Number = 0;
+		
 		public function ABST_Missile(_cg:ContainerGame, _mc:MovieClip, _origin:Point,
 								     _target:Point, _type:int = 0, params:Object = null)
 		{
@@ -107,8 +110,6 @@
 				cg.game.c_main.addChild(tgt);
 				if (cg.game.bg.ocean.currentFrame > 152) 	// post-sunset
 					tgt.gotoAndStop(2);						// white
-				trace("Missile target spawned with frame: " + tgt.currentFrame + "/" + tgt.totalFrames);
-				trace("Sky frame is: " + cg.game.bg.ocean.currentFrame );
 			}
 
 			mc.rotation = getAngle(origin.x, origin.y, target.x, target.y);
@@ -127,8 +128,8 @@
 			if (!markedForDestroy)
 			{
 				// calculate and perform movement
-				var dx:Number = velocity * Math.cos(rot);
-				var dy:Number = velocity * Math.sin(rot);
+				dx = velocity * Math.cos(rot);
+				dy = velocity * Math.sin(rot);
 				
 				mc.x += dx;
 				mc.y += dy;

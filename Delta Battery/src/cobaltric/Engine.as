@@ -81,14 +81,12 @@
 				case 0:
 					container = new ContainerGame(this, startWave);
 					gameState++;
-					//SoundPlayer.playBGM(false);
 					SoundPlayer.stopBGM();
 					allowHigh = startWave == 1;
 				break;
 				case 1:
 					container = new ContainerIntro(this, scoreData, (allowHigh ? scoreArr : null));
 					gameState = 0;
-					SoundPlayer.playBGM(true);
 				break;
 			}
 			

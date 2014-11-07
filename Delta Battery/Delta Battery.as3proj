@@ -77,6 +77,8 @@
     <element path="MissileCruise.swc" />
     <element path="Game.swc" />
     <element path="ContainerMenu.swc" />
+    <element path="ParticleShell.swc" />
+    <element path="ParticleDebris.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

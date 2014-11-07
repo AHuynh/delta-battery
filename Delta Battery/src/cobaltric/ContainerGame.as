@@ -45,7 +45,7 @@
 		public var manBull:ManagerBullet;
 		public var manExpl:ManagerExplosion;
 		
-		public var money:int = 999990;			// actual money
+		public var money:int = 0;			// actual money
 		private var moneyDisplay:int;		// displayed money (for 'increasing' slack effect)
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
@@ -67,6 +67,7 @@
 		public var newWepFlag:int = 0;		// 0 not shown; 1 to be shown; 2 shown
 		
 		private var startWave:int = 1;
+		private var headStart:int;
 	
 		public function ContainerGame(eng:Engine, _startWave:int = 1)
 		{
@@ -74,6 +75,8 @@
 			engine = eng;
 			startWave = _startWave;
 			addEventListener(Event.ADDED_TO_STAGE, init);
+			
+			headStart = startWave == 1 ? 0 : 1;
 		}
 		
 		/*	Sets up the game.
@@ -184,13 +187,26 @@
 		// called by Engine every frame
 		override public function step():Boolean
 		{
+			updateMoney();
+			
 			if (tutorialFlag)
 			{
 				if (game.mc_gui.tutorial.mc.currentFrame == game.mc_gui.tutorial.mc.totalFrames)
 				{
 					game.mc_gui.tutorial.gotoAndPlay("out");
 					tutorialFlag = false;
-					game.mc_gui.newEnemy.gotoAndPlay("in");
+					
+					if (headStart == 1)
+					{
+						headStart = 2;
+						
+						addMoney(startWave == 8 ? 10000 : 40000)
+						game.mc_gui.shop.visible = true;
+						game.mc_gui.mc_statusHuge.visible = false;
+						gameActive = false;
+					}
+					else
+						game.mc_gui.newEnemy.gotoAndPlay("in");
 				}
 				return false;
 			}
@@ -218,7 +234,6 @@
 				}
 			}
 			
-			updateMoney();
 			updateHP();
 			
 			if (!gameActive) return completed;
@@ -305,6 +320,7 @@
 				cityHP = 0;
 				game.city.gotoAndStop(game.city.totalFrames);
 				cityExplode = 75;
+				SoundPlayer.playBGM(false);
 				
 				manWave.enemiesRemaining = 0;
 				for (var i:int = 0; i < 7 + getRand(0, 3); i++)
@@ -371,7 +387,7 @@
 
 			game.mc_gui.tf_wave.text = manWave.wave;
 			game.mc_gui.mc_statusHuge.visible = true;
-			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
+			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Day " + (manWave.wave - 1) + " complete!";
 			intermission = 105;
 		}
 		
