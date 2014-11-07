@@ -15,10 +15,9 @@ package deltabattery.weapons
 			super(_cg, _slot);
 			name = "FLAK";
 			
-			cooldownReset = 14;
+			cooldownReset = cooldownBase = 14;
 			projectileLife = 30 + getRand(0, 10);
-			ammo = ammoMax = 40;
-			
+			ammo = ammoMax = ammoBase = 40;
 		}
 		
 		override protected function createProjectile():void

@@ -21,7 +21,7 @@ package deltabattery.weapons
 			
 			cooldownReset = 10;
 			projectileLife = 13;
-			ammo = ammoMax = 50;
+			ammo = ammoMax = ammoBase = 50;
 		}
 		
 		override protected function createProjectile():void

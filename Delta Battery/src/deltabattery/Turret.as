@@ -133,14 +133,14 @@ package deltabattery
 				turret.mc_cannon.rotation = rot;
 				//trace(TURRET_LIMIT_R + " | " + (rot + 360) + " | " + TURRET_LIMIT_L);
 			}
-			// end updaing mouse
+			// end updating mouse
 			
 			var i:int;
 			if (rightMouseDown)
 			{
 				if (cg.game.mc_gui.newEnemy.visible) return;
 				var newAmmo:int = weaponSecondary[activeSecondary].fire();
-				weaponMC[3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[0].ammo / weaponSecondary[0].ammoMax)));
+				weaponMC[activeSecondary + 3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[activeSecondary].ammo / weaponSecondary[activeSecondary].ammoMax)));
 				if (newAmmo != -1)
 					cg.game.mc_gui.tf_ammoS.text = newAmmo;
 			}
@@ -209,21 +209,38 @@ package deltabattery
 			{
 				if (weaponPrimary[i])
 				{
-					weaponPrimary[i].reload();
+					weaponPrimary[i].reset();
 					weaponMC[i].reload.y = 20;
+					weaponMC[i].ammo.y = 16.65;
 				}
 				if (weaponSecondary[i])
 				{
-					weaponSecondary[i].reload();
+					weaponSecondary[i].reset();
 					weaponMC[i + 3].reload.y = 20;
+					weaponMC[i + 3].ammo.y = 16.65;
 				}
 			}
 			
 			if (weaponSpecial)
 			{
-				weaponSpecial.reload();
+				weaponSpecial.reset();
 				weaponMC[7].reload.y = 20;
+				weaponMC[7].ammo.y = 16.65;
 			}
+		}
+		
+		public function upgradeAll():void
+		{
+			// upgrade all weapons
+			for (var i:int = 0; i < 3; i++)
+			{
+				if (weaponPrimary[i])
+					weaponPrimary[i].setUpgrades();
+				if (weaponSecondary[i])
+					weaponSecondary[i].setUpgrades();
+			}
+			if (weaponSpecial)
+				weaponSpecial.setUpgrades();
 		}
 		
 		private function onKeyboard(e:KeyboardEvent):void
@@ -303,7 +320,6 @@ package deltabattery
 		
 		public function destroy(e:Event):void
 		{
-			trace("Turret destroying...");
 			cg = null;
 			if (turret)
 			{

@@ -29,22 +29,31 @@ package deltabattery
 		
 		private var wepArr:Array;	// list of weapon buttons
 		private var selArr:Array;	// list of 'selected' MC's on weapon buttons
-		private var ammArr:Array;	// list of ammo TextFields
 		private var upgArr:Array;	// list of upgrade buttons
-		private var lvlArr:Array;	// list of upgrade levels
+		private var lvlArr:Array;	// list of upgrade levels MC's
 		
+		// TRUE if weapon was purchased, FALSE otherwise
 		private var wepStatus:Array = [false, false, false, false];
 									// fast  big   flak  laser
-									// true if purchased
-		private const wepPrices:Array = [1000, 2500, 5000, 10000];						  
-									// cost to buy the 1st, 2nd, etc weapon
-		private const wepCount:int = 0;		// number of weapons bought
+									
+		// cost to buy the 1st, 2nd, etc weapon						
+		private const wepPrices:Array = [1000, 5000, 10000, 25000];	
+		private var wepCount:int = 0;		// number of weapons bought
 		
-		private var upgCost:Array = [500, 700, 900];
-								  // expl speed reload
+		// cost of each individual upgrade (index + 1 -> level)
+		private var upgCost:Array = [[200, 300, 500, 750, 1000, 1500, 2500, 4000, 7000],	// explosion
+									 [250, 375, 600, 900, 1250, 1750, 3000, 5000, 9000],	// speed
+									 [200, 400, 750, 900, 1200, 1700, 3200, 5500, 9000],	// reload
+									 [150, 250, 400, 650,  900, 1300, 1900, 2600, 4000]];	// ammo
+									 
+		// modifier of each upgrade (index -> level)
+		public var upgMod:Array = [[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.85, 2],		// explosion
+								   [1, 1.1, 1.2, 1.3, 1.45, 1.6, 1.75, 1.9, 2.1, 2.5],	// speed
+								   [1, 1.15, 1.3, 1.45, 1.6, 1.75, 2, 2.25, 2.5, 2.75],		// reload
+								   [1, 1.2, 1.35, 1.5, 1.75, 2, 2.5, 3, 3.5, 4]];		// ammo
 		
-		private var upgLevel:Array = [1, 1, 1];
-								 // exp spd rel
+		public var upgLevel:Array = [0, 0, 0, 0];
+								 // exp spd rel, ammo
 								 
 		private var boi:String;		// button of interest
 		
@@ -58,19 +67,16 @@ package deltabattery
 			arm.tf_subtitle.text = "";
 			arm.tf_desc.text = "Click an item to view information.";
 			arm.btn_purchase.visible = false;
-			arm.ammoGroup.visible = false;
 			arm.tf_price.text = "";
 			
 			wepArr = [arm.btn_arm_fast, arm.btn_arm_big,
 					  arm.btn_arm_flak, arm.btn_arm_laser];
 			selArr = [];
 			
-			ammArr = [arm.ammoGroup.tf_l, arm.ammoGroup.tf_c, arm.ammoGroup.tf_r];
-			
 			upgArr = [arm.btn_arm_explosion, arm.btn_arm_speed,
-					  arm.btn_arm_reload];
+					  arm.btn_arm_reload, arm.btn_arm_ammo];
 			lvlArr = [arm.lvl_explosion, arm.lvl_speed,
-					  arm.lvl_reload];
+					  arm.lvl_reload, arm.lvl_ammo];
 			
 			arm.btn_purchase.addEventListener(MouseEvent.CLICK, onPurchase);
 			arm.mc_tutorial.btn_resume.addEventListener(MouseEvent.CLICK, onResume);
@@ -106,6 +112,9 @@ package deltabattery
 				addSelected(upgArr[i], false);
 				lvlArr[i].buttonMode = lvlArr[i].mouseEnabled = lvlArr[i].mouseChildren = false;
 			}
+			
+			// put acknowledge above everything
+			arm.setChildIndex(arm.acknowledge, arm.numChildren - 1);
 		}
 		
 		/**
@@ -155,17 +164,8 @@ package deltabattery
 			
 			// update lower right panel
 			arm.btn_purchase.visible = !wepStatus[ind];
-			arm.ammoGroup.visible = wepStatus[ind];
-			arm.tf_price.text = !wepStatus[ind] ? "$" + wepPrices[wepCount] : "";
-			
-			// update ammo if weapon is purchased
-			if (wepStatus[ind])
-			{
-				/*ammArr[0].text = cg.turret.
-				ammArr[1].text =
-				ammArr[2].text =*/
-			}
-			
+			arm.tf_price.text = !wepStatus[ind] ? "$" + wepPrices[wepCount] : "Owned!";
+
 			boi = arm.tf_title.text;						// set button of interest
 			for (var i:int = 0; i < selArr.length; i++)		// update overlays
 				selArr[i].gotoAndStop("unselected");
@@ -178,38 +178,61 @@ package deltabattery
 		 */
 		private function onUpgrade(e:MouseEvent):void
 		{
-			var ind:int = -1;
-			switch (e.target.name)
-			{
-				case "btn_arm_explosion":
-					arm.tf_title.text = "+EXP";
-					arm.tf_subtitle.text = "Upgrade explosion size";
-					arm.tf_desc.text = "Increases explosion size for turret weapons.";
-					ind = 0;
-				break;
-				case "btn_arm_speed":
-					arm.tf_title.text = "+SPD";
-					arm.tf_subtitle.text = "Upgrade flight speed";
-					arm.tf_desc.text = "Increases the speed of turret projectiles";
-					ind = 1;
-				break;
-				case "btn_arm_reload":
-					arm.tf_title.text = "+REL";
-					arm.tf_subtitle.text = "Upgrade reload speed";
-					arm.tf_desc.text = "Decreases the reload time of turret weapons.";
-					ind = 2;
-				break;
-			}
+			var ind:int = setUpgDesc(e.target.name);
 			if (ind == -1) return;
-			arm.btn_purchase.visible = true;
-			arm.ammoGroup.visible = false;
-			arm.tf_price.text = "$" + upgCost[ind];
-			boi = arm.tf_title.text;
+
+			arm.btn_purchase.visible = upgLevel[ind] < 9;
+			arm.tf_price.text = arm.btn_purchase.visible ? "$" + upgCost[ind][upgLevel[ind]] : "MAX LVL";
 			
 			boi = arm.tf_title.text;						// set button of interest
 			for (var i:int = 0; i < selArr.length; i++)		// update overlays
 				selArr[i].gotoAndStop("unselected");
 			selArr[ind+4].gotoAndPlay("selected");
+		}
+		
+		private function setUpgDesc(s:String):int
+		{
+			trace("Got: " + s);
+			switch (s)
+			{
+				case "btn_arm_explosion":
+					arm.tf_title.text = "EXP Lv." + upgLevel[0];
+					arm.tf_subtitle.text = "Upgrade explosion size";
+					arm.tf_desc.text = "Bigger explosions can hit more targets.\n\n\n\n" +
+									   "Explosion size\n" +
+									   "Current:\tx" + upgMod[0][upgLevel[0]].toFixed(2) +
+									   (upgLevel[0] < 9 ? "\nNext:\t\tx" + upgMod[0][upgLevel[0] + 1].toFixed(2) : "");
+					return 0;
+				break;
+				case "btn_arm_speed":
+					arm.tf_title.text = "SPD Lv." + upgLevel[1];
+					arm.tf_subtitle.text = "Upgrade flight speed";
+					arm.tf_desc.text = "Faster projectiles make it easier to hit targets.\n\n\n\n" +
+									   "Projectile velocity\n" +
+									   "Current:\tx" + upgMod[1][upgLevel[1]].toFixed(2) +
+									   (upgLevel[1] < 8 ? "\nNext:\t\tx" + upgMod[1][upgLevel[1] + 1].toFixed(2) : "");
+					return 1;
+				break;
+				case "btn_arm_reload":
+					arm.tf_title.text = "REL Lv." + upgLevel[2];
+					arm.tf_subtitle.text = "Upgrade reload speed";
+					arm.tf_desc.text = "Faster reload speeds let you shoot more often.\n\n\n" +
+									   "Reload speed\n" +
+									   "Current:\tx" + upgMod[2][upgLevel[2]].toFixed(2) +
+									   (upgLevel[2] < 8 ? "\nNext:\t\tx" + upgMod[2][upgLevel[2] + 1].toFixed(2) : "");
+					return 2;
+				break;
+				case "btn_arm_ammo":
+					arm.tf_title.text = "AMM Lv." + upgLevel[3];
+					arm.tf_subtitle.text = "Upgrade ammo reserve";
+					arm.tf_desc.text = "Higher ammo stores make it harder to go empty.\n\n\n" +
+									   "Ammo count\n" +
+									   "Current:\tx" + upgMod[3][upgLevel[3]].toFixed(2) +
+									   (upgLevel[3] < 8 ? "\nNext:\t\tx" + upgMod[3][upgLevel[3] + 1].toFixed(2) : "");
+					return 3;
+				break;
+			}	
+			return -1;
 		}
 		
 		private function onPurchase(e:MouseEvent):void
@@ -225,45 +248,50 @@ package deltabattery
 			var slot:int;
 			var weapon:ABST_Weapon;
 			
-			switch (boi)
+			switch (boi.substring(0, 3))
 			{
-				case "RAAM":
+				case "RAA":
 					aoi = wepArr;
 					ioi = 0;
 					weapon = new Weapon_RAAM(cg, 1);		// TODO complete for others
 					slot = 1;
 				break;
-				case "HE-S":
+				case "HE-":
 					aoi = wepArr;
 					ioi = 1;
 					weapon = new Weapon_HES(cg, 2);
 					slot = 2;
 				break;
-				case "FLAK":
+				case "FLA":
 					aoi = wepArr;
 					ioi = 2;
 					weapon = new Weapon_Flak(cg, 4);
 					slot = 4;
 				break;
-				case "LASER":
+				case "LASE":
 					aoi = wepArr;
 					ioi = 3;
 				break;
-				case "+EXP":
+				case "EXP":
 					aoi = upgArr;
 					ioi = 0;
 				break;
-				case "+SPD":
+				case "SPD":
 					aoi = upgArr;
 					ioi = 1;
 				break;
-				case "+REL":
+				case "REL":
 					aoi = upgArr;
 					ioi = 2;
+				break;
+				case "AMM":
+					aoi = upgArr;
+					ioi = 3;
 				break;
 			}
 			
 			cg.addMoney( -price);
+			arm.acknowledge.gotoAndPlay(2);
 			
 			// if a weapon was selected with index ioi
 			if (aoi == wepArr)
@@ -271,11 +299,25 @@ package deltabattery
 				cg.turret.enableWeapon(weapon, slot);
 				selArr[ioi].lock.visible = false;
 				wepStatus[ioi] = true;
+				wepCount++;
 				
 				arm.btn_purchase.visible = false;
-				arm.ammoGroup.visible = true;
-				arm.tf_price.text = "";	
+				arm.tf_price.text = "Owned!";	
 			}
+			// if an upgrade was selected with index ioi
+			else if (aoi == upgArr)
+			{				
+				upgLevel[ioi]++;			// level this upgrade up
+				lvlArr[ioi].tf_lvl.text = "Lv." + upgLevel[ioi];
+				arm.tf_title.text = arm.tf_title.text.substring(0, 3) + " Lv." + upgLevel[ioi];
+				
+				// show new price
+				arm.tf_price.text = (upgLevel[ioi] < 9 ? "$" + upgCost[ioi][upgLevel[ioi]] : "MAX LVL");		
+				arm.btn_purchase.visible = upgLevel[ioi] < 9;
+				setUpgDesc(upgArr[ioi].name);	// update right side text
+			}
+			
+			cg.turret.upgradeAll();
 		}
 	}
 }

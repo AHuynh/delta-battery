@@ -18,8 +18,8 @@ package deltabattery.weapons
 			projectileParams["partInterval"] = 7;
 			projectileParams["explosionScale"] = 2.25;		// TODO use different, slower explosion?
 			
-			ammo = ammoMax = 25;
-			cooldownReset = 60;
+			ammo = ammoMax = ammoBase = 25;
+			cooldownReset = cooldownBase = 60;
 		}
 		
 		override protected function createProjectile():void

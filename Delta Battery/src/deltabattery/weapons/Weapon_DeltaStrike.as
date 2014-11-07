@@ -32,8 +32,8 @@ package deltabattery.weapons
 			delay = delayMax = 4;
 			gfxCount = gfxMax = 2;
 			
-			cooldownReset = 30 * 20;		// 20 seconds
-			ammo = ammoMax = 3;
+			cooldownReset = cooldownBase = 30 * 20;		// 20 seconds
+			ammo = ammoMax = ammoBase = 1;
 		}
 		
 		override public function step():void

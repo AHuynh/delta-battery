@@ -42,7 +42,7 @@
 		public var manBull:ManagerBullet;
 		public var manExpl:ManagerExplosion;
 		
-		public var money:int = 999999;				// actual money
+		public var money:int = 99999999;				// actual money
 		private var moneyDisplay:int;		// displayed money (for 'increasing' slack effect)
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
@@ -115,10 +115,14 @@
 			managers = [manPart, manWave, manArty, manMiss, manBull, manExpl];
 			manLen = managers.length - 1;
 			
+			// setup the Armory
+			armory = new Armory(this);
+			
 			// setup the Turret
 			turret = new Turret(this, game.mc_turret);
 			//turret.step();
 			turret.turret.mc_cannon.deltaStrike.visible = false;
+			turret.upgradeAll()
 			
 			// setup city
 			cityHP = cityHPMax = cityHPSlack = 100;
@@ -132,7 +136,6 @@
 			shop.visible = false;
 			shop.btn_nextDay.addEventListener(MouseEvent.CLICK, onShopDone);
 			
-			armory = new Armory(this);
 			
 			// setup tutorial
 			tutorialFlag = true;						// TODO set based on chosen day
@@ -177,14 +180,15 @@
 				}
 			}
 			
+			updateMoney();
+			updateHP();
+			
 			if (!gameActive) return completed;
 			
 			mx = mouseX - game.x;
 			my = mouseY - game.y;
 			
 			turret.step();		// update the Turret
-			updateMoney();
-			updateHP();
 			//ai.step();
 			
 			// update each manager
@@ -278,7 +282,7 @@
 			game.mc_gui.tf_wave.text = manWave.wave;
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
-			intermission = 120;
+			intermission = 105;
 			gameActive = false;
 			manPart.clear();
 		}
@@ -323,8 +327,8 @@
 			var delta:int = moneyDisplay - money;
 			if (Math.abs(delta) < MONEY_DELTA)
 				moneyDisplay = money;
-			else
-				moneyDisplay += (delta > 0 ? -1 : 1) * MONEY_DELTA;
+			else		// change money display faster as difference grows
+				moneyDisplay += (delta > 0 ? -1 : 1) * (Math.abs(delta) < 400 ? MONEY_DELTA : .5 * Math.abs(delta) - 170);
 			game.mc_gui.tf_money.text = moneyDisplay;
 		}
 		

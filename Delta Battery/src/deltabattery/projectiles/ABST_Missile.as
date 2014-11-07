@@ -89,6 +89,11 @@
 					createExplosion = params["explode"];
 				if (params["explosionScale"])
 					explosionScale = params["explosionScale"];
+					
+				if (params["upgradeV"])								// velocity upgrade
+					velocity *= params["upgradeV"];
+				if (params["upgradeE"])								// explosion upgrade
+					explosionScale *= params["upgradeE"];
 			}
 			
 			// spawn missile target marker (player-fired missiles)
@@ -101,6 +106,7 @@
 				if (cg.game.bg.ocean.currentFrame > 152) 	// post-sunset
 					tgt.gotoAndStop(2);						// white
 				trace("Missile target spawned with frame: " + tgt.currentFrame);
+				trace("Sky frame is: " + cg.game.bg.ocean.currentFrame );
 			}
 
 			mc.rotation = getAngle(origin.x, origin.y, target.x, target.y);

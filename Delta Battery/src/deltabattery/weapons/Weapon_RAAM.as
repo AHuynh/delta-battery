@@ -21,8 +21,8 @@ package deltabattery.weapons
 			projectileParams["partInterval"] = 2;
 			projectileParams["explosionScale"] = .7;
 			
-			ammo = ammoMax = 30;
-			cooldownReset = 45;
+			ammo = ammoMax = ammoBase = 30;
+			cooldownReset = cooldownBase = 45;
 		}
 		
 		override protected function createProjectile():void
