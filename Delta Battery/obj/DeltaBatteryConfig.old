@@ -38,7 +38,6 @@
     <include-libraries />
     <library-path append="true">
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\BulletStandard.swc</path-element>
-      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileTarget.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\ArtilleryStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Selected.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileBig.swc</path-element>
@@ -60,6 +59,7 @@
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileStandard.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileLASM.swc</path-element>
       <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\Game.swc</path-element>
+      <path-element>C:\Users\Alex\Documents\aaGeorgia Tech\5 Fall 14\VG Dev\Delta Battery\Delta Battery\MissileTarget.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>

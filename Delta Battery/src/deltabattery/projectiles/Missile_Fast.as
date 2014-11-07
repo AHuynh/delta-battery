@@ -23,6 +23,7 @@
 			super(_cg, _mc, _origin, _target, _type, params);
 			
 			money = params["money"] ? params["money"] : 125;
+			params["explosionScale"] = .5;	
 		}
 	}
 }

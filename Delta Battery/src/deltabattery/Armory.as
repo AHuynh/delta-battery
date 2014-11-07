@@ -37,19 +37,19 @@ package deltabattery
 									// fast  big   flak  laser
 									
 		// cost to buy the 1st, 2nd, etc weapon						
-		private const wepPrices:Array = [1000, 5000, 10000, 25000];	
+		private const wepPrices:Array = [1000, 3500, 7500, 20000];	
 		private var wepCount:int = 0;		// number of weapons bought
 		
 		// cost of each individual upgrade (index + 1 -> level)
-		private var upgCost:Array = [[200, 300, 500, 750, 1000, 1500, 2500, 4000, 7000],	// explosion
-									 [250, 375, 600, 900, 1250, 1750, 3000, 5000, 9000],	// speed
-									 [200, 400, 750, 900, 1200, 1700, 3200, 5500, 9000],	// reload
-									 [150, 250, 400, 650,  900, 1300, 1900, 2600, 4000]];	// ammo
+		private var upgCost:Array = [[400, 850, 1400, 2000, 3000, 4000, 5000, 7500, 10000],	// explosion
+									 [500, 900, 1500, 2250, 3500, 4750, 6000, 8000, 11000],	// speed
+									 [500, 1000, 1750, 2500, 3750, 5000, 7000, 9500, 12500],// reload
+									 [350, 650, 1200, 1850,  2500, 3750, 4750, 6000, 9000]];// ammo
 									 
 		// modifier of each upgrade (index -> level)
-		public var upgMod:Array = [[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.85, 2],		// explosion
-								   [1, 1.1, 1.2, 1.3, 1.45, 1.6, 1.75, 1.9, 2.1, 2.5],	// speed
-								   [1, 1.15, 1.3, 1.45, 1.6, 1.75, 2, 2.25, 2.5, 2.75],		// reload
+		public var upgMod:Array = [[1, 1.05, 1.1, 1.2, 1.3, 1.4, 1.5, 1.65, 1.8, 2],	// explosion
+								   [1, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4, 1.55, 1.75, 2],	// speed
+								   [1, 1.05, 1.1, 1.2, 1.3, 1.4, 1.5, 1.65, 1.8, 2],	// reload
 								   [1, 1.2, 1.35, 1.5, 1.75, 2, 2.5, 3, 3.5, 4]];		// ammo
 		
 		public var upgLevel:Array = [0, 0, 0, 0];
@@ -210,7 +210,7 @@ package deltabattery
 					arm.tf_desc.text = "Faster projectiles make it easier to hit targets.\n\n\n\n" +
 									   "Projectile velocity\n" +
 									   "Current:\tx" + upgMod[1][upgLevel[1]].toFixed(2) +
-									   (upgLevel[1] < 8 ? "\nNext:\t\tx" + upgMod[1][upgLevel[1] + 1].toFixed(2) : "");
+									   (upgLevel[1] < 9 ? "\nNext:\t\tx" + upgMod[1][upgLevel[1] + 1].toFixed(2) : "");
 					return 1;
 				break;
 				case "btn_arm_reload":
@@ -219,7 +219,7 @@ package deltabattery
 					arm.tf_desc.text = "Faster reload speeds let you shoot more often.\n\n\n" +
 									   "Reload speed\n" +
 									   "Current:\tx" + upgMod[2][upgLevel[2]].toFixed(2) +
-									   (upgLevel[2] < 8 ? "\nNext:\t\tx" + upgMod[2][upgLevel[2] + 1].toFixed(2) : "");
+									   (upgLevel[2] < 9 ? "\nNext:\t\tx" + upgMod[2][upgLevel[2] + 1].toFixed(2) : "");
 					return 2;
 				break;
 				case "btn_arm_ammo":
@@ -228,7 +228,7 @@ package deltabattery
 					arm.tf_desc.text = "Higher ammo stores make it harder to go empty.\n\n\n" +
 									   "Ammo count\n" +
 									   "Current:\tx" + upgMod[3][upgLevel[3]].toFixed(2) +
-									   (upgLevel[3] < 8 ? "\nNext:\t\tx" + upgMod[3][upgLevel[3] + 1].toFixed(2) : "");
+									   (upgLevel[3] < 9 ? "\nNext:\t\tx" + upgMod[3][upgLevel[3] + 1].toFixed(2) : "");
 					return 3;
 				break;
 			}	

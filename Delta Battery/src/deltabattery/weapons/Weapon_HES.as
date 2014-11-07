@@ -4,7 +4,10 @@ package deltabattery.weapons
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * High Explosive Striker.
+	 * 
+	 * Slow but powerful weapon.
+	 * 
 	 * @author Alexander Huynh
 	 */
 	public class Weapon_HES extends ABST_Weapon 
@@ -16,10 +19,10 @@ package deltabattery.weapons
 			
 			projectileParams["velocity"] = 6;
 			projectileParams["partInterval"] = 7;
-			projectileParams["explosionScale"] = 2.25;		// TODO use different, slower explosion?
+			projectileParams["explosionScale"] = 2.25;
 			
-			ammo = ammoMax = ammoBase = 25;
-			cooldownReset = cooldownBase = 60;
+			cooldownReset = cooldownBase = 90;
+			ammo = ammoMax = ammoBase = 10;
 		}
 		
 		override protected function createProjectile():void

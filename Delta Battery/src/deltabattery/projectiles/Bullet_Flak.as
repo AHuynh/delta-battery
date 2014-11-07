@@ -33,10 +33,10 @@ package deltabattery.projectiles
 
 			_target.x += getRand( -20, 20) * accScale;
 			_target.y += getRand( -20, 20) * accScale;
-
-			explosionScale = .5;
 			
 			super(_cg, _mc, _origin, _target, _type, _life, stats);
+
+			explosionScale *= .5;
 			
 			mc.gotoAndStop("tracer");
 			mc.alpha = .4;

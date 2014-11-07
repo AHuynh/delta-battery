@@ -53,7 +53,6 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="BulletStandard.swc" />
-    <element path="MissileTarget.swc" />
     <element path="ArtilleryStandard.swc" />
     <element path="Selected.swc" />
     <element path="MissileBig.swc" />
@@ -75,6 +74,7 @@
     <element path="MissileStandard.swc" />
     <element path="MissileLASM.swc" />
     <element path="Game.swc" />
+    <element path="MissileTarget.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

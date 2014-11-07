@@ -25,8 +25,8 @@ package deltabattery.weapons
 		public var projectileLife:int = -1;
 		public var projectileRange:int = -1;	// uses life to determine when to despawn
 		
-		public var ammoBase:int = 70;			// base reserve ammo
-		public var ammoMax:int = ammoMax;		// max reserve ammo - affected by upgrades
+		public var ammoBase:int = 25;			// base reserve ammo
+		public var ammoMax:int = ammoBase;		// max reserve ammo - affected by upgrades
 		public var ammo:int = ammoMax;			// current ammo
 		
 		public function ABST_Weapon(_cg:ContainerGame, _slot:int) 
@@ -77,6 +77,7 @@ package deltabattery.weapons
 		{
 			if (cooldownCounter > 0 || ammo == 0) return -1;
 
+			
 			createProjectile();
 			cooldownCounter = cooldownReset;
 			return --ammo;

@@ -4,9 +4,10 @@ package deltabattery.weapons
 	import deltabattery.SoundPlayer;
 	import flash.geom.Point;
 	
-	/**	Fast-travelling missile
+	/**
+	 * Rapid Anti-Air Missile.
 	 * 
-	 * 	Rapid Anti-Air Missile
+	 * Fast-travelling missile with high reload time and small area of effect.
 	 *
 	 * @author Alexander Huynh
 	 */
@@ -17,12 +18,12 @@ package deltabattery.weapons
 			super(_cg, _slot);
 			name = "RAAM";
 			
-			projectileParams["velocity"] = 18;
+			projectileParams["velocity"] = 16;
 			projectileParams["partInterval"] = 2;
-			projectileParams["explosionScale"] = .7;
+			projectileParams["explosionScale"] = .5;
 			
-			ammo = ammoMax = ammoBase = 30;
-			cooldownReset = cooldownBase = 45;
+			cooldownReset = cooldownBase = 60;
+			ammo = ammoMax = ammoBase = 10;
 		}
 		
 		override protected function createProjectile():void

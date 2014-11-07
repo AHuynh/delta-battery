@@ -15,6 +15,7 @@
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	/**
 	 * Primary game container and controller
@@ -42,7 +43,7 @@
 		public var manBull:ManagerBullet;
 		public var manExpl:ManagerExplosion;
 		
-		public var money:int = 99999999;				// actual money
+		public var money:int = 0;			// actual money
 		private var moneyDisplay:int;		// displayed money (for 'increasing' slack effect)
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
@@ -244,9 +245,14 @@
 			{
 				cityHP = 0;
 				game.city.gotoAndStop(game.city.totalFrames);
-				game.mc_lose.visible = true;
-				game.mc_lose.tf_day.text = "Day " + manWave.wave;
-				gameActive = false;
+				
+				manWave.enemiesRemaining = 0;
+				for (var i:int = 0; i < 10 + getRand(0, 5); i++)
+				{
+					manExpl.spawnExplosion(new Point(game.city.x + getRand( -100, 100), game.city.y + getRand( -50, 50)), 1, getRand(.5, 2));
+					manPart.spawnParticle("smoke", new Point(game.city.x + getRand( -100, 100), game.city.y + getRand( -50, 50)), getRand(0, 360),
+										  getRand( -5, 5), getRand( -2, 2));
+				}
 			}
 			else		// update the visual state of the city
 			{
@@ -279,12 +285,20 @@
 		// called after the intermission finishes
 		public function endWave():void
 		{
+			gameActive = false;
+			manPart.clear();
+
+			if (cityHP == 0)
+			{
+				game.mc_lose.visible = true;
+				game.mc_lose.tf_day.text = "Day " + manWave.wave;
+				return;
+			}
+
 			game.mc_gui.tf_wave.text = manWave.wave;
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Wave " + (manWave.wave - 1) + " complete!";
 			intermission = 105;
-			gameActive = false;
-			manPart.clear();
 		}
 		
 		private function onPause(e:MouseEvent):void

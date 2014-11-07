@@ -22,7 +22,7 @@ package deltabattery.projectiles
 			// shrink
 			mc.scaleX = mc.scaleY = .6;
 			
-			money = 150;
+			money = 50;
 		}	
 	}
 }

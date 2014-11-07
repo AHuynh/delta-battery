@@ -7,7 +7,8 @@ package deltabattery.weapons
 	import deltabattery.Turret;
 	
 	/**
-	 * ...
+	 * A powerful, auto-targeting sky-clearer. Panic button.
+	 * 
 	 * @author Alexander Huynh
 	 */
 	public class Weapon_DeltaStrike extends ABST_Weapon 
@@ -77,7 +78,7 @@ package deltabattery.weapons
 				if (m.markedForDestroy) continue;
 				
 				dist = getDistance(turret.x, turret.y, m.mc.x, m.mc.y);
-				if (dist > 680) continue;			// TODO magic number - range
+				if (dist > 680) continue;		// range is 680
 				if (dist < minDist)
 				{
 					minDist = dist;

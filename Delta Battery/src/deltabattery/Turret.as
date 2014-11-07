@@ -50,7 +50,6 @@ package deltabattery
 			// setup default weapons
 			weaponPrimary[0] = new Weapon_SAM(cg, 0);
 			weaponSecondary[0] = new Weapon_Chain(cg, 3);
-			weaponSecondary[1] = new Weapon_Flak(cg, 4);
 			weaponSpecial = new Weapon_DeltaStrike(cg);
 		}
 		
@@ -102,12 +101,14 @@ package deltabattery
 				}
 			weaponMC[0].visible = true;
 			weaponMC[3].visible = true;
-			weaponMC[4].visible = true;
 			weaponMC[7].visible = true;
 			weaponMC[0].selected.visible = true;
 			weaponMC[3].selected.visible = true;
 			weaponMC[7].selected.visible = true;
 			weaponMC[7].tf_number.text = "S";
+
+			cg.game.mc_gui.tf_ammoP.text = weaponPrimary[0].ammo;
+			cg.game.mc_gui.tf_ammoS.text = weaponSecondary[0].ammo;
 		}
 		
 		// called by ContainerGame
@@ -227,6 +228,9 @@ package deltabattery
 				weaponMC[7].reload.y = 20;
 				weaponMC[7].ammo.y = 16.65;
 			}
+			
+			cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
+			cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
 		}
 		
 		public function upgradeAll():void

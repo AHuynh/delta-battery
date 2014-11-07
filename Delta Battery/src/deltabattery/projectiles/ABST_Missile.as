@@ -105,7 +105,7 @@
 				cg.game.c_main.addChild(tgt);
 				if (cg.game.bg.ocean.currentFrame > 152) 	// post-sunset
 					tgt.gotoAndStop(2);						// white
-				trace("Missile target spawned with frame: " + tgt.currentFrame);
+				trace("Missile target spawned with frame: " + tgt.currentFrame + "/" + tgt.totalFrames);
 				trace("Sky frame is: " + cg.game.bg.ocean.currentFrame );
 			}
 

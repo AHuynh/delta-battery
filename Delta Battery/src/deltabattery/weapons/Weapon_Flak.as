@@ -4,7 +4,10 @@ package deltabattery.weapons
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * Flak Gun.
+	 * 
+	 * Good at firing with the primary weapon to fill the sky randomly.
+	 * 
 	 * @author Alexander Huynh
 	 */
 	public class Weapon_Flak extends ABST_Weapon 
@@ -15,9 +18,9 @@ package deltabattery.weapons
 			super(_cg, _slot);
 			name = "FLAK";
 			
-			cooldownReset = cooldownBase = 14;
+			cooldownReset = cooldownBase = 18;
 			projectileLife = 30 + getRand(0, 10);
-			ammo = ammoMax = ammoBase = 40;
+			ammo = ammoMax = ammoBase = 25;
 		}
 		
 		override protected function createProjectile():void

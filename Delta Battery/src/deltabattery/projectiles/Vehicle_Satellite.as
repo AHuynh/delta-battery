@@ -39,7 +39,7 @@ package deltabattery.projectiles
 			dirY = 1;
 			
 			hp = hpMax = 3;
-			money = 600;
+			money = 750;
 		}
 		
 		override public function step():Boolean
