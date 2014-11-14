@@ -1,4 +1,5 @@
-﻿package deltabattery.managers {
+﻿package deltabattery.managers
+{
 	import cobaltric.ABST_Container;
 	import cobaltric.ContainerGame;
 	import deltabattery.projectiles.ABST_Missile;
@@ -78,7 +79,7 @@
 		
 		private const R_SEA:Array = [new Point( -360, 120), new Point( -200, 130)];			// popups
 		
-		private const R_ARTY_NORM:Array = [new Point( -500, -170), new Point( -420, -220)];
+		private const R_ARTY_NORM:Array = [new Point( -530, -170), new Point( -480, -220)];
 		
 		// param helpers
 		private const P_FAST:Object = { explosionScale: .75 };
@@ -901,6 +902,14 @@
 						if (cg.game.bg.ocean.currentFrame < 152)		// magic number :c
 							return;
 						cg.game.bg.cacheAsBitmap = false;
+						
+						var oldVals:Array = [cg.cursor.tf_pr.text, cg.cursor.tf_se.text, cg.cursor.tf_sp.text];
+						
+						cg.cursor.gotoAndStop(2);
+						cg.cursor.tf_pr.text = oldVals[0];
+						cg.cursor.tf_se.text = oldVals[1];
+						cg.cursor.tf_sp.text = oldVals[2];
+						
 						dayFlag++;
 						advanceTime("sunset");
 					}

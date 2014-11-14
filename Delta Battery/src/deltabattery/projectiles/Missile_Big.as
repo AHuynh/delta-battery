@@ -15,13 +15,14 @@ package deltabattery.projectiles
 		{
 			if (!params)
 				params = { velocity: 2 + getRand(0, 1) };
-			else
+			else if (!params["velocity"])
 				params["velocity"] = 2 + getRand(0, 1);
 				
 			super(_cg, _mc, _origin, _target, _type, params);
 			
 			money = params["money"] ? params["money"] : 125;
-			params["explosionScale"] = 1.5;	
+			if (type == 0)
+				params["explosionScale"] = 1.5;	
 			damage = 13 + getRand(0, 4);
 		}
 		

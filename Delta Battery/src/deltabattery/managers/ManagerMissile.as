@@ -52,7 +52,7 @@
 					addObject(new Missile_Standard(cg, new MissileFast(), origin, target, type, params));
 				break;
 				case "big":
-					addObject(new Missile_Standard(cg, new MissileCruise(), origin, target, type, params));
+					addObject(new Missile_Big(cg, new MissileCruise(), origin, target, type, params));
 				break;
 				case "rocket":
 					addObject(new Missile_Fast(cg, new MissileRocket(), origin, target, type, params));

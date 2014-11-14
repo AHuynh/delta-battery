@@ -66,8 +66,8 @@
 		{
 			save();		// new data
 			
-			scoreData = [["Cb Auto Turret", 10, 15000], ["Cb Auto Turret", 8, 10000], ["Cb Auto Turret", 6, 6000], ["Cb Auto Turret", 5, 4000],
-						 ["Cb Auto Turret", 4, 3000], ["Cb Auto Turret", 3, 2000], ["Cb Auto Turret", 2, 1500], ["Cb Auto Turret", 1, 500]];
+			scoreData = [[" ", 1, 0], [" ", 1, 0], [" ", 1, 0], [" ", 1, 0],
+						 [" ", 1, 0], [" ", 1, 0], [" ", 1, 0], [" ", 1, 0]];
 		}
 		
 		public function step(e:Event):void
@@ -122,8 +122,8 @@
 		{ 
 			saveData.clear();
 			if (!scoreData)
-				scoreData = [["Cb Auto Turret", 10, 15000], ["Cb Auto Turret", 8, 10000], ["Cb Auto Turret", 6, 6000], ["Cb Auto Turret", 5, 4000],
-							 ["Cb Auto Turret", 4, 3000], ["Cb Auto Turret", 3, 2000], ["Cb Auto Turret", 2, 1500], ["Cb Auto Turret", 1, 500]];
+				scoreData = [[" ", 1, 0], [" ", 1, 0], [" ", 1, 0], [" ", 1, 0],
+							 [" ", 1, 0], [" ", 1, 0], [" ", 1, 0], [" ", 1, 0]];
 			saveData.data.sd_name = [];
 			saveData.data.sd_day = [];
 			saveData.data.sd_money = [];

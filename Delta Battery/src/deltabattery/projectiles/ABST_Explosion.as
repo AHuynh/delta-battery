@@ -75,8 +75,9 @@ package deltabattery.projectiles
 				arty = manArty.objArr[i]
 				if (type == arty.type) continue;
 
-				if (getDistance(mc.x, mc.y, arty.mc.x, arty.mc.y) < range)
-					arty.destroy();
+				d = getDistance(mc.x, mc.y, arty.mc.x, arty.mc.y);
+				if (d < range)
+					arty.destroy(d);
 			}
 				
 			if (mc.currentFrame != mc.totalFrames) return false;

@@ -17,6 +17,7 @@
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.ui.Mouse;
 	
 	/**
 	 * Primary game container and controller
@@ -68,6 +69,8 @@
 		
 		private var startWave:int = 1;
 		private var headStart:int;
+		
+		public var cursor:MovieClip;
 	
 		public function ContainerGame(eng:Engine, _startWave:int = 1)
 		{
@@ -182,12 +185,20 @@
 			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 31 ? 31 : manWave.wave);
 			game.mc_gui.newEnemy.mc.btn_start.addEventListener(MouseEvent.CLICK, infoAck);
 			game.mc_gui.newEnemy.mc.btn_start.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			
+			// cursor
+			cursor = new GameCursor();
+			game.mc_gui.addChild(cursor);
+			cursor.visible = false;
 		}
 		
 		// called by Engine every frame
 		override public function step():Boolean
 		{
 			updateMoney();
+			
+			cursor.x = mouseX - game.x - game.mc_gui.x;
+			cursor.y = mouseY - game.y - game.mc_gui.y;
 			
 			if (tutorialFlag)
 			{
@@ -204,6 +215,9 @@
 						game.mc_gui.shop.visible = true;
 						game.mc_gui.mc_statusHuge.visible = false;
 						gameActive = false;
+						
+						Mouse.show();
+						cursor.visible = false;
 					}
 					else
 						game.mc_gui.newEnemy.gotoAndPlay("in");
@@ -213,11 +227,15 @@
 			else if (infoFlag)
 			{
 				gameActive = false;
+				Mouse.show();
+				cursor.visible = false;
 				return false;
 			}
 			else if (newWepFlag == 2)
 			{
 				gameActive = false;
+				Mouse.show();
+				cursor.visible = false;
 				return false;
 			}
 			
@@ -231,6 +249,8 @@
 				{
 					game.mc_gui.shop.visible = true;
 					game.mc_gui.mc_statusHuge.visible = false;
+					Mouse.show();
+					cursor.visible = false;
 				}
 			}
 			
@@ -261,6 +281,8 @@
 			infoFlag = false;
 			gameActive = true;
 			SoundPlayer.play("sfx_menu_blip");
+			Mouse.hide();
+			cursor.visible = true;
 		}
 		
 		private function wepAck(e:MouseEvent):void
@@ -269,6 +291,8 @@
 			newWepFlag = 3;
 			gameActive = true;
 			SoundPlayer.play("sfx_menu_blip");
+			Mouse.hide();
+			cursor.visible = true;
 		}
 		
 		private function armAck(e:MouseEvent):void
@@ -308,6 +332,7 @@
 			var life:Number;
 			if (param is ABST_Missile || param is ABST_Bullet)
 			{
+				//trace("Damage: " + param.damage);
 				cityHP -= param.damage;
 				cityHPCounter = 30;		// reset the slack counter
 			
@@ -362,7 +387,13 @@
 				game.mc_gui.newWeapon.visible = true;
 				game.mc_gui.newWeapon.gotoAndPlay(1);
 			}
+			else
+			{
+				Mouse.hide();
+				cursor.visible = true;
+			}
 			SoundPlayer.play("sfx_menu_blip");
+			cursor.gotoAndStop(1);
 		}
 		
 		// end the current wave, enabling the shop, etc.
@@ -375,13 +406,13 @@
 			if (cityHP <= 0)
 			{
 				game.mc_lose.visible = true;
-				game.mc_lose.tf_day.text = "Day " + manWave.wave;
+				game.mc_lose.tf_day.text = "Day " + (manWave.wave - 1);
 				return;
 			}
 			else if (manWave.wave == 31)
 			{
 				game.mc_win.visible = true;
-				game.mc_win.tf_day.text = "Day " + manWave.wave;
+				game.mc_win.tf_day.text = "Day " + (manWave.wave - 1);
 				return;
 			}
 
@@ -399,9 +430,15 @@
 			{
 				prevActive = gameActive;
 				gameActive = false;
+				Mouse.show();
+				cursor.visible = false;
 			}
 			else
+			{
 				gameActive = prevActive;
+				Mouse.hide();
+				cursor.visible = true;
+			}
 
 			game.mc_pause.visible = paused;
 			SoundPlayer.play("sfx_menu_blip");
@@ -415,6 +452,8 @@
 			game.mc_gui.tutorial.mc.gotoAndStop(1);
 			gameActive = false;
 			SoundPlayer.play("sfx_menu_blip");
+			Mouse.show();
+			cursor.visible = false;
 		}
 		
 		private function onQuit(e:MouseEvent):void
@@ -424,6 +463,8 @@
 			tutorialFlag = infoFlag = false;
 			completed = true;
 			SoundPlayer.play("sfx_menu_blip");
+			Mouse.show();
+			cursor.visible = false;
 			
 			engine.scoreArr = [manWave.wave, money];
 		}
@@ -496,6 +537,7 @@
 				managers[i].destroy();
 			removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			//removeEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+			Mouse.show();
 		}
 	}
 }

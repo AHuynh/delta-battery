@@ -253,6 +253,7 @@ package deltabattery
 			if (price > cg.money)
 			{
 				SoundPlayer.play("sfx_no_ammo");
+				arm.mc_cashWarn.gotoAndPlay(2);
 				return;
 			}
 			

@@ -99,7 +99,8 @@ package deltabattery
 				{
 					weaponMC[i].visible = false;
 					weaponMC[i].selected.visible = false;
-					weaponMC[i].tf_number.text = (i+1);
+					weaponMC[i].tf_number.text = (i + 1);
+					weaponMC[i].mc_noAmmo.visible = false;
 				}
 			weaponMC[0].visible = true;
 			weaponMC[3].visible = true;
@@ -111,6 +112,11 @@ package deltabattery
 
 			cg.game.mc_gui.tf_ammoP.text = weaponPrimary[0].ammo;
 			cg.game.mc_gui.tf_ammoS.text = weaponSecondary[0].ammo;
+			
+			cg.cursor.tf_pr.text = weaponPrimary[activePrimary].ammo;
+			cg.cursor.tf_se.text = weaponSecondary[activeSecondary].ammo;
+			cg.cursor.tf_sp.text = weaponSpecial.ammo;
+			trace(weaponMC[7].ammo);
 		}
 		
 		// called by ContainerGame
@@ -146,10 +152,11 @@ package deltabattery
 				if (cg.game.mc_gui.newEnemy.visible) return;
 				var newAmmo:int = weaponSecondary[activeSecondary].fire();
 				weaponMC[activeSecondary + 3].ammo.y = 16.65 + (35 * (1 - (weaponSecondary[activeSecondary].ammo / weaponSecondary[activeSecondary].ammoMax)));
-				
+
 				if (newAmmo != -1)
 				{
 					cg.game.mc_gui.tf_ammoS.text = newAmmo;
+					cg.cursor.tf_se.text = newAmmo;
 					if (activeSecondary != 2)
 						cg.manPart.spawnParticle("shell", new Point(turret.x + getRand(15, 10), turret.y + getRand( -20, -26)), 0, getRand(0, 1), getRand( -4, -3), .5);
 				}
@@ -158,6 +165,8 @@ package deltabattery
 					SoundPlayer.play("sfx_no_ammo");
 					noAmmoGrace = 15;
 				}
+				
+				weaponMC[activeSecondary + 3].mc_noAmmo.visible = weaponSecondary[activeSecondary].ammo == 0;
 			}
 
 			// update all weapons
@@ -181,6 +190,10 @@ package deltabattery
 				weaponMC[7].reload.y = -20 + ((weaponSpecial.cooldownCounter / weaponSpecial.cooldownReset) * 40);
 			}
 			
+			cg.cursor.tf_pr.alpha = weaponPrimary[activePrimary].ammo == 0 ? .4 : (weaponPrimary[activePrimary].cooldownCounter == 0 ? 1 : .5);
+			cg.cursor.tf_se.alpha = weaponSecondary[activeSecondary].ammo == 0 ? .4 : (weaponSecondary[activeSecondary].cooldownCounter == 0 ? 1 : .5);
+			cg.cursor.tf_sp.alpha = weaponSpecial.ammo == 0 ? .4 : (weaponSpecial.cooldownCounter == 0 ? 1 : .5);
+			
 			if (noAmmoGrace > 0)
 				noAmmoGrace--;
 		}
@@ -194,6 +207,7 @@ package deltabattery
 			if (newAmmo != -1)
 			{
 				cg.game.mc_gui.tf_ammoP.text = newAmmo;
+				cg.cursor.tf_pr.text = newAmmo;
 				weaponMC[activePrimary].ammo.y = 16.65 + (35 * (1 - (weaponPrimary[activePrimary].ammo / weaponPrimary[activePrimary].ammoMax)));
 				for (var i:int = 0; i < int(getRand(2, 4)) + 2; i++)
 				{
@@ -201,7 +215,11 @@ package deltabattery
 				}
 			}
 			else
+			{
 				SoundPlayer.play("sfx_no_ammo");
+			}
+			
+			weaponMC[activePrimary].mc_noAmmo.visible = weaponPrimary[activePrimary].ammo == 0;
 		}
 		
 		// TEMP
@@ -232,12 +250,14 @@ package deltabattery
 					weaponPrimary[i].reset();
 					weaponMC[i].reload.y = 20;
 					weaponMC[i].ammo.y = 16.65;
+					weaponMC[i].mc_noAmmo.visible = false;
 				}
 				if (weaponSecondary[i])
 				{
 					weaponSecondary[i].reset();
 					weaponMC[i + 3].reload.y = 20;
 					weaponMC[i + 3].ammo.y = 16.65;
+					weaponMC[i + 3].mc_noAmmo.visible = false;
 				}
 			}
 			
@@ -246,10 +266,19 @@ package deltabattery
 				weaponSpecial.reset();
 				weaponMC[7].reload.y = 20;
 				weaponMC[7].ammo.y = 16.65;
+				weaponMC[7].mc_noAmmo.visible = false;
 			}
 			
 			cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
 			cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
+			
+			cg.cursor.tf_pr.text = weaponPrimary[activePrimary].ammo;
+			cg.cursor.tf_se.text = weaponSecondary[activeSecondary].ammo;
+			cg.cursor.tf_sp.text = weaponSpecial.ammo;
+			
+			cg.cursor.tf_pr.alpha = 1;
+			cg.cursor.tf_se.alpha = 1;
+			cg.cursor.tf_sp.alpha = 1;
 		}
 		
 		public function upgradeAll():void
@@ -278,6 +307,8 @@ package deltabattery
 				case 32:	// SPACE
 					var newAmmo:int = weaponSpecial.fire();
 					weaponMC[7].ammo.y = 16.65 + (35 * (1 - (weaponSpecial.ammo / weaponSpecial.ammoMax)));
+					weaponMC[7].mc_noAmmo.visible = weaponSpecial.ammo == 0;
+					cg.cursor.tf_sp.text = weaponSpecial.ammo;
 				break;
 				case 49:	// 1
 					if (weaponPrimary[0])
@@ -287,6 +318,8 @@ package deltabattery
 						changed = 0;
 						cg.game.mc_gui.tf_weaponP.text = weaponPrimary[activePrimary].name;
 						cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
+						cg.cursor.tf_pr.alpha = 1;
+						cg.cursor.tf_pr.text = weaponPrimary[activePrimary].ammo;
 					}
 				break;
 				case 50: 	// 2
@@ -297,6 +330,8 @@ package deltabattery
 						changed = 1;
 						cg.game.mc_gui.tf_weaponP.text = weaponPrimary[activePrimary].name;
 						cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
+						cg.cursor.tf_pr.alpha = 1;
+						cg.cursor.tf_pr.text = weaponPrimary[activePrimary].ammo;
 					}
 				break;
 				case 51:	// 3
@@ -307,6 +342,8 @@ package deltabattery
 						changed = 2;
 						cg.game.mc_gui.tf_weaponP.text = weaponPrimary[activePrimary].name;
 						cg.game.mc_gui.tf_ammoP.text = weaponPrimary[activePrimary].ammo;
+						cg.cursor.tf_pr.alpha = 1;
+						cg.cursor.tf_pr.text = weaponPrimary[activePrimary].ammo;
 					}
 				break;
 				case 52:	// 4
@@ -317,6 +354,8 @@ package deltabattery
 						changed = 3;
 						cg.game.mc_gui.tf_weaponS.text = weaponSecondary[activeSecondary].name;
 						cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
+						cg.cursor.tf_se.alpha = 1;
+						cg.cursor.tf_se.text = weaponSecondary[activeSecondary].ammo;
 					}
 				break;
 				case 53:	// 5
@@ -327,6 +366,8 @@ package deltabattery
 						changed = 4;
 						cg.game.mc_gui.tf_weaponS.text = weaponSecondary[activeSecondary].name;
 						cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
+						cg.cursor.tf_se.alpha = 1;
+						cg.cursor.tf_se.text = weaponSecondary[activeSecondary].ammo;
 					}
 				break;
 				case 54:	// 6
@@ -337,15 +378,14 @@ package deltabattery
 						changed = 5;
 						cg.game.mc_gui.tf_weaponS.text = weaponSecondary[activeSecondary].name;
 						cg.game.mc_gui.tf_ammoS.text = weaponSecondary[activeSecondary].ammo;
+						cg.cursor.tf_se.alpha = 1;
+						cg.cursor.tf_se.text = weaponSecondary[activeSecondary].ammo;
 					}
 				break;
 			}
 		
 			if (changed == -1) return;
 
-			/*for (var i:int = 0; i < 3; i++)		// TODO change 3
-				if (weaponMC[i])
-					weaponMC[i].selected.visible = false;*/
 			weaponMC[old].selected.visible = false;
 			weaponMC[changed].selected.visible = true;
 		}

@@ -61,7 +61,7 @@ package deltabattery.weapons
 			var tgt:ABST_Missile;
 			var proj:Array = cg.getProjectileArray();
 			var dist:Number;
-			var minDist:Number = 25;				// min distance to mouse
+			var minDist:Number = 150;				// min distance to mouse
 			
 			for (var i:int = proj.length - 1; i >= 0; i--)
 			{

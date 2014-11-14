@@ -75,10 +75,11 @@
     <element path="MissilePop.swc" />
     <element path="MoneyPopup.swc" />
     <element path="MissileCruise.swc" />
-    <element path="Game.swc" />
     <element path="ContainerMenu.swc" />
     <element path="ParticleShell.swc" />
     <element path="ParticleDebris.swc" />
+    <element path="Game.swc" />
+    <element path="GameCursor.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

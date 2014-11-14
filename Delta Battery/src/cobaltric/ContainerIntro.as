@@ -111,7 +111,7 @@
 					
 					menu.mc_high.newHigh.tf_name.text = "Anonymous";
 					menu.mc_high.newHigh.tf_day.text = newArr[0];
-					menu.mc_high.newHigh.tf_money.text = newArr[1];
+					menu.mc_high.newHigh.tf_money.text = "$" + newArr[1];
 					displaceRank = rank - 1;
 					
 					menu.mc_high.visible = true;
