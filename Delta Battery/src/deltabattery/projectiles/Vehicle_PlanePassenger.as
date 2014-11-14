@@ -16,18 +16,28 @@ package deltabattery.projectiles
 	{
 		public function Vehicle_PlanePassenger(_cg:ContainerGame, _mc:MovieClip, _origin:Point, _target:Point, _type:int=0, params:Object=null) 
 		{
-			_target.y = _origin.y;
-
-			if (!params)
-				params = { velocity:(1 + getRand(0, 2)) };
+			if (!_target || !_origin)		// dem random crashes though
+			{
+				if (_mc)
+					_mc.visible = false;
+				destroy();
+			}
 			else
-				params["velocity"] = 1 + getRand(0, 2);
+			{
 			
-			super(_cg, _mc, _origin, _target, _type, params);
-			
-			typeSmart = 1;		// teach DELTA STRIKE to ignore this
-			money = -500;
-			hp = hpMax = 13;
+				_target.y = _origin.y;
+
+				if (!params)
+					params = { velocity:(1 + getRand(0, 2)) };
+				else
+					params["velocity"] = 1 + getRand(0, 2);
+				
+				super(_cg, _mc, _origin, _target, _type, params);
+				
+				typeSmart = 1;		// teach DELTA STRIKE to ignore this
+				money = -500;
+				hp = hpMax = 13;
+			}
 		}
 		
 		override public function step():Boolean
@@ -37,7 +47,7 @@ package deltabattery.projectiles
 				// calculate and perform movement
 				mc.x -= velocity;
 				
-				// destroy if out of bounds
+				// destroy if out of bounds12
 				if (mc.x < -450)
 				{
 					money *= -1;		// earn money instead of losing it

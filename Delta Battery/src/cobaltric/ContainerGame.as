@@ -47,6 +47,7 @@
 		public var manExpl:ManagerExplosion;
 		
 		public var money:int = 0;			// actual money
+		private var moneyTotal:int = 0;		// total earned money - for scoring
 		private var moneyDisplay:int;		// displayed money (for 'increasing' slack effect)
 		private const MONEY_DELTA:int = 11;	// rate to change displayed money
 		
@@ -377,7 +378,6 @@
 			manWave.startWave();
 			game.mc_gui.shop.visible = false;
 			infoFlag = true;
-			turret.reloadAll();
 			game.mc_gui.newEnemy.gotoAndPlay("in");
 			game.mc_gui.newEnemy.mc.gotoAndStop(manWave.wave >= 31 ? 31 : manWave.wave);
 			game.bg.cacheAsBitmap = true;
@@ -394,6 +394,7 @@
 			}
 			SoundPlayer.play("sfx_menu_blip");
 			cursor.gotoAndStop(1);
+			turret.reloadAll();
 		}
 		
 		// end the current wave, enabling the shop, etc.
@@ -419,7 +420,7 @@
 			game.mc_gui.tf_wave.text = manWave.wave;
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Day " + (manWave.wave - 1) + " complete!";
-			intermission = 105;
+			intermission = 60;
 		}
 		
 		private function onPause(e:MouseEvent):void
@@ -466,7 +467,7 @@
 			Mouse.show();
 			cursor.visible = false;
 			
-			engine.scoreArr = [manWave.wave, money];
+			engine.scoreArr = [manWave.wave, moneyTotal];
 		}
 		
 		// updates the displayed money to match the actual money
@@ -485,6 +486,8 @@
 		// changes the money by amount
 		public function addMoney(amount:int):Boolean
 		{
+			if (amount > 0)
+				moneyTotal += amount;
 			if (money + amount < 0)
 				return false;
 			money += amount;
