@@ -81,7 +81,7 @@ package deltabattery.weapons
 			{
 				gfxCount = gfxMax;
 				cg.game.c_part.graphics.clear();
-				cg.game.c_part.graphics.lineStyle(1, 0xFF0000, .5);
+				cg.game.c_part.graphics.lineStyle(2, 0xFF0000, .5);
 				cg.game.c_part.graphics.moveTo(turret.x, turret.y);
 				cg.game.c_part.graphics.lineTo(tgt.mc.x, tgt.mc.y);
 				if (tgt is ABST_Vehicle)

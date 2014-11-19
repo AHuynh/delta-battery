@@ -72,6 +72,8 @@
 		private var headStart:int;
 		
 		public var cursor:MovieClip;
+		private var win:Boolean = false;
+		private var dayOffset:Boolean = true;
 	
 		public function ContainerGame(eng:Engine, _startWave:int = 1)
 		{
@@ -217,6 +219,9 @@
 						game.mc_gui.mc_statusHuge.visible = false;
 						gameActive = false;
 						
+						armory.arm.repairGroup.tf_repair.text = "$100 x " + manWave.wave + " = $" + (100 * manWave.wave);
+						armory.arm.repairGroup.visible = manWave.wave % 3 == 0;
+						
 						Mouse.show();
 						cursor.visible = false;
 					}
@@ -252,6 +257,7 @@
 					game.mc_gui.mc_statusHuge.visible = false;
 					Mouse.show();
 					cursor.visible = false;
+					turret.reloadAll();
 				}
 			}
 			
@@ -347,7 +353,7 @@
 				game.city.gotoAndStop(game.city.totalFrames);
 				cityExplode = 75;
 				SoundPlayer.playBGM(false);
-				
+
 				manWave.enemiesRemaining = 0;
 				for (var i:int = 0; i < 7 + getRand(0, 3); i++)
 					explodeCity();
@@ -394,7 +400,7 @@
 			}
 			SoundPlayer.play("sfx_menu_blip");
 			cursor.gotoAndStop(1);
-			turret.reloadAll();
+			dayOffset = true;
 		}
 		
 		// end the current wave, enabling the shop, etc.
@@ -402,18 +408,24 @@
 		public function endWave():void
 		{
 			gameActive = false;
+			dayOffset = false;
 			manPart.clear();
 
 			if (cityHP <= 0)
 			{
 				game.mc_lose.visible = true;
 				game.mc_lose.tf_day.text = "Day " + (manWave.wave - 1);
+				Mouse.show();
+				cursor.visible = false;
 				return;
 			}
 			else if (manWave.wave == 31)
 			{
 				game.mc_win.visible = true;
 				game.mc_win.tf_day.text = "Day " + (manWave.wave - 1);
+				Mouse.show();
+				cursor.visible = false;
+				win = true;
 				return;
 			}
 
@@ -421,6 +433,9 @@
 			game.mc_gui.mc_statusHuge.visible = true;
 			game.mc_gui.mc_statusHuge.tf_statusHuge.text = "Day " + (manWave.wave - 1) + " complete!";
 			intermission = 60;
+			
+			armory.arm.repairGroup.tf_repair.text = "$100 x " + manWave.wave + " = $" + (100 * manWave.wave);
+			armory.arm.repairGroup.visible = manWave.wave % 3 == 0;
 		}
 		
 		private function onPause(e:MouseEvent):void
@@ -467,7 +482,7 @@
 			Mouse.show();
 			cursor.visible = false;
 			
-			engine.scoreArr = [manWave.wave, moneyTotal];
+			engine.scoreArr = [(win ? 99 : manWave.wave - 1) + (dayOffset ? 1 : 0), moneyTotal];
 		}
 		
 		// updates the displayed money to match the actual money

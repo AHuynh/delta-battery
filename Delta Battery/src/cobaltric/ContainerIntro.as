@@ -69,6 +69,8 @@
 			{
 				//trace("Got new data: " + newArr);
 				
+				// day is 99 if Win
+				
 				var rank:int;
 				for (rank = 9; rank > 1; rank--)
 				{
@@ -82,7 +84,6 @@
 				//trace("Rank to be displaced is: " + rank);
 				if (rank < 9)
 				{
-					var replace:Array = ["NEW", newArr[0], newArr[1]];
 					for (var r:int = 8; r > rank; r--)
 					{
 						//trace("Displacing rank: " + r);
@@ -91,8 +92,8 @@
 						scoreArr[r - 1][2] = scoreArr[r - 2][2];
 					}
 					
-					scoreArr[rank-1][0] = "Anonymous";
-					scoreArr[rank-1][1] = newArr[0];
+					scoreArr[rank - 1][0] = "Anonymous";
+					scoreArr[rank - 1][1] = newArr[0];
 					scoreArr[rank - 1][2] = newArr[1];
 					
 					var nth:String;
@@ -110,7 +111,7 @@
 					menu.mc_high.newHigh.tf_rank.text = nth;
 					
 					menu.mc_high.newHigh.tf_name.text = "Anonymous";
-					menu.mc_high.newHigh.tf_day.text = newArr[0];
+					menu.mc_high.newHigh.tf_day.text = newArr[0] == 99 ? "Win" : newArr[0];
 					menu.mc_high.newHigh.tf_money.text = "$" + newArr[1];
 					displaceRank = rank - 1;
 					
@@ -125,7 +126,7 @@
 			for (var i:int = 0; i < 8; i++)
 			{
 				arrName[i].text = scoreArr[i][0];
-				arrDay[i].text = scoreArr[i][1];
+				arrDay[i].text = scoreArr[i][1] == 99 ? "Win" : scoreArr[i][1];
 				arrMoney[i].text = "$" + scoreArr[i][2];
 			}
 		}
@@ -209,7 +210,7 @@
 			for (var i:int = 0; i < 8; i++)
 			{
 				arrName[i].text = scoreArr[i][0];
-				arrDay[i].text = scoreArr[i][1];
+				arrDay[i].text = scoreArr[i][1] == 99 ? "Win" : scoreArr[i][1];
 				arrMoney[i].text = "$" + scoreArr[i][2];
 			}
 			

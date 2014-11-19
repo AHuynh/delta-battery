@@ -27,7 +27,7 @@ package deltabattery
 	public class Armory 
 	{
 		private var cg:ContainerGame;
-		private var arm:MovieClip;
+		public var arm:MovieClip;
 		
 		private var wepArr:Array;	// list of weapon buttons
 		private var selArr:Array;	// list of 'selected' MC's on weapon buttons
@@ -82,8 +82,11 @@ package deltabattery
 			
 			arm.btn_purchase.addEventListener(MouseEvent.CLICK, onPurchase);
 			arm.btn_purchase.addEventListener(MouseEvent.MOUSE_OVER, overButton);
+			arm.repairGroup.btn_repair.addEventListener(MouseEvent.CLICK, onRepair);
+			arm.repairGroup.btn_repair.addEventListener(MouseEvent.MOUSE_OVER, overButton);
 			arm.mc_tutorial.btn_resume.addEventListener(MouseEvent.CLICK, onResume);
 			arm.mc_tutorial.btn_skip.addEventListener(MouseEvent.CLICK, onResume);
+			arm.acknowledge.addEventListener(MouseEvent.CLICK, onSkipAck);
 		}
 		
 		private function addSelected(btn:SimpleButton, showX:Boolean):void
@@ -154,7 +157,7 @@ package deltabattery
 					arm.tf_title.text = "FLAK";
 					arm.tf_subtitle.text = "Flak Gun";
 					arm.tf_desc.text = "An area-of-effect cannon.\n\n" +
-									   "The Flak gun excels at saturating areas. " +
+									   "The Flak Gun excels at saturating areas. " +
 									   "However, its accuracy is very low."
 					ind = 2;
 				break;
@@ -341,6 +344,53 @@ package deltabattery
 			}
 			
 			cg.turret.upgradeAll();
+		}
+		
+		private function onRepair(e:MouseEvent):void
+		{
+			if (cg.cityHP == cg.cityHPMax)
+			{
+				arm.repairGroup.fullWarning.gotoAndPlay(2);
+				SoundPlayer.play("sfx_no_ammo");
+				return;
+			}
+			
+			var cost:int = 100 * cg.manWave.wave;
+			if (cg.money < cost)
+			{
+				arm.repairGroup.repairWarning.gotoAndPlay(2);
+				SoundPlayer.play("sfx_no_ammo");
+				return;
+			}
+			
+			cg.addMoney( -cost);
+			SoundPlayer.play("sfx_purchase");
+			
+			with (cg)
+			{
+				cityHP += .1 * cityHPMax
+				if (cityHP > cityHPMax)
+					cityHP = cityHPMax;
+				
+				cityHPCounter = 30;		// reset the slack counter
+			
+				life = cityHP / cityHPMax;
+				game.mc_gui.mc_health.primary.x = 74.75 - (1 - life) * 149.5;		// update health bar (primary)
+							
+				if (life < .30)
+					game.city.gotoAndStop(4);
+				else if (life < .5)
+					game.city.gotoAndStop(3);
+				else if (life < .85)
+					game.city.gotoAndStop(2);
+				else
+					game.city.gotoAndStop(1);
+			}
+		}
+		
+		private function onSkipAck(e:MouseEvent):void
+		{
+			arm.acknowledge.gotoAndStop(1);
 		}
 		
 		private function overButton(e:MouseEvent):void

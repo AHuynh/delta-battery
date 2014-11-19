@@ -112,7 +112,12 @@ package deltabattery
 			if (bgm)
 				bgm.stop();
 			var snd:Sound = (isMenu ? new bgm_1 : new bgm_2);
-			bgm = snd.play(0, Infinity);
+			bgm = snd.play(0, 9999);
+		}
+		
+		public static function isBGMplaying():Boolean
+		{
+			return bgm != null;
 		}
 		
 		public static function stopBGM():void
@@ -122,11 +127,6 @@ package deltabattery
 				bgm.stop();
 				bgm = null;
 			}
-		}
-		
-		public static function shutUp():void
-		{
-			//SoundMixer.stopAll();
 		}
 	}
 }

@@ -169,6 +169,8 @@
 		protected function checkTarget(dest:Boolean = true):void
 		{
 			if (type == 1) return;				// ignore player projectiles
+			if (!mc) return;					// catch error-causing edge case
+			if (!targetMC) return;				// catch error-causing edge case
 			if (abs(mc.x - targetMC.x) < 100 && abs(mc.y - (targetMC.y + 50)) < 50 && Math.random() > .8)
 			{
 				cg.damageCity(this);

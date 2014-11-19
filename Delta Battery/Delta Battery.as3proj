@@ -78,8 +78,8 @@
     <element path="ContainerMenu.swc" />
     <element path="ParticleShell.swc" />
     <element path="ParticleDebris.swc" />
-    <element path="Game.swc" />
     <element path="GameCursor.swc" />
+    <element path="Game.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

@@ -87,6 +87,8 @@
 				case 1:
 					container = new ContainerIntro(this, scoreData, (allowHigh ? scoreArr : null));
 					gameState = 0;
+					if (!SoundPlayer.isBGMplaying())
+						SoundPlayer.playBGM(true);	
 				break;
 			}
 			
