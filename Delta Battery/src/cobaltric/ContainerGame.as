@@ -401,6 +401,7 @@
 			SoundPlayer.play("sfx_menu_blip");
 			cursor.gotoAndStop(1);
 			dayOffset = true;
+			turret.reloadAll();
 		}
 		
 		// end the current wave, enabling the shop, etc.
