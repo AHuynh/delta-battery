@@ -1,14 +1,14 @@
 delta-battery
 =============
 
-Missile defense game for VGDev, Fall 2014  
+Missile defense game for VGDev, Fall 2014.  
 www.vgdev.org
 
 ## Object
 Protect the city against 30 days of increasingly-difficult attacks.
 
 ## Mechanics
-* Destroy incoming threats using your primary, secondary, and special weapons
+* Destroy incoming threats using your primary, secondary, and special weapons.
 * Money is awarded for each threat destroyed.
 * Use money to buy new weapons, obtain upgrades, and repair the city.
 * The game is won if Day 30 is completed.
